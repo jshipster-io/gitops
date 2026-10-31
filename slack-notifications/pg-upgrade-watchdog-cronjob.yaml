@@ -10,7 +10,7 @@ metadata:
 spec:
   schedule: 2-59/5 * * * *
   timeZone: Etc/UTC
-  suspend: true
+  suspend: false
   concurrencyPolicy: Forbid
   startingDeadlineSeconds: 120
   successfulJobsHistoryLimit: 3
