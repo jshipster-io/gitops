@@ -64,3 +64,29 @@ storage objects. A failed IMDS request or expired token is not successful denial
 
 Azure documents [role propagation delay](https://learn.microsoft.com/en-us/azure/storage/blobs/authorize-access-azure-active-directory#role-assignment-propagation-delays-for-blob-data-access);
 the kubelet's registry access must remain intact while waiting.
+
+## Verified result — 2026-10-31
+
+- The targeted Terraform apply deleted exactly one role assignment: zero resources
+  added or changed, one role deleted. No inherited storage grant remains for the
+  kubelet principal; `AcrPull` remains on the registry.
+- Before removal, the exact kubelet IMDS identity received HTTP 200 for metadata
+  on `hasadnaa-documents`, `loki-logs` and `pg-backups`. After propagation, all three
+  returned HTTP 403 `AuthorizationPermissionMismatch` with a valid, unexpired
+  token. The first post-delete requests still returned 200; retirement was not
+  declared complete until the actual permission-denial checks passed.
+- All six service-account paths passed after removal: four write/read/delete
+  paths and two read/write-denied paths, with unrelated-container denials.
+- Hasadnaa's real application storage code passed synthetic upload, user-delegation
+  SAS download/content verification and deletion. The current backup CronJob
+  template passed a synthetic gzip upload/download/content check without dumping
+  or reading any database data; the diagnostic Job was removed.
+- A new unprivileged diagnostic container successfully pulled the current private
+  Hasadnaa image with `imagePullPolicy: Always`, exited successfully and was removed.
+- Both Macs retained owner Entra access to production container metadata.
+- All 32 Argo applications were Healthy/Synced, and Loki had no Azure authentication
+  failures in the checked post-change log window. Temporary executable probes were
+  removed; existing workloads, image references and scheduled jobs were preserved.
+
+The credential-free Terraform guard tests and existing GitOps production gate
+remain automatic; no CI human approval step was added.
