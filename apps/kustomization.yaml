@@ -50,3 +50,4 @@ resources:
   - pg-backups.yaml
   # - openclaw.yaml
   # - padel-booking.yaml
+  - azure-operators.yaml

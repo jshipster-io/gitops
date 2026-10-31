@@ -1,0 +1,55 @@
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: azure-operators-owner-token-only
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+      - apiGroups: [""]
+        apiVersions: [v1]
+        operations: [CREATE]
+        resources: [serviceaccounts/token]
+  matchConditions:
+    - name: isolated-namespace
+      expression: request.namespace == 'azure-operators'
+  validations:
+    - expression: request.userInfo.username == '6544d2d9-52ad-4005-bd9a-6bd856b53900' && request.name == 'docintel-operator'
+      message: Only the named Entra owner may request the OCR operator token.
+    - expression: object.spec.audiences == ['api://AzureADTokenExchange'] && has(object.spec.expirationSeconds) && object.spec.expirationSeconds == 600
+      message: OCR operator tokens require the Azure exchange audience and a ten-minute lifetime.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: azure-operators-owner-token-only
+spec:
+  policyName: azure-operators-owner-token-only
+  validationActions: [Deny]
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicy
+metadata:
+  name: azure-operators-no-pods-or-secrets
+spec:
+  failurePolicy: Fail
+  matchConstraints:
+    resourceRules:
+      - apiGroups: [""]
+        apiVersions: [v1]
+        operations: [CREATE, UPDATE]
+        resources: [pods, secrets]
+  matchConditions:
+    - name: isolated-namespace
+      expression: request.namespace == 'azure-operators'
+  validations:
+    - expression: 'false'
+      message: The operator namespace cannot run pods or hold legacy service-account tokens or other secrets.
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingAdmissionPolicyBinding
+metadata:
+  name: azure-operators-no-pods-or-secrets
+spec:
+  policyName: azure-operators-no-pods-or-secrets
+  validationActions: [Deny]

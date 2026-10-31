@@ -1,6 +1,9 @@
 version: v1.35
 phase: enforce
 namespaces:
+  azure-operators:
+    enforce: restricted
+    reason: Owner-only federation; pods and secrets are forbidden by admission.
   argocd:
     enforce: baseline
     reason: Existing workloads require a staged migration to non-root Restricted settings.
