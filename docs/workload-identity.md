@@ -51,6 +51,7 @@ The eight migrated backup uploaders pin Azure CLI 2.91.0 by digest. Its RPM pack
 - Hasadnaa's actual application storage implementation uploaded a synthetic blob, issued a user-delegation download URL, verified its contents and deleted it.
 - Blutag's actual OpenAI implementation completed a request. ACS authorization was accepted for a recipient-free invalid request; no email was sent.
 - The billing and Slack identities read cost data. Backup-report and Slack identities read backup metadata and were denied writes. Loki's identity passed a scoped synthetic blob write/read/delete check.
+- The committed backup uploader completed a synthetic upload/download/content check and deleted the test blob, without database access. Loki readiness and a historical log query also passed.
 - SSH over Tailscale worked from both Macs; public SSH port 22 remained closed.
 - The legacy slack-billing-reporter application password and its Cost Management Reader assignment were revoked after replacement reads passed.
 
