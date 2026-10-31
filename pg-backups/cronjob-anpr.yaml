@@ -75,12 +75,12 @@ spec:
                 cpu: 200m
           containers:
           - name: upload
-            image: mcr.microsoft.com/azure-cli:latest
+            image: mcr.microsoft.com/azure-cli:2.91.0@sha256:933eb8dcb81aecb6f77e03c5b8660f0a1dfa9e1d16525763a27f86ff3b83a044
             command:
             - /bin/sh
             - -c
             args:
-            - "set -e\npython3 /var/run/azure-workload-login/login.py\nset -eu\nTIMESTAMP=$(date\
+            - "set -e\nPYTHONPATH=/usr/lib64/az/lib/python3.12/site-packages python3.12 /var/run/azure-workload-login/login.py\nset -eu\nTIMESTAMP=$(date\
               \ +%Y-%m-%d)\nFILENAME=\"anpr-${TIMESTAMP}.sql.gz\"\necho \"Uploading\
               \ to pg-backups/anpr/${TIMESTAMP}.sql.gz...\"\naz storage blob upload\
               \ \\\n  --account-name \"${AZURE_STORAGE_ACCOUNT}\" \\\n  --auth-mode\

@@ -160,7 +160,7 @@ spec:
             - /bin/sh
             - -ec
             args:
-            - 'python3 /var/run/azure-workload-login/login.py
+            - 'PYTHONPATH=/usr/lib64/az/lib/python3.12/site-packages python3.12 /var/run/azure-workload-login/login.py
 
               umask 077
 
