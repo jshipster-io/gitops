@@ -49,6 +49,15 @@ def validate(docs, config=None):
         assert template.get('metadata', {}).get('labels', {}).get('azure.workload.identity/use') == 'true', f'{ns}/{name}: missing webhook label'
         assert template['spec'].get('serviceAccountName') == profile['serviceAccount'], f'{ns}/{name}: wrong service account'
         for container in template['spec'].get('containers', []) + template['spec'].get('initContainers', []):
+            if profile.get('identity') == 'pg-backups' and 'azure-cli' in container.get('image', ''):
+                cli = config['azureCLI']
+                envs = {entry['name']: entry.get('value') for entry in container.get('env', [])}
+                command = '\n'.join(container.get('command', []) + container.get('args', []))
+                assert container['image'] == cli['image'], 'Backup Azure CLI image must match the verified pin'
+                assert envs.get('PYTHONPATH') == cli['pythonPath'], 'Use the packaged Azure CLI Python modules'
+                assert envs.get('AZURE_STORAGE_AUTH_MODE') == 'login', 'Backup storage must use Azure login'
+                assert cli['python'] + ' /var/run/azure-workload-login/login.py' in command, 'Missing verified identity login helper'
+                assert '--account-key' not in command, 'Backup cannot use an account-key argument'
             for env in container.get('env', []):
                 assert env['name'] not in FORBIDDEN, f'{ns}/{name}: long-lived credential {env["name"]}'
     print(f'Validated {len(config["workloads"])} Azure workload identity bindings')
