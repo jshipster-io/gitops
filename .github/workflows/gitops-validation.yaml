@@ -40,6 +40,7 @@ jobs:
       - run: python scripts/test-pod-security.py
       - run: python scripts/test-network-policy.py
       - run: python scripts/test-operator-identity.py
+      - run: go build -o "$RUNNER_TEMP/kubelet-storage-probe" tools/kubelet-storage-probe/main.go
       - run: python scripts/test-workload-identity.py
       - run: python scripts/test-postgres-upgrade.py
       - run: python scripts/validate-gitops.py
