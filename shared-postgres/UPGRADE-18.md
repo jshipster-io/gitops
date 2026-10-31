@@ -105,3 +105,17 @@ Snapshot restores must use unique disk names in the AKS node resource group.
 An initial rehearsal with identically named disks in two resource groups hit a
 stale attachment/I/O failure; the uniquely named restore booted successfully and
 passed `pg_amcheck --all --install-missing --heapallindexed`.
+
+The backup uploader uses the existing container-scoped `pg-backups` Azure
+workload identity. The recovery job uses a separate Kubernetes service account
+in `postgres`, with an exact federated subject managed in
+`terraform/postgres_backup_identity.tf`. It does not use a storage account key.
+The archive includes raw PostgreSQL configuration, effective settings and HBA
+rules, globals, system-database dumps, and dereferenced TLS/credential files.
+
+Rehearsal on 2026-10-31 verified the clean PostgreSQL 17 disk-snapshot restore,
+all ten downloaded application-backup restores with data/catalog comparisons,
+and an actual globals restore from the encrypted recovery archive. All 23
+credential references passed TLS hostname validation; denied cross-database
+access and restricted TLS reload were also tested. Final frozen-source
+comparison and the 24-hour production observation remain cutover gates.

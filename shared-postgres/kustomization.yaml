@@ -9,6 +9,8 @@ resources:
   - statefulset.yaml
   - statefulset-18.yaml
   - backup-recovery-cronjob.yaml
+  - workload-identity-backup.yaml
+  - workload-identity-login.yaml
   - service.yaml
   # Bootstrap is manual: automatic execution overwrites restored credentials.
   - optional-tls-reload-cronjob.yaml

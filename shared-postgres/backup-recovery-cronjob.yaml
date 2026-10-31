@@ -20,6 +20,7 @@ spec:
         metadata:
           labels:
             app: shared-postgres-backup
+            azure.workload.identity/use: 'true'
         spec:
           restartPolicy: Never
           automountServiceAccountToken: false
@@ -53,13 +54,17 @@ spec:
               psql -X -v ON_ERROR_STOP=1 -Atc ''SELECT row_to_json(h) FROM pg_hba_file_rules
               h'' > /backups/hba.jsonl
 
-              psql -X -v ON_ERROR_STOP=1 -Atc "SELECT pg_read_file(current_setting(''config_file''))" > /backups/postgresql.conf
+              psql -X -v ON_ERROR_STOP=1 -Atc "SELECT pg_read_file(current_setting(''config_file''))"
+              > /backups/postgresql.conf
 
-              psql -X -v ON_ERROR_STOP=1 -Atc "SELECT pg_read_file(current_setting(''hba_file''))" > /backups/pg_hba.conf
+              psql -X -v ON_ERROR_STOP=1 -Atc "SELECT pg_read_file(current_setting(''hba_file''))"
+              > /backups/pg_hba.conf
 
-              psql -X -v ON_ERROR_STOP=1 -Atc "SELECT pg_read_file(current_setting(''ident_file''))" > /backups/pg_ident.conf
+              psql -X -v ON_ERROR_STOP=1 -Atc "SELECT pg_read_file(current_setting(''ident_file''))"
+              > /backups/pg_ident.conf
 
-              psql -X -v ON_ERROR_STOP=1 -Atc "SELECT pg_read_file(''postgresql.auto.conf'', 0, 10000000, true)" > /backups/postgresql.auto.conf
+              psql -X -v ON_ERROR_STOP=1 -Atc "SELECT pg_read_file(''postgresql.auto.conf'',
+              0, 10000000, true)" > /backups/postgresql.auto.conf
 
               pg_dump -Fc --create -d postgres -f /backups/postgres.dump
 
@@ -155,7 +160,9 @@ spec:
             - /bin/sh
             - -ec
             args:
-            - 'umask 077
+            - 'python3 /var/run/azure-workload-login/login.py
+
+              umask 077
 
               STAMP=$(date -u +%Y%m%dT%H%M%SZ)
 
@@ -180,15 +187,9 @@ spec:
             - name: HOME
               value: /tmp
             - name: AZURE_STORAGE_ACCOUNT
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-backup-storage
-                  key: AZURE_STORAGE_ACCOUNT
-            - name: AZURE_STORAGE_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-backup-storage
-                  key: AZURE_STORAGE_KEY
+              value: jshipsterprod410479
+            - name: AZURE_STORAGE_AUTH_MODE
+              value: login
             securityContext:
               readOnlyRootFilesystem: true
               allowPrivilegeEscalation: false
@@ -201,6 +202,9 @@ spec:
               readOnly: true
             - name: tmp
               mountPath: /tmp
+            - name: azure-workload-login
+              mountPath: /var/run/azure-workload-login
+              readOnly: true
             resources:
               requests:
                 memory: 64Mi
@@ -228,3 +232,8 @@ spec:
             secret:
               secretName: shared-postgres-secrets
               defaultMode: 288
+          - name: azure-workload-login
+            configMap:
+              name: azure-workload-login
+              defaultMode: 292
+          serviceAccountName: postgres-backup-recovery

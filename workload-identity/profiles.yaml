@@ -135,3 +135,30 @@ workloads:
   clientID: df936683-b0a0-401c-8d6f-13317c93a70a
   remove:
   - AZURE_STORAGE_KEY
+- identity: pg-backups
+  folder: pg-backups
+  namespace: pg-backups
+  serviceAccount: pg-backups
+  kind: CronJob
+  name: pg-backup-anpr
+  clientID: df936683-b0a0-401c-8d6f-13317c93a70a
+  remove:
+  - AZURE_STORAGE_KEY
+- identity: pg-backups
+  folder: pg-backups
+  namespace: pg-backups
+  serviceAccount: pg-backups
+  kind: CronJob
+  name: pg-backup-mashov-mcp
+  clientID: df936683-b0a0-401c-8d6f-13317c93a70a
+  remove:
+  - AZURE_STORAGE_KEY
+- identity: pg-backups
+  folder: shared-postgres
+  namespace: postgres
+  serviceAccount: postgres-backup-recovery
+  kind: CronJob
+  name: pg-backup-cluster-recovery
+  clientID: df936683-b0a0-401c-8d6f-13317c93a70a
+  remove:
+  - AZURE_STORAGE_KEY
