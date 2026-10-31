@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: uptime-health-state
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false
+data:
+  state.json: '{"down":{}}'
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: uptime-check
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: uptime-state
+rules:
+  - apiGroups: ['']
+    resources: [configmaps]
+    resourceNames: [uptime-health-state]
+    verbs: [get, update]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: uptime-state
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: uptime-state
+subjects:
+  - kind: ServiceAccount
+    name: uptime-check
+    namespace: jshipster

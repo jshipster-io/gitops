@@ -15,12 +15,16 @@ spec:
       labels:
         app: slack-notifications
     spec:
+      serviceAccountName: uptime-check
+      automountServiceAccountToken: true
       containers:
       - name: slack-notifications
         image: prodacr1234.azurecr.io/slack-notifications:main-a2ef5b1
         ports:
         - containerPort: 8080
         env:
+        - name: UPTIME_STATE_CONFIGMAP
+          value: uptime-health-state
         - name: PORT
           value: "8080"
         envFrom:

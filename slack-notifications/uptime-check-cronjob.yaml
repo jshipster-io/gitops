@@ -13,18 +13,23 @@ spec:
   jobTemplate:
     spec:
       backoffLimit: 1
+      activeDeadlineSeconds: 120
       template:
         metadata:
           labels:
             app: uptime-check
         spec:
           restartPolicy: Never
+          serviceAccountName: uptime-check
+          automountServiceAccountToken: true
           containers:
           - name: uptime-check
             image: prodacr1234.azurecr.io/slack-notifications:main-a2ef5b1
             command: ["/root/slack-notifications"]
             args: ["uptime-check"]
             env:
+            - name: UPTIME_STATE_CONFIGMAP
+              value: uptime-health-state
             - name: SLACK_TOKEN
               valueFrom:
                 secretKeyRef:

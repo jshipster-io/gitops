@@ -1,5 +1,5 @@
 version: v1.35
-phase: audit
+phase: enforce
 namespaces:
   argocd:
     enforce: baseline

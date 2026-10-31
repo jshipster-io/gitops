@@ -22,6 +22,12 @@ spec:
   ignoreDifferences:
     - group: ''
       kind: ConfigMap
+      name: uptime-health-state
+      namespace: jshipster
+      jsonPointers:
+        - /data/state.json
+    - group: ''
+      kind: ConfigMap
       name: padel-health-state
       namespace: jshipster
       jsonPointers:
