@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: postgres-backup-recovery
+  namespace: postgres
+  annotations:
+    azure.workload.identity/client-id: df936683-b0a0-401c-8d6f-13317c93a70a
+    azure.workload.identity/tenant-id: 4816ec0c-0a79-49e4-8844-2077c7c79460
+automountServiceAccountToken: false

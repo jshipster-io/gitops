@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
   - cronjob-tivtaam-mcp.yaml
   - cronjob-webtop-mcp.yaml
+  - cronjob-mashov-mcp.yaml
   - cronjob-multi-whatsapp.yaml
   - cronjob-ids.yaml
   - cronjob-dirtbike.yaml
@@ -11,13 +12,14 @@ resources:
   # - cronjob-genrag.yaml
   - cronjob-blutag.yaml
   - cronjob-trainings.yaml
-  # ANPR retired 2026-10-30; retain the manifest but prune the CronJob.
-  # - cronjob-anpr.yaml
+  # Retained ANPR data remains protected after application retirement.
+  - cronjob-anpr.yaml
 
   - workload-identity-serviceaccount.yaml
   - workload-identity-login.yaml
 generators:
   - tivtaam-mcp-secrets-generator.yaml
   - webtop-mcp-secrets-generator.yaml
+  - mashov-mcp-secrets-generator.yaml
   - multi-whatsapp-secrets-generator.yaml
   - secrets-generator.yaml

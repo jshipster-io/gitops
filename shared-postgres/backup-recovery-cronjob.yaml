@@ -1,0 +1,241 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: pg-backup-cluster-recovery
+  namespace: postgres
+  labels:
+    app: pg-backup
+    database: cluster-recovery
+spec:
+  schedule: 35 3 * * *
+  timeZone: Etc/UTC
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      activeDeadlineSeconds: 1800
+      template:
+        metadata:
+          labels:
+            app: shared-postgres-backup
+            azure.workload.identity/use: 'true'
+        spec:
+          restartPolicy: Never
+          automountServiceAccountToken: false
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
+            fsGroup: 1001
+            seccompProfile:
+              type: RuntimeDefault
+          initContainers:
+          - name: pg-dump
+            image: postgres:18.6-alpine@sha256:10a5c69a83035ab5239f5620d708520e8b28f5aa1f2b20143e6024532edadfb5
+            command:
+            - /bin/sh
+            - -ec
+            args:
+            - 'umask 077
+
+              pg_dumpall --globals-only --file /backups/globals.sql
+
+              psql -X -v ON_ERROR_STOP=1 -Atc ''SELECT row_to_json(s) FROM pg_settings
+              s'' > /backups/settings.jsonl
+
+              psql -X -v ON_ERROR_STOP=1 -Atc ''SELECT row_to_json(d) FROM (SELECT
+              pg_database.*, pg_get_userbyid(datdba) AS owner_name FROM pg_database)
+              d; SELECT row_to_json(s) FROM (SELECT r.rolname, d.datname, s.setconfig
+              FROM pg_db_role_setting s LEFT JOIN pg_roles r ON r.oid=s.setrole LEFT
+              JOIN pg_database d ON d.oid=s.setdatabase) s'' > /backups/databases.jsonl
+
+              psql -X -v ON_ERROR_STOP=1 -Atc ''SELECT row_to_json(h) FROM pg_hba_file_rules
+              h'' > /backups/hba.jsonl
+
+              psql -X -v ON_ERROR_STOP=1 -Atc "SELECT pg_read_file(current_setting(''config_file''))"
+              > /backups/postgresql.conf
+
+              psql -X -v ON_ERROR_STOP=1 -Atc "SELECT pg_read_file(current_setting(''hba_file''))"
+              > /backups/pg_hba.conf
+
+              psql -X -v ON_ERROR_STOP=1 -Atc "SELECT pg_read_file(current_setting(''ident_file''))"
+              > /backups/pg_ident.conf
+
+              psql -X -v ON_ERROR_STOP=1 -Atc "SELECT pg_read_file(''postgresql.auto.conf'',
+              0, 10000000, true)" > /backups/postgresql.auto.conf
+
+              pg_dump -Fc --create -d postgres -f /backups/postgres.dump
+
+              pg_dump -Fc --create -d template1 -f /backups/template1.dump
+
+              tar -chzf /backups/recovery.tar.gz -C / backups/globals.sql backups/settings.jsonl
+              backups/databases.jsonl backups/hba.jsonl backups/postgres.dump backups/template1.dump
+              backups/postgresql.conf backups/pg_hba.conf backups/pg_ident.conf backups/postgresql.auto.conf
+              recovery/tls recovery/ca recovery/credentials
+
+              rm /backups/globals.sql /backups/settings.jsonl /backups/databases.jsonl
+              /backups/hba.jsonl
+
+              '
+            env:
+            - name: PGHOST
+              value: shared-postgres.postgres.svc.cluster.local
+            - name: PGPORT
+              value: '5432'
+            - name: PGDATABASE
+              value: postgres
+            - name: PGUSER
+              value: postgres
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: shared-postgres-secrets
+                  key: POSTGRES_ADMIN_PASSWORD
+            - name: PGSSLMODE
+              value: verify-full
+            - name: PGSSLROOTCERT
+              value: /recovery/ca/tls.crt
+            securityContext:
+              readOnlyRootFilesystem: true
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                - ALL
+            volumeMounts:
+            - name: backup-data
+              mountPath: /backups
+            - name: tls
+              mountPath: /recovery/tls
+              readOnly: true
+            - name: ca
+              mountPath: /recovery/ca
+              readOnly: true
+            - name: credentials
+              mountPath: /recovery/credentials
+              readOnly: true
+            resources:
+              requests:
+                memory: 64Mi
+                cpu: 10m
+              limits:
+                memory: 256Mi
+                cpu: 200m
+          - name: encrypt
+            image: ghcr.io/getsops/sops:v3.11.0@sha256:6ce00ac946e1a52b2d1e5b7087441f7b6ef7bad907753104013f8bdb8f5fd891
+            command:
+            - sops
+            args:
+            - --encrypt
+            - --age
+            - age103wy5wh49l0ptpscalt4ywxezd2nqykd29jru0fvgen7aweffp2s99kne9
+            - --input-type
+            - binary
+            - --output-type
+            - json
+            - --output
+            - /backups/recovery.sops.json
+            - /backups/recovery.tar.gz
+            securityContext:
+              readOnlyRootFilesystem: true
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                - ALL
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+              limits:
+                cpu: 200m
+                memory: 128Mi
+            volumeMounts:
+            - name: backup-data
+              mountPath: /backups
+          containers:
+          - name: upload
+            image: mcr.microsoft.com/azure-cli:2.91.0@sha256:933eb8dcb81aecb6f77e03c5b8660f0a1dfa9e1d16525763a27f86ff3b83a044
+            command:
+            - /bin/sh
+            - -ec
+            args:
+            - 'python3.12 /var/run/azure-workload-login/login.py
+
+              umask 077
+
+              STAMP=$(date -u +%Y%m%dT%H%M%SZ)
+
+              test -s /backups/recovery.sops.json
+
+              sha256sum /backups/recovery.sops.json > /tmp/recovery.sha256
+
+              az storage blob upload --container-name pg-backups --name "cluster-recovery/${STAMP}/recovery.sops.json"
+              --file /backups/recovery.sops.json --overwrite false --only-show-errors
+              --output none
+
+              az storage blob upload --container-name pg-backups --name "cluster-recovery/${STAMP}/recovery.sha256"
+              --file /tmp/recovery.sha256 --overwrite false --only-show-errors --output
+              none
+
+              echo "Encrypted cluster recovery uploaded: ${STAMP}"
+
+              '
+            env:
+            - name: AZURE_CONFIG_DIR
+              value: /tmp/azure
+            - name: HOME
+              value: /tmp
+            - name: AZURE_STORAGE_ACCOUNT
+              value: jshipsterprod410479
+            - name: AZURE_STORAGE_AUTH_MODE
+              value: login
+            - name: PYTHONPATH
+              value: /usr/lib64/az/lib/python3.12/site-packages
+            securityContext:
+              readOnlyRootFilesystem: true
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                - ALL
+            volumeMounts:
+            - name: backup-data
+              mountPath: /backups
+              readOnly: true
+            - name: tmp
+              mountPath: /tmp
+            - name: azure-workload-login
+              mountPath: /var/run/azure-workload-login
+              readOnly: true
+            resources:
+              requests:
+                memory: 64Mi
+                cpu: 10m
+              limits:
+                memory: 512Mi
+                cpu: 200m
+          volumes:
+          - name: backup-data
+            emptyDir:
+              medium: Memory
+              sizeLimit: 32Mi
+          - name: tmp
+            emptyDir:
+              sizeLimit: 128Mi
+          - name: tls
+            secret:
+              secretName: shared-postgres-server-tls
+              defaultMode: 288
+          - name: ca
+            secret:
+              secretName: shared-postgres-root-ca
+              defaultMode: 288
+          - name: credentials
+            secret:
+              secretName: shared-postgres-secrets
+              defaultMode: 288
+          - name: azure-workload-login
+            configMap:
+              name: azure-workload-login
+              defaultMode: 292
+          serviceAccountName: postgres-backup-recovery

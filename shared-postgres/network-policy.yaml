@@ -18,8 +18,12 @@ metadata:
   namespace: postgres
 spec:
   podSelector:
-    matchLabels:
-      app: shared-postgres
+    matchExpressions:
+    - key: app
+      operator: In
+      values:
+      - shared-postgres
+      - shared-postgres-18
   policyTypes:
   - Ingress
   ingress:
@@ -127,6 +131,12 @@ spec:
       podSelector:
         matchLabels:
           app.kubernetes.io/name: multi-whatsapp-migrate
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: postgres
+      podSelector:
+        matchLabels:
+          app: shared-postgres-backup
     ports:
     - protocol: TCP
       port: 5432
@@ -158,8 +168,28 @@ spec:
         matchLabels:
           kubernetes.io/metadata.name: postgres
       podSelector:
-        matchLabels:
-          app: shared-postgres
+        matchExpressions:
+        - key: app
+          operator: In
+          values:
+          - shared-postgres
+          - shared-postgres-18
     ports:
     - protocol: TCP
       port: 5432
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: postgres-backup-upload
+  namespace: postgres
+spec:
+  podSelector:
+    matchLabels:
+      app: shared-postgres-backup
+  policyTypes:
+  - Egress
+  egress:
+  - ports:
+    - protocol: TCP
+      port: 443
