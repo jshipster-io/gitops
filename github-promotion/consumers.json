@@ -1,0 +1,105 @@
+{
+  "organization": "jshipster-io",
+  "action": {
+    "tag": "v3.3.0",
+    "sha": "64ab729a6294000f5aa4a4bc0b73d1f32bc45510"
+  },
+  "promotion": {
+    "app_id": 5556540,
+    "installation_id": 177250155,
+    "client_id": "Iv23li3wzOze8NF0oZGe",
+    "repositories": [
+      "gitops"
+    ],
+    "permissions": {
+      "contents": "write",
+      "metadata": "read"
+    }
+  },
+  "dependency": {
+    "app_id": 5556586,
+    "installation_id": 177252558,
+    "client_id": "Iv23libhyQyxxktBjYbH",
+    "repositories": [
+      "FindMy.py"
+    ],
+    "permissions": {
+      "contents": "read",
+      "metadata": "read"
+    }
+  },
+  "consumers": [
+    {
+      "repo": "drc",
+      "workflow": ".github/workflows/trainings.yml"
+    },
+    {
+      "repo": "blutag-website",
+      "workflow": ".github/workflows/ci-cd.yml"
+    },
+    {
+      "repo": "blutag-app",
+      "workflow": ".github/workflows/ci-cd.yml"
+    },
+    {
+      "repo": "blutag-findmy",
+      "workflow": ".github/workflows/ci-cd.yml"
+    },
+    {
+      "repo": "blutag-pointer-push",
+      "workflow": ".github/workflows/ci-cd.yml"
+    },
+    {
+      "repo": "webtop-mcp",
+      "workflow": ".github/workflows/check.yml"
+    },
+    {
+      "repo": "padel-booking",
+      "workflow": ".github/workflows/check.yml"
+    },
+    {
+      "repo": "ids",
+      "workflow": ".github/workflows/ids.yml"
+    },
+    {
+      "repo": "tivtaam-mcp",
+      "workflow": ".github/workflows/check.yml"
+    },
+    {
+      "repo": "multi-whatsapp",
+      "workflow": ".github/workflows/check.yml"
+    },
+    {
+      "repo": "slack-notifications",
+      "workflow": ".github/workflows/ci.yml"
+    },
+    {
+      "repo": "mashov-mcp",
+      "workflow": ".github/workflows/check.yml"
+    },
+    {
+      "repo": "hasadnaa",
+      "workflow": ".github/workflows/ci.yml"
+    },
+    {
+      "repo": "trips",
+      "workflow": ".github/workflows/ci.yaml"
+    },
+    {
+      "repo": "dirtbike-specialist",
+      "workflow": ".github/workflows/ci.yml"
+    },
+    {
+      "repo": "gen-rag",
+      "workflow": ".github/workflows/ci.yml"
+    },
+    {
+      "repo": "ANPR-Shikmim",
+      "workflow": ".github/workflows/ci.yml"
+    },
+    {
+      "repo": "johnson",
+      "workflow": ".github/workflows/johnson.yml"
+    }
+  ]
+}
