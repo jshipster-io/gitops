@@ -45,12 +45,12 @@ for ns,p in profiles.items():
     if config['phase']!='enforce' or p['enforce']=='privileged':continue
     safe={'apiVersion':'v1','kind':'Pod','metadata':{'name':'psa-admission-proof','namespace':ns},'spec':{'automountServiceAccountToken':False,'securityContext':{'runAsNonRoot':True,'runAsUser':1001,'seccompProfile':{'type':'RuntimeDefault'}},'containers':[{'name':'probe','image':'alpine:3.23','securityContext':{'allowPrivilegeEscalation':False,'capabilities':{'drop':['ALL']}}}]}}
     assert submit(safe).returncode==0, ns+': compliant pod rejected'
-    bad=copy.deepcopy(safe);bad['spec']['containers'][0]['securityContext']['privileged']=True
+    bad=copy.deepcopy(safe);bad['spec']['containers'][0]['securityContext'].update({'privileged':True,'allowPrivilegeEscalation':True})
     r=submit(bad)
-    assert r.returncode!=0 and 'violates PodSecurity' in r.stderr,ns+': privileged pod not rejected by PSA'
+    assert r.returncode!=0 and 'violates PodSecurity' in r.stderr,ns+': privileged pod not rejected by PSA: '+r.stderr
     if p['enforce']=='restricted':
         bad=copy.deepcopy(safe);bad['spec']['securityContext']['runAsUser']=0
         r=submit(bad)
-        assert r.returncode!=0 and 'violates PodSecurity' in r.stderr,ns+': root pod not rejected by PSA'
+        assert r.returncode!=0 and 'violates PodSecurity' in r.stderr,ns+': root pod not rejected by PSA: '+r.stderr
     print('PASS:',ns,p['enforce'],'positive/negative admission',flush=True)
 print('No test pods were created.')
