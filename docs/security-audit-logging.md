@@ -20,8 +20,9 @@ network policy or access grant is changed by this feature.
 - Three stateful log alerts run every 15 minutes, without per-actor/dimension
   billing expansion: sensitive recorded operations, five administrative denials
   per actor in 30 minutes, and collection health/quota warnings.
-- Five native Activity Log alerts cover Azure authorization changes, audit-control
-  changes, and AKS admin credentials/control changes/deletion. Native Activity Log
+- Nine native Activity Log alerts cover Azure authorization changes, audit-control
+  changes, exact workspace/table writes/deletes, and AKS admin credentials/control
+  changes/deletion. Routine workspace shared-key reads do not alert. Native Activity Log
   keeps its independent 90-day retention; no duplicate paid export is added.
 - Notify the existing budget email recipient using common alert schema. The $15
   monthly resource-filtered budget warns at actual 50/80/100% and forecast 100%.

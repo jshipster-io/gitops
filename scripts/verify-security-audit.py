@@ -96,12 +96,12 @@ def verify_config():
         assert [s.lower() for s in alert['scopes']] == [WORKSPACE.lower()]
         assert [s.lower() for s in alert['actions']['actionGroups']] == [ACTION.lower()]
         assert not any(c.get('dimensions') for c in alert['criteria']['allOf'])
-    for name in ['azure-privilege-change', 'audit-control-change', 'aks-admin-credential', 'aks-control-change', 'aks-delete']:
+    for name in ['azure-privilege-change', 'audit-control-change', 'aks-admin-credential', 'aks-control-change', 'aks-delete', 'workspace-settings', 'workspace-delete', 'workspace-retention', 'workspace-table-delete']:
         alert = arm(RG + '/providers/Microsoft.Insights/activityLogAlerts/security-' + name, '2020-10-01')['properties']
         assert alert['enabled'] and alert['actions']['actionGroups'][0]['actionGroupId'].lower() == ACTION.lower()
     budget = arm(RG + '/providers/Microsoft.Consumption/budgets/security-audit-monthly', '2024-08-01')['properties']
     assert budget['amount'] == 15 and budget['timeGrain'] == 'Monthly' and len(budget['notifications']) == 4
-    print('PASS three stateful 15-minute log alerts, five activity alerts and $15 monthly budget notifications')
+    print('PASS three stateful 15-minute log alerts, nine activity alerts and $15 monthly budget notifications')
     return workspace['customerId']
 
 
