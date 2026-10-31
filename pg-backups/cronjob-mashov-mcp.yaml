@@ -103,7 +103,7 @@ spec:
             - /bin/sh
             - -ec
             args:
-            - "set -e\nPYTHONPATH=/usr/lib64/az/lib/python3.12/site-packages python3.12 /var/run/azure-workload-login/login.py\nBACKUP_DATE=$(cat\
+            - "set -e\npython3.12 /var/run/azure-workload-login/login.py\nBACKUP_DATE=$(cat\
               \ /backups/date)\naz storage blob upload --container-name pg-backups\
               \ \\\n  --name \"mashov_mcp/${BACKUP_DATE}.sql.gz\" \\\n  --file /backups/mashov_mcp.sql.gz\
               \ --overwrite true --only-show-errors --output none\necho 'Uploaded\
@@ -122,6 +122,8 @@ spec:
               value: /tmp/azure
             - name: AZURE_STORAGE_AUTH_MODE
               value: login
+            - name: PYTHONPATH
+              value: /usr/lib64/az/lib/python3.12/site-packages
             securityContext:
               readOnlyRootFilesystem: true
               allowPrivilegeEscalation: false

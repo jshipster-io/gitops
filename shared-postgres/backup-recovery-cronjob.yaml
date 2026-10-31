@@ -160,7 +160,7 @@ spec:
             - /bin/sh
             - -ec
             args:
-            - 'PYTHONPATH=/usr/lib64/az/lib/python3.12/site-packages python3.12 /var/run/azure-workload-login/login.py
+            - 'python3.12 /var/run/azure-workload-login/login.py
 
               umask 077
 
@@ -190,6 +190,8 @@ spec:
               value: jshipsterprod410479
             - name: AZURE_STORAGE_AUTH_MODE
               value: login
+            - name: PYTHONPATH
+              value: /usr/lib64/az/lib/python3.12/site-packages
             securityContext:
               readOnlyRootFilesystem: true
               allowPrivilegeEscalation: false

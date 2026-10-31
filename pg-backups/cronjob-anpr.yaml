@@ -80,13 +80,13 @@ spec:
             - /bin/sh
             - -c
             args:
-            - "set -e\nPYTHONPATH=/usr/lib64/az/lib/python3.12/site-packages python3.12 /var/run/azure-workload-login/login.py\nset -eu\nTIMESTAMP=$(date\
-              \ +%Y-%m-%d)\nFILENAME=\"anpr-${TIMESTAMP}.sql.gz\"\necho \"Uploading\
-              \ to pg-backups/anpr/${TIMESTAMP}.sql.gz...\"\naz storage blob upload\
-              \ \\\n  --account-name \"${AZURE_STORAGE_ACCOUNT}\" \\\n  --auth-mode\
-              \ login \\\n  --container-name pg-backups \\\n  --name \"anpr/${TIMESTAMP}.sql.gz\"\
-              \ \\\n  --file \"/backups/${FILENAME}\" \\\n  --overwrite true\necho\
-              \ \"Upload complete.\"\n"
+            - "set -e\npython3.12 /var/run/azure-workload-login/login.py\nset -eu\n\
+              TIMESTAMP=$(date +%Y-%m-%d)\nFILENAME=\"anpr-${TIMESTAMP}.sql.gz\"\n\
+              echo \"Uploading to pg-backups/anpr/${TIMESTAMP}.sql.gz...\"\naz storage\
+              \ blob upload \\\n  --account-name \"${AZURE_STORAGE_ACCOUNT}\" \\\n\
+              \  --auth-mode login \\\n  --container-name pg-backups \\\n  --name\
+              \ \"anpr/${TIMESTAMP}.sql.gz\" \\\n  --file \"/backups/${FILENAME}\"\
+              \ \\\n  --overwrite true\necho \"Upload complete.\"\n"
             env:
             - name: AZURE_STORAGE_ACCOUNT
               valueFrom:
@@ -97,6 +97,8 @@ spec:
               value: /tmp/azure
             - name: AZURE_STORAGE_AUTH_MODE
               value: login
+            - name: PYTHONPATH
+              value: /usr/lib64/az/lib/python3.12/site-packages
             volumeMounts:
             - name: backup-data
               mountPath: /backups

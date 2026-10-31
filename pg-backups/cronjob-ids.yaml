@@ -80,7 +80,7 @@ spec:
             args:
             - |
               set -e
-              PYTHONPATH=/usr/lib64/az/lib/python3.12/site-packages python3.12 /var/run/azure-workload-login/login.py
+              python3.12 /var/run/azure-workload-login/login.py
               set -e
               TIMESTAMP=$(date +%Y-%m-%d)
               FILENAME="ids_embeddings-${TIMESTAMP}.sql.gz"
@@ -103,6 +103,8 @@ spec:
               value: /tmp/azure
             - name: AZURE_STORAGE_AUTH_MODE
               value: login
+            - name: PYTHONPATH
+              value: /usr/lib64/az/lib/python3.12/site-packages
             volumeMounts:
             - name: backup-data
               mountPath: /backups

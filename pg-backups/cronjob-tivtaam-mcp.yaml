@@ -68,7 +68,7 @@ spec:
               args:
                 - |
                   set -e
-                  PYTHONPATH=/usr/lib64/az/lib/python3.12/site-packages python3.12 /var/run/azure-workload-login/login.py
+                  python3.12 /var/run/azure-workload-login/login.py
                   BACKUP_DATE=$(cat /backups/date)
                   az storage blob upload --container-name pg-backups \
                     --name "tivtaam_mcp/${BACKUP_DATE}.sql.gz" \
@@ -82,6 +82,8 @@ spec:
                     secretKeyRef: {name: pg-backup-secrets, key: AZURE_STORAGE_ACCOUNT}
                 - name: AZURE_STORAGE_AUTH_MODE
                   value: login
+                - name: PYTHONPATH
+                  value: /usr/lib64/az/lib/python3.12/site-packages
               securityContext:
                 readOnlyRootFilesystem: true
                 allowPrivilegeEscalation: false
