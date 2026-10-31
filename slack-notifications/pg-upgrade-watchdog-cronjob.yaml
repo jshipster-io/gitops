@@ -2,6 +2,9 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: pg-upgrade-watchdog
+  annotations:
+    # Avoid self-referential Argo health during the monitor itself; watchdog checks its liveness.
+    argocd.argoproj.io/ignore-healthcheck: "true"
   labels: &id001
     app: pg-upgrade-monitor
 spec:
