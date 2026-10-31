@@ -38,8 +38,8 @@ namespaces:
     enforce: restricted
     reason: Workloads meet Restricted standards.
   jshipster:
-    enforce: baseline
-    reason: Existing workloads require a staged migration to non-root Restricted settings.
+    enforce: restricted
+    reason: Non-root notification image, deployment and all scheduled templates verified.
   loki:
     enforce: privileged
     reason: Alloy requires hostPath access to node logs and runs as root.

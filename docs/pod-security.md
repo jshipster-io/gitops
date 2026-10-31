@@ -12,7 +12,10 @@ compatible enforcement levels. Labels do not restart or evict existing pods.
 Enforcement protects newly created pods, including controller replacements.
 
 - Restricted: cert-manager, ingress-nginx, mashov-mcp, webtop-mcp, tivtaam-mcp,
-  multi-whatsapp (including workers and migration/monitor jobs).
+  multi-whatsapp (including workers and migration/monitor jobs), hasadnaa, drc,
+  trips, external-dns and jshipster (including all notification CronJobs). The
+  isolated azure-operators namespace also has Restricted labels but deliberately
+  denies every pod through its separate admission policy.
 - Baseline: ordinary legacy application, backup and database namespaces. Existing
   images/init scripts and jobs are not assumed to support forced non-root startup.
   Baseline rejects privileged containers, host namespace sharing and hostPath,
@@ -69,3 +72,51 @@ audit/warning labels and other namespaces' enforcement. A policy change that pas
 CI is not proof of live application availability.
 
 Reference: [Kubernetes namespace policy staging](https://kubernetes.io/docs/tasks/configure-pod-container/enforce-standards-namespace-labels/).
+
+## Stateless runtime hardening (2026-11-01)
+
+Eight Deployments and eight notification CronJobs have explicit non-root users,
+RuntimeDefault seccomp, no privilege escalation, all capabilities dropped and
+read-only root filesystems. Their writable temporary/cache/PID directories use
+size-limited emptyDir volumes. `workloads.yaml` records the exact runtime identities
+and Kubernetes token exceptions; CI rejects regressions even in a namespace still
+at Baseline. Run `scripts/test-workload-hardening.py` and the full validator.
+
+The Deployment scope is Hasadnaa, Trainings, Trips, Blutag App, Blutag Website,
+External DNS, the Argo cloudflared tunnel and Slack Notifications. Existing image
+users are preserved: Hasadnaa 1000, Trainings/cloudflared 65532, External DNS 65534,
+Nginx 101, and the other listed Go runtimes 1001. Nginx starts directly and gets
+separate writable cache/PID volumes; it does not need a writable configuration
+or root startup scripts. Port 80 remains usable with the verified container
+network setting, without adding a bind capability.
+
+External DNS retains its Kubernetes token to watch resources. The notification
+Deployment and uptime-check CronJob retain their scoped ConfigMap access for
+outage/recovery state. Other listed workloads disable automatic API tokens;
+separate Azure federation projections and GCP credential mounts are preserved.
+
+The notification source image now runs from /app as UID/GID 1001. Its legacy
+/root/slack-notifications path remains an executable compatibility link during
+image/manifest promotion; current scheduled templates use /app/slack-notifications.
+Source CI checks the published image as non-root with a read-only filesystem and
+no network before promotion. Tests must not send reports, notifications or emails.
+
+Deploy hardened templates first, verify replacements and access, then promote
+namespace enforcement. Hasadnaa, drc, trips, external-dns and jshipster completed
+this staged sequence. Blutag App/Website and cloudflared have per-workload guards;
+the shared blutag and argocd namespaces retain Baseline until their other workloads
+are migrated. Database/backup templates, persistent FindMy/Pointer workers, the
+third-party anisette cache and root-dependent bastion/KSOPS bootstrap are separate
+compatibility work; do not infer they were migrated by this stateless stage.
+
+```sh
+KUBECONFIG="$HOME/.kube/prod-aks-entra" python3 scripts/verify-workload-hardening.py
+KUBECONFIG="$HOME/.kube/prod-aks-entra" python3 scripts/verify-pod-security.py
+```
+
+Live checks include replacement readiness, positive/negative PSA dry-runs, public
+readiness routes, Hasadnaa synthetic PDF rendering, notification ConfigMap read
+success and secret-read denial, and private SSH/owner API access from both Macs.
+The runtime verifier never starts scheduled jobs. Shell `test -w` alone is not
+proof of a writable filesystem: validate mount flags and an owned disposable write
+attempt when testing read-only enforcement, and remove temporary probe files.
