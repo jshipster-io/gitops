@@ -19,7 +19,7 @@ spec:
       automountServiceAccountToken: true
       containers:
       - name: slack-notifications
-        image: prodacr1234.azurecr.io/slack-notifications:main-a2ef5b1
+        image: prodacr1234.azurecr.io/slack-notifications:main-e53ee13
         ports:
         - containerPort: 8080
         env:

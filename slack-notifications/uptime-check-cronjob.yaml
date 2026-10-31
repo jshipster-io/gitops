@@ -24,7 +24,7 @@ spec:
           automountServiceAccountToken: true
           containers:
           - name: uptime-check
-            image: prodacr1234.azurecr.io/slack-notifications:main-a2ef5b1
+            image: prodacr1234.azurecr.io/slack-notifications:main-e53ee13
             command: ["/root/slack-notifications"]
             args: ["uptime-check"]
             env:
