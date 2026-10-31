@@ -8,7 +8,7 @@ network policy or access grant is changed by this feature.
 ## Contract
 
 - `jshipster-security-audit` / `AKSAuditAdmin`: 30-day retention, including total
-  retention, immediate 30-day purge, Analytics tier and 0.1 GB/day quota safeguard.
+  retention, immediate 30-day purge, Analytics tier and 0.15 GB/day quota safeguard.
 - Export only `kube-audit-admin`, once, with a resource-specific destination.
 - Attach and propagate the workspace transformation **before** export. Store
   metadata only: no request/response bodies, URL parameters, status messages,
@@ -24,17 +24,20 @@ network policy or access grant is changed by this feature.
   changes, exact workspace/table writes/deletes, and AKS admin credentials/control
   changes/deletion. Routine workspace shared-key reads do not alert. Native Activity Log
   keeps its independent 90-day retention; no duplicate paid export is added.
-- Notify the existing budget email recipient using common alert schema. The $15
+- Notify the existing budget email recipient using common alert schema. The $20
   monthly resource-filtered budget warns at actual 50/80/100% and forecast 100%.
   No human approval step is added to deployment or alert handling.
 
 Coverage is deliberately limited: administrative logs omit GET/list, so they are
 not a complete record of secret reads, sign-ins or GET-based WebSocket interactive
 access. Intended privileged owner/Argo changes can alert. Correlate with authorized
-changes rather than excluding whole identities from security monitoring.
+changes rather than excluding whole identities from security monitoring. The
+alert-only exception is `aksService` patching 32 explicit managed RBAC/admission object keys;
+all records remain stored. Owner/Argo changes, new names and other verbs still
+alert. Usage queries compare Azure's `True` billable flag case-insensitively.
 
 Daily quotas can overshoot and stop collection until the next reset; budgets only
-notify, and filtering can incur transformation-processing charges. The 80 MB
+notify, and filtering can incur transformation-processing charges. The 120 MB
 rolling-day warning is approximate, not the Azure quota-reset accounting clock.
 Do not automatically raise limits or weaken filters. Investigate volume, native
 Activity Log and collection health before deciding how to restore coverage.

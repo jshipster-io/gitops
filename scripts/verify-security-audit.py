@@ -68,7 +68,7 @@ def create_canary(kubeconfig):
 def verify_config():
     workspace = arm(WORKSPACE, '2022-10-01')['properties']
     assert workspace['retentionInDays'] == 30
-    assert workspace['workspaceCapping']['dailyQuotaGb'] == 0.1
+    assert workspace['workspaceCapping']['dailyQuotaGb'] == 0.15
     assert workspace['features']['disableLocalAuth'] is True
     assert workspace['features']['enableLogAccessUsingOnlyResourcePermissions'] is False
     assert workspace['defaultDataCollectionRuleResourceId'].lower() == DCR.lower()
@@ -100,15 +100,15 @@ def verify_config():
         alert = arm(RG + '/providers/Microsoft.Insights/activityLogAlerts/security-' + name, '2020-10-01')['properties']
         assert alert['enabled'] and alert['actions']['actionGroups'][0]['actionGroupId'].lower() == ACTION.lower()
     budget = arm(RG + '/providers/Microsoft.Consumption/budgets/security-audit-monthly', '2024-08-01')['properties']
-    assert budget['amount'] == 15 and budget['timeGrain'] == 'Monthly' and len(budget['notifications']) == 4
-    print('PASS three stateful 15-minute log alerts, nine activity alerts and $15 monthly budget notifications')
+    assert budget['amount'] == 20 and budget['timeGrain'] == 'Monthly' and len(budget['notifications']) == 4
+    print('PASS three stateful 15-minute log alerts, nine activity alerts and $20 monthly budget notifications')
     return workspace['customerId']
 
 
 def verify_events(workspace_id, canary):
     row = query(workspace_id, '''AKSAuditAdmin
 | where TimeGenerated > ago(24h)
-| summarize Records=count(), LastAudit=max(TimeGenerated), BillableBytes=sumif(_BilledSize,_IsBillable == "true"), Bodies=countif(isnotnull(RequestObject) or isnotnull(ResponseObject)), QueryStrings=countif(RequestUri contains "?"), StatusMessages=countif(isnotnull(ResponseStatus.message)), UserExtras=countif(isnotnull(User.extra)), ExtraAnnotations=countif(array_length(bag_keys(Annotations)) > 1)
+| summarize Records=count(), LastAudit=max(TimeGenerated), BillableBytes=sumif(_BilledSize,_IsBillable =~ "true"), Bodies=countif(isnotnull(RequestObject) or isnotnull(ResponseObject)), QueryStrings=countif(RequestUri contains "?"), StatusMessages=countif(isnotnull(ResponseStatus.message)), UserExtras=countif(isnotnull(User.extra)), ExtraAnnotations=countif(array_length(bag_keys(Annotations)) > 1)
 ''')[0]
     assert row['Records'] > 0, 'No audit events have arrived yet'
     assert all(row[k] == 0 for k in ['Bodies', 'QueryStrings', 'StatusMessages', 'UserExtras', 'ExtraAnnotations']), 'Unexpected sensitive audit fields remain; inspect without printing their contents'
