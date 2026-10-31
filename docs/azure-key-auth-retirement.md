@@ -32,8 +32,9 @@ AzureRM does not expose the ACS setting, so an `azapi_update_resource` patches o
 account is maintained by `setup-backend.sh`, which disables Shared Key and uses
 `--auth-mode login` for container access. Both the Terraform backend and AzureRM
 provider explicitly select Entra storage authentication. Key/connection-string
-outputs are removed. Named owner data roles preserve interactive OpenAI, OCR and
-Speech access; CI identities do not receive those roles.
+outputs are removed. Named owner data roles enable interactive OpenAI, Speech
+and OCR v3.1 metadata access; OCR v4 delegated-user access remains unresolved
+(see below). CI identities do not receive those roles.
 
 Terraform CI runs mocked plans asserting the resource settings plus checks for
 identity-only backend/provider/bootstrap configuration and absent key exports.
@@ -85,3 +86,28 @@ no unrelated database-maintenance or network-policy setting was modified.
 References: [Storage Shared Key retirement](https://learn.microsoft.com/en-us/azure/storage/common/shared-key-authorization-prevent),
 [AI local authentication and propagation](https://learn.microsoft.com/en-us/azure/ai-services/disable-local-auth),
 [ACS authentication property](https://learn.microsoft.com/en-us/azure/templates/microsoft.communication/2025-05-01/communicationservices).
+
+### Final access verification (2026-10-31)
+
+- All 31 Argo applications were Healthy/Synced; Hasadnaa and Blutag public health
+  endpoints returned HTTP 200. Terraform and GitOps hosted validation passed.
+- Both Macs can read Terraform state through Entra with Shared Key disabled.
+  The final targeted Terraform plan reported no changes.
+- Loki's service-account federation uploaded/read/deleted synthetic content in
+  its own container and was denied access to the PostgreSQL backup container.
+- Owner Entra access passed OpenAI embeddings, Speech voice metadata and Document
+  Intelligence v3.1 model metadata. Document Intelligence v4 model metadata
+  returned HTTP 401 with the same delegated token. No active deployment consumes
+  that OCR endpoint, but full owner v4 access is **not** verified/preserved.
+
+Run `python3 scripts/verify-azure-key-auth.py --check-owner-ai` to include these
+operator checks. It deliberately exits nonzero while v4 access remains broken;
+it does not substitute v3.1 and report v4 success. The default audit checks the
+six authentication controls and Entra state access, not all operator APIs.
+
+Automatic approval review rejected a proposed new operator managed identity,
+Kubernetes federation and OCR data role because a service account in the default
+namespace could be acquired by other workloads. The command did not execute;
+no operator identity/federation was created. An approved, appropriately isolated
+access design and successful v4 verification remain necessary before claiming
+full operator access. Keys remain disabled. CI has no human approval gate.
