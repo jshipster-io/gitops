@@ -49,6 +49,11 @@ FROM pg_proc p JOIN pg_namespace n ON n.oid=p.pronamespace
 WHERE n.nspname NOT IN ('pg_catalog','information_schema') AND p.prokind IN ('f','p','w')
 AND NOT EXISTS (SELECT 1 FROM pg_depend d WHERE d.classid='pg_proc'::regclass AND d.objid=p.oid AND d.deptype='e')
 ORDER BY n.nspname,p.proname,pg_get_function_identity_arguments(p.oid);
+SELECT json_build_object('kind','builtin_function_acl','function',p.oid::regprocedure::text,'acl',p.proacl::text)
+FROM pg_proc p WHERE p.pronamespace='pg_catalog'::regnamespace AND p.proacl IS NOT NULL
+AND EXISTS (SELECT 1 FROM aclexplode(p.proacl) a JOIN pg_roles r ON r.oid=a.grantee
+            WHERE r.rolname NOT LIKE 'pg_%' AND r.rolname<>'postgres')
+ORDER BY p.oid::regprocedure::text;
 SELECT json_build_object('kind','trigger','schema',n.nspname,'table',c.relname,
   'name',t.tgname,'enabled',t.tgenabled,'definition',pg_get_triggerdef(t.oid))
 FROM pg_trigger t JOIN pg_class c ON c.oid=t.tgrelid JOIN pg_namespace n ON n.oid=c.relnamespace

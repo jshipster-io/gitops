@@ -21,7 +21,7 @@ spec:
           labels:
             app: shared-postgres-backup
         spec:
-          restartPolicy: OnFailure
+          restartPolicy: Never
           automountServiceAccountToken: false
           securityContext:
             runAsNonRoot: true
@@ -53,13 +53,22 @@ spec:
               psql -X -v ON_ERROR_STOP=1 -Atc ''SELECT row_to_json(h) FROM pg_hba_file_rules
               h'' > /backups/hba.jsonl
 
+              psql -X -v ON_ERROR_STOP=1 -Atc "SELECT pg_read_file(current_setting(''config_file''))" > /backups/postgresql.conf
+
+              psql -X -v ON_ERROR_STOP=1 -Atc "SELECT pg_read_file(current_setting(''hba_file''))" > /backups/pg_hba.conf
+
+              psql -X -v ON_ERROR_STOP=1 -Atc "SELECT pg_read_file(current_setting(''ident_file''))" > /backups/pg_ident.conf
+
+              psql -X -v ON_ERROR_STOP=1 -Atc "SELECT pg_read_file(''postgresql.auto.conf'', 0, 10000000, true)" > /backups/postgresql.auto.conf
+
               pg_dump -Fc --create -d postgres -f /backups/postgres.dump
 
               pg_dump -Fc --create -d template1 -f /backups/template1.dump
 
-              tar -czf /backups/recovery.tar.gz -C /backups globals.sql settings.jsonl
-              databases.jsonl hba.jsonl postgres.dump template1.dump -C /recovery
-              tls ca credentials
+              tar -chzf /backups/recovery.tar.gz -C / backups/globals.sql backups/settings.jsonl
+              backups/databases.jsonl backups/hba.jsonl backups/postgres.dump backups/template1.dump
+              backups/postgresql.conf backups/pg_hba.conf backups/pg_ident.conf backups/postgresql.auto.conf
+              recovery/tls recovery/ca recovery/credentials
 
               rm /backups/globals.sql /backups/settings.jsonl /backups/databases.jsonl
               /backups/hba.jsonl
@@ -141,7 +150,7 @@ spec:
               mountPath: /backups
           containers:
           - name: upload
-            image: mcr.microsoft.com/azure-cli:latest
+            image: mcr.microsoft.com/azure-cli:2.91.0@sha256:933eb8dcb81aecb6f77e03c5b8660f0a1dfa9e1d16525763a27f86ff3b83a044
             command:
             - /bin/sh
             - -ec
