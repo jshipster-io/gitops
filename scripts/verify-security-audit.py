@@ -119,8 +119,9 @@ def verify_events(workspace_id, canary):
         assert re.fullmatch(r'security-audit-canary-[0-9a-f]{12}', canary), 'Invalid canary name'
         rows = query(workspace_id, f'''AKSAuditAdmin
 | where TimeGenerated > ago(24h) and tostring(ObjectRef.name) == "{canary}"
-| summarize Events=dcount(AuditId) by Verb, Resource=tostring(ObjectRef.resource)
+| summarize Events=dcount(AuditId), MissingActor=countif(isempty(tostring(User.username))) by Verb, Resource=tostring(ObjectRef.resource)
 ''')
+        assert all(r['MissingActor'] == 0 for r in rows), 'Canary actor identity was lost during redaction'
         observed = {(r['Verb'], r['Resource']) for r in rows}
         expected = {('create', 'configmaps'), ('delete', 'configmaps'), ('create', 'roles'), ('delete', 'roles')}
         assert expected <= observed, 'Synthetic create/delete audit metadata has not fully arrived'

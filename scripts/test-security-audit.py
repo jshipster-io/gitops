@@ -42,7 +42,7 @@ class AuditVerification(unittest.TestCase):
 
     def test_canary_requires_both_resources_and_cleanup_events(self):
         base = dict(Records=4, LastAudit='synthetic', BillableBytes=1000, Bodies=0, QueryStrings=0, StatusMessages=0, UserExtras=0, ExtraAnnotations=0)
-        with patch.object(audit, 'query', side_effect=[[base], [{'Records': 4}], [{'Verb': 'create', 'Resource': 'roles', 'Events': 1}]]):
+        with patch.object(audit, 'query', side_effect=[[base], [{'Records': 4}], [{'Verb': 'create', 'Resource': 'roles', 'Events': 1, 'MissingActor': 0}]]):
             with self.assertRaises(AssertionError):
                 audit.verify_events('synthetic-workspace', 'security-audit-canary-123456abcdef')
 
