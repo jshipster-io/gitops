@@ -9,6 +9,9 @@ start it as a writer after PostgreSQL 18 has accepted production writes.
 - Original PVC: `postgres-data-shared-postgres-0` (16 GiB; PV reclaim policy Retain).
 - Target PVC: `postgres-data-shared-postgres-18-0` (16 GiB; PV reclaim policy Retain).
 - Full initial snapshot: `prod-rg/pg17-preupgrade-20261031-initial`.
+- Full final clean-shutdown snapshot: `prod-rg/pg17-preupgrade-20261031-final`.
+  Both snapshots completed; the initial snapshot was restored to a separate disk
+  and booted as PostgreSQL 17.11 for recovery and integrity verification.
 - Private storage: `jshipsterprod410479`, container `pg-backups`, prefix
   `upgrade/20261031T1335Z/`. Archives are age-encrypted to the existing owner key.
 - Each recovery set contains custom-format database dumps, globals including
@@ -118,4 +121,58 @@ all ten downloaded application-backup restores with data/catalog comparisons,
 and an actual globals restore from the encrypted recovery archive. All 23
 credential references passed TLS hostname validation; denied cross-database
 access and restricted TLS reload were also tested. Final frozen-source
-comparison and the 24-hour production observation remain cutover gates.
+comparison passed before cutover. The production observation remains open.
+
+
+## Production cutover evidence (2026-10-31)
+
+Production traffic switched to PostgreSQL 18.6 / pgvector 0.8.7 after GitOps
+PR #36 merged (`755ef1a146ec2ea19df58f123316689fa171eb59`) and production
+revision `f3baae1b8d453edb1abdc00201c244d28104ebaa` reconciled. Writers resumed
+at **16:01:42 UTC** following approximately 51 minutes of maintenance. The
+original PostgreSQL 17 StatefulSet remains at zero replicas. Production writes
+have resumed: the pre-write rollback procedure is no longer safe.
+
+The final frozen comparison covered all 11 non-template databases, both templates,
+and 114 table fingerprints, including counts, sequences, large objects, catalog
+ownership/permissions, role/password fingerprints and database settings. No
+unexplained differences remained. `template0` again disallows connections.
+The target restarted before the final comparison; integrity, collation, planner
+statistics and pgvector similarity/HNSW checks passed.
+
+All 23 credential references passed TLS hostname verification, including negative
+cross-database authorization checks in 13 distinct credential cases. Eight application
+and worker deployments became Ready. Repository and isolated database integration
+tests passed; authenticated MCP initialize/tool discovery passed for all four
+services without invoking business actions. The normal SSH bastion route exposes
+PostgreSQL 18.6 clients and passed database TLS verification. The actual production
+TLS-reload CronJob also completed with its existing restricted credential.
+
+Final encrypted dumps and evidence were uploaded under `final/` and
+`final-evidence/` within the upgrade prefix above, downloaded, and SHA-256 verified.
+Evidence includes the frozen-source/target inventories, final acceptance receipt,
+clean shutdown, final snapshot, snapshot recovery and logical restore receipts.
+Both original and target PVs retain the `Retain` reclaim policy.
+The first production encrypted recovery archive was also downloaded, checksum
+verified and decrypted; its globals and system databases restored successfully
+into an isolated PostgreSQL 18 server, with roles, memberships and verifier
+fingerprints matching production.
+
+With explicit cleanup approval, 18 finished rehearsal Jobs, the two temporary
+network policies and the unused temporary backup Secret were removed. Network
+allow/deny tests passed again using production policies alone. No database disk,
+snapshot or recovery archive was deleted.
+
+### Observation still required
+
+Do not declare the upgrade fully accepted before **2026-11-01 16:01:42 UTC** and
+one complete successful scheduled backup cycle. Also confirm the existing weekly
+backup report scheduled for **Monday 2026-11-02 08:30 UTC**; do not manually send
+it as a test. Manual backup jobs are separate evidence, not a scheduled cycle.
+Use the CronJob scheduled-timestamp annotation to distinguish scheduled Jobs.
+
+The `verify-postgresql-18-recovery` heartbeat checks every 30 minutes and remains
+quiet while healthy. It must notify on failures, missing verification access, or
+completion, and pause only after all observation gates pass. Local scheduled
+checks require the owner computer and Codex app to remain running. Keep recovery
+resources through at least 2026-11-30 regardless of observation completion.
