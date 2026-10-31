@@ -34,7 +34,7 @@ spec:
               type: RuntimeDefault
           containers:
           - name: monitor
-            image: prodacr1234.azurecr.io/slack-notifications:main-235fc2b
+            image: prodacr1234.azurecr.io/slack-notifications:main-9f5cfc0
             command:
             - /usr/local/bin/slack-notifications
             args:
