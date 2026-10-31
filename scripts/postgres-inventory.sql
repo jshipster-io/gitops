@@ -8,8 +8,22 @@ SELECT json_build_object('kind','database','name',current_database(),
   'owner',pg_get_userbyid(datdba),'acl',datacl::text,'connection_limit',datconnlimit,
   'template',datistemplate,'allow_connections',datallowconn)
 FROM pg_database WHERE datname=current_database();
-SELECT json_build_object('kind','extension','name',extname,'version',extversion)
-FROM pg_extension ORDER BY extname;
+SELECT json_build_object('kind','extension','name',extname,'version',extversion,
+  'owner',pg_get_userbyid(extowner),'schema',n.nspname)
+FROM pg_extension e JOIN pg_namespace n ON n.oid=e.extnamespace ORDER BY extname;
+SELECT json_build_object('kind','schema','name',nspname,'owner',pg_get_userbyid(nspowner),'acl',nspacl::text)
+FROM pg_namespace WHERE nspname NOT IN ('pg_catalog','information_schema')
+AND nspname NOT LIKE 'pg_toast%' AND nspname NOT LIKE 'pg_temp%' ORDER BY nspname;
+SELECT json_build_object('kind','sequence_definition','schema',n.nspname,'name',c.relname,
+  'type',format_type(s.seqtypid,NULL),'start',seqstart,'increment',seqincrement,
+  'maximum',seqmax,'minimum',seqmin,'cache',seqcache,'cycle',seqcycle)
+FROM pg_sequence s JOIN pg_class c ON c.oid=s.seqrelid JOIN pg_namespace n ON n.oid=c.relnamespace
+ORDER BY n.nspname,c.relname;
+SELECT json_build_object('kind','enum','schema',n.nspname,'name',t.typname,
+  'owner',pg_get_userbyid(t.typowner),'acl',t.typacl::text,
+  'labels',(SELECT json_agg(e.enumlabel ORDER BY e.enumsortorder) FROM pg_enum e WHERE e.enumtypid=t.oid))
+FROM pg_type t JOIN pg_namespace n ON n.oid=t.typnamespace WHERE t.typtype='e'
+AND n.nspname NOT IN ('pg_catalog','information_schema') ORDER BY n.nspname,t.typname;
 SELECT json_build_object('kind','relation','schema',n.nspname,'name',c.relname,
   'type',c.relkind,'owner',pg_get_userbyid(c.relowner),'acl',c.relacl::text,
   'rls',c.relrowsecurity,'force_rls',c.relforcerowsecurity)
