@@ -8,3 +8,6 @@ resources:
 
 generators:
   - secrets-generator.yaml
+
+patches:
+  - path: pod-hardening.patch.yaml

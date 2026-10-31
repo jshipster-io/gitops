@@ -17,4 +17,5 @@ commonLabels:
   app: blutag-app
 
 patches:
+  - path: pod-hardening.patch.yaml
   - path: workload-identity-blutag-app.patch.yaml

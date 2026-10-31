@@ -14,3 +14,6 @@ commonLabels:
   app.kubernetes.io/name: cloudflared
   app.kubernetes.io/component: tunnel
 
+
+patches:
+  - path: pod-hardening.patch.yaml

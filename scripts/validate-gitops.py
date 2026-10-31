@@ -8,6 +8,7 @@ import tempfile
 
 import yaml
 import pod_security
+import workload_hardening
 import workload_identity
 import operator_identity
 
@@ -112,6 +113,7 @@ def validate(root=ROOT):
                     policy_docs.append(doc)
         operator_identity.validate(policy_docs)
         pod_security.validate(policy_docs)
+        workload_hardening.validate(policy_docs)
         workload_identity.validate(policy_docs)
         workload_identity.validate_secret_fields(yaml.safe_load((tree / "workload-identity/profiles.yaml").read_text()), folders=targets)
         print(f"Validated {count} resources; encrypted secret contents are not decrypted in CI.")

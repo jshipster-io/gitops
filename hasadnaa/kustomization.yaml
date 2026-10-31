@@ -12,4 +12,5 @@ generators:
   - secrets-generator.yaml
 
 patches:
+  - path: pod-hardening.patch.yaml
   - path: workload-identity-hasadnaa.patch.yaml

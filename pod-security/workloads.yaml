@@ -1,0 +1,42 @@
+workloads:
+- namespace: hasadnaa
+  kind: Deployment
+  name: hasadnaa
+  uid: 1000
+  kubernetesToken: false
+  reason: No Kubernetes API dependency; Azure federation uses its separate projected
+    token where needed.
+- namespace: drc
+  kind: Deployment
+  name: trainings
+  uid: 65532
+  kubernetesToken: false
+  reason: No Kubernetes API dependency; Azure federation uses its separate projected
+    token where needed.
+- namespace: trips
+  kind: Deployment
+  name: trips
+  uid: 1001
+  kubernetesToken: false
+  reason: No Kubernetes API dependency; Azure federation uses its separate projected
+    token where needed.
+- namespace: blutag
+  kind: Deployment
+  name: blutag-app
+  uid: 1001
+  kubernetesToken: false
+  reason: No Kubernetes API dependency; Azure federation uses its separate projected
+    token where needed.
+- namespace: external-dns
+  kind: Deployment
+  name: external-dns
+  uid: 65534
+  kubernetesToken: true
+  reason: Watches Kubernetes ingress/service resources.
+- namespace: argocd
+  kind: Deployment
+  name: cloudflared
+  uid: 65532
+  kubernetesToken: false
+  reason: No Kubernetes API dependency; Azure federation uses its separate projected
+    token where needed.
