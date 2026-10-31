@@ -1,0 +1,70 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: pg-upgrade-monitor
+  labels: &id001
+    app: pg-upgrade-monitor
+spec:
+  schedule: '*/5 * * * *'
+  timeZone: Etc/UTC
+  suspend: true
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 120
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      activeDeadlineSeconds: 240
+      template:
+        metadata:
+          labels: *id001
+        spec:
+          serviceAccountName: pg-upgrade-monitor
+          automountServiceAccountToken: true
+          restartPolicy: Never
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+          - name: monitor
+            image: prodacr1234.azurecr.io/slack-notifications:main-235fc2b
+            command:
+            - /usr/local/bin/slack-notifications
+            args:
+            - pg-upgrade-monitor
+            env:
+            - name: SLACK_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: slack-notifications-secrets
+                  key: SLACK_TOKEN
+            - name: PG_BACKUP_REPORT_CHANNEL
+              value: C09QJ6769QR
+            resources:
+              requests:
+                cpu: 10m
+                memory: 32Mi
+              limits:
+                cpu: 200m
+                memory: 128Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                - ALL
+            envFrom:
+            - secretRef:
+                name: pg-upgrade-monitor-credentials
+            volumeMounts:
+            - name: pg-ca
+              mountPath: /pg-ca
+              readOnly: true
+          volumes:
+          - name: pg-ca
+            configMap:
+              name: pg-upgrade-monitor-ca
