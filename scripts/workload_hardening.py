@@ -18,6 +18,8 @@ def validate(docs):
         assert spec.get('automountServiceAccountToken') is p['kubernetesToken'] and p['reason'], f'Token policy drift: {key}'
         for c in spec.get('initContainers', []) + spec['containers']:
             s = c.get('securityContext', {})
+            assert s.get('runAsNonRoot') is not False and s.get('runAsUser', p['uid']) == p['uid'], f'Container identity override: {key}'
+            assert s.get('seccompProfile', {'type': 'RuntimeDefault'}).get('type') == 'RuntimeDefault', f'Container seccomp override: {key}'
             assert s.get('allowPrivilegeEscalation') is False and s.get('readOnlyRootFilesystem') is True, f'Writable or escalating container: {key}/{c["name"]}'
             assert s.get('capabilities', {}).get('drop') == ['ALL'] and not s.get('capabilities', {}).get('add'), f'Capabilities drift: {key}'
         for v in spec.get('volumes', []):

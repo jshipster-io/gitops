@@ -40,3 +40,9 @@ workloads:
   kubernetesToken: false
   reason: No Kubernetes API dependency; Azure federation uses its separate projected
     token where needed.
+- namespace: blutag
+  kind: Deployment
+  name: blutag-website
+  uid: 101
+  kubernetesToken: false
+  reason: Static Nginx; writable runtime/cache volumes only, no Kubernetes API access.

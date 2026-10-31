@@ -21,11 +21,12 @@ class HardeningTests(unittest.TestCase):
     def test_accepts_hardened_workload(self):
         workload_hardening.validate([self.doc])
     def test_rejects_regressions_beyond_psa(self):
-        for field in ['token', 'filesystem', 'unbounded', 'missing', 'init']:
+        for field in ['token', 'filesystem', 'unbounded', 'missing', 'init', 'root-override']:
             d = copy.deepcopy(self.doc); s = d['spec']['template']['spec']
             if field == 'token': s['automountServiceAccountToken'] = True
             if field == 'filesystem': s['containers'][0]['securityContext']['readOnlyRootFilesystem'] = False
             if field == 'unbounded': s['volumes'][0]['emptyDir'] = {}
+            if field == 'root-override': s['containers'][0]['securityContext']['runAsUser'] = 0
             if field == 'init': s['initContainers'] = [{'name': 'unsafe'}]
             with self.subTest(field=field), self.assertRaises(AssertionError):
                 workload_hardening.validate([] if field == 'missing' else [d])

@@ -11,3 +11,6 @@ namespace: blutag
 commonLabels:
   app: blutag-website
 
+
+patches:
+  - path: pod-hardening.patch.yaml

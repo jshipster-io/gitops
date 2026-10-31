@@ -23,14 +23,14 @@ namespaces:
     enforce: baseline
     reason: Existing workloads require a staged migration to non-root Restricted settings.
   drc:
-    enforce: baseline
-    reason: Existing workloads require a staged migration to non-root Restricted settings.
+    enforce: restricted
+    reason: Non-root read-only runtime verified before namespace enforcement.
   external-dns:
-    enforce: baseline
-    reason: Existing workloads require a staged migration to non-root Restricted settings.
+    enforce: restricted
+    reason: Non-root read-only runtime verified before namespace enforcement.
   hasadnaa:
-    enforce: baseline
-    reason: Existing workloads require a staged migration to non-root Restricted settings.
+    enforce: restricted
+    reason: Non-root read-only runtime verified before namespace enforcement.
   ids:
     enforce: baseline
     reason: Existing workloads require a staged migration to non-root Restricted settings.
@@ -62,8 +62,8 @@ namespaces:
     enforce: restricted
     reason: Workloads meet Restricted standards.
   trips:
-    enforce: baseline
-    reason: Existing workloads require a staged migration to non-root Restricted settings.
+    enforce: restricted
+    reason: Non-root read-only runtime verified before namespace enforcement.
   webtop-mcp:
     enforce: restricted
     reason: Workloads meet Restricted standards.
