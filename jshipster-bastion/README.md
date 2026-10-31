@@ -40,14 +40,18 @@ as the default recovery procedure.
 
 ## PostgreSQL 18 maintenance tools
 
-Use the pinned `postgres-tools` container for `psql`, `pg_dump`, `pg_restore`, and
-`pg_dumpall` against shared PostgreSQL 18. The SSH container and existing access
-remain unchanged; its older `pg_dump` must not be used for PostgreSQL 18 backups.
+The digest-pinned SSH image includes PostgreSQL 18.6 `psql`, `pg_dump`,
+`pg_restore`, and `pg_dumpall` on the normal SSH command path.
 
 ```sh
-kubectl --context jshipster -n default exec deployment/jshipster-bastion \
-  -c postgres-tools -- pg_dump --version
+ssh -o BatchMode=yes azure-jshipster-bastion 'psql --version; pg_dump --version'
 ```
 
-Pass credentials through protected environment/input, never command history or logs.
-The tools container has no stored database credentials and opens no listener.
+`Dockerfile.postgres18` upgrades the immutable existing bastion image so its SSH
+configuration and host keys survive the database-client update. The resulting
+image passed actual SSH authentication with strict host-key checking and all
+four client version checks before deployment. `Dockerfile` also installs the
+PostgreSQL 18 client for future base rebuilds.
+
+Pass database credentials through protected environment/input, never command
+history or logs. No database credentials are embedded in the image.

@@ -1,0 +1,12 @@
+ARG BASTION_BASE
+FROM ${BASTION_BASE}
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl gnupg && \
+    install -d /usr/share/postgresql-common/pgdg && \
+    curl -fsS https://www.postgresql.org/media/keys/ACCC4CF8.asc -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc && \
+    gpg --show-keys --with-colons /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc | grep -F B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8 && \
+    echo 'deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt jammy-pgdg main' > /etc/apt/sources.list.d/pgdg.list
+RUN apt-get update && apt-get install -y --no-install-recommends postgresql-client-18 && \
+    /usr/lib/postgresql/18/bin/pg_dump --version | grep -F '18.6' && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+ENV PATH=/usr/lib/postgresql/18/bin:$PATH
