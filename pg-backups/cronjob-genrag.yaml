@@ -55,7 +55,7 @@ spec:
                 cpu: "200m"
           containers:
           - name: upload
-            image: mcr.microsoft.com/azure-cli:latest
+            image: mcr.microsoft.com/azure-cli:2.91.0@sha256:933eb8dcb81aecb6f77e03c5b8660f0a1dfa9e1d16525763a27f86ff3b83a044
             command: ["/bin/sh", "-c"]
             args:
             - |

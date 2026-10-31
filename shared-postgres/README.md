@@ -1,9 +1,12 @@
 # Shared PostgreSQL
 
-This application runs the cluster's shared PostgreSQL 17 server in the dedicated
+This application runs the cluster's shared PostgreSQL 18.6 server in the dedicated
 `postgres` namespace. PostgreSQL is provided by the pgvector image so databases
 that require the `vector` extension can share the same server without sharing
 roles, database ownership, or application credentials.
+
+See [UPGRADE-18.md](UPGRADE-18.md) for recovery points, acceptance checks,
+backup retention, and the PostgreSQL 17 rollback boundary.
 
 ## Endpoint
 
@@ -11,9 +14,13 @@ roles, database ownership, or application credentials.
 
 ## Databases and owners
 
-| Database | Login owner | pgvector |
+| Database | Database owner | pgvector |
 |---|---|---|
 | `tivtaam_mcp` | `tivtaam_mcp` | No |
+| `mashov_mcp` | `mashov_mcp` | No |
+| `webtop_mcp` | `webtop_mcp` | No |
+| `multi_whatsapp` | `multi_whatsapp_owner` | No |
+| `postgres` | `postgres` | No |
 | `anpr` | `anpr` | No |
 | `blutag` | `blutag` | No |
 | `dirtbike` | `dirtbike` | Yes |
@@ -21,13 +28,16 @@ roles, database ownership, or application credentials.
 | `ids_embeddings` | `ids_user` | Yes |
 | `trainings` | `trainings` | No |
 
-Application roles are non-superusers and can connect only to their own database.
+`anpr`, Dirtbike, and IDS data remain protected even when their applications are inactive.
+Both templates are included in upgrade recovery validation.
+
+Application roles are non-superusers and are restricted to their own application databases.
 The `anpr_backup` role retains `pg_read_all_data`; the `anpr_reporter` role is
 limited to read access in the ANPR database.
 
 ## Storage and deletion protection
 
-- One 16 GiB `ReadWriteOnce` PVC on the cluster's default Standard SSD class.
+- The active PostgreSQL 18 and retained PostgreSQL 17 servers each have a 16 GiB `ReadWriteOnce` PVC on the cluster's default Standard SSD class.
 - StatefulSet PVC retention is explicitly `Retain` when the StatefulSet is
   deleted or scaled down.
 - The namespace has the Argo CD `Prune=false` sync option so deleting the Argo

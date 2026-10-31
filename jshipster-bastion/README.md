@@ -37,3 +37,21 @@ port-forward permission can use `kubectl --context jshipster -n default
 port-forward service/jshipster-bastion 2222:22`, then connect to localhost:2222
 with the same key and `HostKeyAlias debug.jshipster.io`. Do not reopen public SSH
 as the default recovery procedure.
+
+## PostgreSQL 18 maintenance tools
+
+The digest-pinned SSH image includes PostgreSQL 18.6 `psql`, `pg_dump`,
+`pg_restore`, and `pg_dumpall` on the normal SSH command path.
+
+```sh
+ssh -o BatchMode=yes azure-jshipster-bastion 'psql --version; pg_dump --version'
+```
+
+`Dockerfile.postgres18` upgrades the immutable existing bastion image so its SSH
+configuration and host keys survive the database-client update. The resulting
+image passed actual SSH authentication with strict host-key checking and all
+four client version checks before deployment. `Dockerfile` also installs the
+PostgreSQL 18 client for future base rebuilds.
+
+Pass database credentials through protected environment/input, never command
+history or logs. No database credentials are embedded in the image.

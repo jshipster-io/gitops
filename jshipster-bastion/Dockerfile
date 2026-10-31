@@ -3,10 +3,16 @@ FROM ubuntu:22.04
 # Set non-interactive mode
 ENV DEBIAN_FRONTEND=noninteractive
 
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates curl gnupg && \
+    install -d /usr/share/postgresql-common/pgdg && \
+    curl -fsS https://www.postgresql.org/media/keys/ACCC4CF8.asc -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc && \
+    gpg --show-keys --with-colons /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc | grep -F B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8 && \
+    echo 'deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt jammy-pgdg main' > /etc/apt/sources.list.d/pgdg.list
+
 # Install all required packages
 RUN apt-get update && \
     apt-get install -y \
-    postgresql-client \
+    postgresql-client-18 \
     mysql-client \
     curl \
     netcat-openbsd \
@@ -49,6 +55,8 @@ RUN echo '#!/bin/bash\n\
     # Start SSH daemon\n\
     exec /usr/sbin/sshd -D\n\
     ' > /entrypoint.sh && chmod +x /entrypoint.sh
+
+ENV PATH=/usr/lib/postgresql/18/bin:$PATH
 
 EXPOSE 22
 

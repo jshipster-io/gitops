@@ -8,7 +8,7 @@ metadata:
 spec:
   type: ClusterIP
   selector:
-    app: shared-postgres
+    app: shared-postgres-18
   ports:
     - name: postgres
       port: 5432
