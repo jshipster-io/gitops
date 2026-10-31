@@ -11,5 +11,5 @@ generators:
 images:
 - name: tivtaam-mcp
   newName: prodacr1234.azurecr.io/tivtaam-mcp
-  newTag: main-545758e
-  digest: sha256:570b50ee7a4f98fc3d30e769f7846ba02f15fc4ea1609c0805abc30bbe71c0ee
+  newTag: main-53598b8
+  digest: sha256:6b7a25e8e2b5613fe8680f325f3b5d004b4057f70d76b82bf20cb4e69fbe35ec
