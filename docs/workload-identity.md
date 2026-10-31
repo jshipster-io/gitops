@@ -59,6 +59,6 @@ The separate PostgreSQL upgrade can intentionally suspend Argo reconciliation an
 
 ## Remaining credentials
 
-The separate [GitHub App migration](github-promotion.md) replaced and revoked the cross-repository promotion PAT. Azure federation does not replace the SOPS age key, application/database credentials or third-party API tokens. Storage shared-key access and OpenAI/ACS keys were not disabled account-wide because offline or external consumers require a separate inventory. Their keys were removed from the migrated active workloads' encrypted secrets. Do not rotate or revoke shared credentials without verifying every remaining consumer.
+The separate [GitHub App migration](github-promotion.md) replaced and revoked the cross-repository promotion PAT. Azure federation does not replace the SOPS age key, application/database credentials or third-party API tokens. The subsequent [Azure key-auth retirement](azure-key-auth-retirement.md) inventories remaining consumers and disables Shared Key/local authentication on both storage accounts, all three Azure AI accounts and ACS. Named operator and workload identities preserve current access. Retired applications must migrate their legacy clients before reactivation; do not restore key authentication as a fallback.
 
 For new services, follow the workspace `.agents/skills/scaffold-go-app/SKILL.md` and its platform reference. Add identity profiles only when the application actually calls Azure APIs; ordinary private MCP services do not need a runtime Azure identity.

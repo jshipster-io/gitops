@@ -5,7 +5,10 @@ import yaml
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 FORBIDDEN = {'AZURE_CLIENT_SECRET', 'AZURE_STORAGE_KEY', 'AZURE_STORAGE_ACCOUNT_KEY',
-             'AZURE_OPENAI_KEY', 'PG_BACKUP_STORAGE_KEY', 'ACS_CONNECTION_STRING'}
+             'AZURE_STORAGE_CONNECTION_STRING', 'AZURE_STORAGE_SAS_TOKEN',
+             'AZURE_OPENAI_KEY', 'AZURE_OPENAI_API_KEY', 'AZURE_SPEECH_KEY',
+             'AZURE_DOCUMENT_INTELLIGENCE_KEY', 'ANPR_AZURE_ACCESS_KEY',
+             'PG_BACKUP_STORAGE_KEY', 'ACS_CONNECTION_STRING'}
 
 
 def reject_secret_fields(doc):
@@ -14,8 +17,8 @@ def reject_secret_fields(doc):
     assert not (keys & forbidden), 'Long-lived Azure credential in active encrypted secret: ' + str(keys & forbidden)
 
 
-def validate_secret_fields(config):
-    for folder in {p['folder'] for p in config['workloads']}:
+def validate_secret_fields(config, folders=None):
+    for folder in {p['folder'] for p in config['workloads']} | set(folders or []):
         path = ROOT / folder
         kustomization = yaml.safe_load((path / 'kustomization.yaml').read_text())
         for generator in kustomization.get('generators', []):
@@ -27,6 +30,8 @@ def validate_secret_fields(config):
 def validate(docs, config=None):
     config = config or yaml.safe_load((ROOT / 'workload-identity/profiles.yaml').read_text())
     for doc in docs:
+        if doc['kind'] == 'ConfigMap':
+            assert not (set(doc.get('data', {})) & FORBIDDEN), 'Retired Azure credential in active ConfigMap'
         spec = doc.get('spec', {})
         template = spec.get('jobTemplate', {}).get('spec', {}).get('template', {}) if doc['kind'] == 'CronJob' else spec.get('template', {})
         for container in template.get('spec', {}).get('containers', []) + template.get('spec', {}).get('initContainers', []):

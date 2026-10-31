@@ -1,0 +1,35 @@
+{
+  "subscription": "b76ecd16-669b-4ca9-b797-b7786eb1b334",
+  "resources": [
+    {
+      "kind": "storage",
+      "name": "jshipsterprod410479",
+      "group": "prod-rg"
+    },
+    {
+      "kind": "storage",
+      "name": "tfstateaks1c9c999c",
+      "group": "terraform-state-rg"
+    },
+    {
+      "kind": "cognitive",
+      "name": "jshipster-openai",
+      "group": "prod-rg"
+    },
+    {
+      "kind": "cognitive",
+      "name": "jshipster-docintel",
+      "group": "prod-rg"
+    },
+    {
+      "kind": "cognitive",
+      "name": "jshipster-speech",
+      "group": "prod-rg"
+    },
+    {
+      "kind": "communication",
+      "name": "jshipster-communication",
+      "group": "prod-rg"
+    }
+  ]
+}
