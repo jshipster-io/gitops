@@ -22,18 +22,6 @@ spec:
   ignoreDifferences:
     - group: ''
       kind: ConfigMap
-      name: pg-upgrade-monitor-state
-      namespace: jshipster
-      jsonPointers:
-        - /data/state.json
-    - group: ''
-      kind: ConfigMap
-      name: pg-upgrade-watchdog-state
-      namespace: jshipster
-      jsonPointers:
-        - /data/alerted
-    - group: ''
-      kind: ConfigMap
       name: uptime-health-state
       namespace: jshipster
       jsonPointers:
