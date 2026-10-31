@@ -3,8 +3,8 @@ enabled: true
 generation: 1
 image:
   repository: prodacr1234.azurecr.io/multi-whatsapp
-  tag: main-e29d9b2
-  digest: sha256:21973d47a504775eaa252ae4c190adb5f070cf69dafae657ff2342e59090673e
+  tag: main-b2e18e9
+  digest: sha256:f34ca716a9df407328c55211201a15adb702693e0e52d95771bd9e5ed896937c
 resources:
   requests:
     cpu: 50m
