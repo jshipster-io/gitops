@@ -3,7 +3,13 @@ kind: Namespace
 metadata:
   name: postgres
   annotations:
-    argocd.argoproj.io/sync-options: Prune=false
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false
   labels:
     app.kubernetes.io/name: shared-postgres
     app.kubernetes.io/part-of: shared-databases
+    pod-security.kubernetes.io/enforce: privileged
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/enforce-version: v1.35
+    pod-security.kubernetes.io/warn-version: v1.35
+    pod-security.kubernetes.io/audit-version: v1.35

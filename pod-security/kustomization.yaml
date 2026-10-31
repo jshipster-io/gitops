@@ -1,0 +1,17 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- argocd.yaml
+- blutag.yaml
+- default.yaml
+- dirtbike.yaml
+- drc.yaml
+- external-dns.yaml
+- ids.yaml
+- jshipster.yaml
+- mashov-mcp.yaml
+- pg-backups.yaml
+- tailscale.yaml
+- tivtaam-mcp.yaml
+- trips.yaml
+- webtop-mcp.yaml

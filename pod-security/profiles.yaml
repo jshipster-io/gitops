@@ -1,0 +1,66 @@
+version: v1.35
+phase: audit
+namespaces:
+  argocd:
+    enforce: baseline
+    reason: Existing workloads require a staged migration to non-root Restricted settings.
+  blutag:
+    enforce: baseline
+    reason: Existing workloads require a staged migration to non-root Restricted settings.
+  cert-manager:
+    enforce: restricted
+    reason: Workloads meet Restricted standards.
+  cyberghost-egress:
+    enforce: privileged
+    reason: VPN requires NET_ADMIN and MKNOD; root is required by current image.
+  default:
+    enforce: baseline
+    reason: Existing workloads require a staged migration to non-root Restricted settings.
+  dirtbike:
+    enforce: baseline
+    reason: Existing workloads require a staged migration to non-root Restricted settings.
+  drc:
+    enforce: baseline
+    reason: Existing workloads require a staged migration to non-root Restricted settings.
+  external-dns:
+    enforce: baseline
+    reason: Existing workloads require a staged migration to non-root Restricted settings.
+  hasadnaa:
+    enforce: baseline
+    reason: Existing workloads require a staged migration to non-root Restricted settings.
+  ids:
+    enforce: baseline
+    reason: Existing workloads require a staged migration to non-root Restricted settings.
+  ingress-nginx:
+    enforce: restricted
+    reason: Workloads meet Restricted standards.
+  jshipster:
+    enforce: baseline
+    reason: Existing workloads require a staged migration to non-root Restricted settings.
+  loki:
+    enforce: privileged
+    reason: Alloy requires hostPath access to node logs and runs as root.
+  mashov-mcp:
+    enforce: restricted
+    reason: Workloads meet Restricted standards.
+  multi-whatsapp:
+    enforce: restricted
+    reason: Workloads meet Restricted standards.
+  pg-backups:
+    enforce: baseline
+    reason: Existing workloads require a staged migration to non-root Restricted settings.
+  postgres:
+    enforce: baseline
+    reason: Existing workloads require a staged migration to non-root Restricted settings.
+  tailscale:
+    enforce: privileged
+    reason: Subnet router requires privileged networking containers.
+  tivtaam-mcp:
+    enforce: restricted
+    reason: Workloads meet Restricted standards.
+  trips:
+    enforce: baseline
+    reason: Existing workloads require a staged migration to non-root Restricted settings.
+  webtop-mcp:
+    enforce: restricted
+    reason: Workloads meet Restricted standards.

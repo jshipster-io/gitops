@@ -3,4 +3,12 @@ kind: Namespace
 metadata:
   labels:
     app.kubernetes.io/part-of: traefik-ingress
+    pod-security.kubernetes.io/enforce: privileged
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/enforce-version: v1.35
+    pod-security.kubernetes.io/warn-version: v1.35
+    pod-security.kubernetes.io/audit-version: v1.35
   name: ingress-nginx
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false

@@ -7,6 +7,7 @@ import subprocess
 import tempfile
 
 import yaml
+import pod_security
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 CUSTOM = {"Application", "ApplicationSet", "AppProject", "Certificate", "ClusterIssuer",
@@ -61,6 +62,8 @@ def validate(root=ROOT):
 
         apps = list(yaml.safe_load_all(subprocess.check_output(["kustomize", "build", str(tree / "apps")], text=True)))
         targets = {"apps"}
+        namespaces = {"apps": "argocd"}
+        policy_docs = []
         for app in apps:
             if app["kind"] == "Application":
                 spec = app["spec"]
@@ -68,6 +71,7 @@ def validate(root=ROOT):
                     check_source(source)
                     if "github.com/jshipster-io/gitops" in source.get("repoURL", ""):
                         targets.add(source["path"])
+                        namespaces[source["path"]] = spec["destination"]["namespace"]
             elif app["kind"] == "ApplicationSet":
                 check_source(app["spec"]["template"]["spec"]["source"])
                 for generator in app["spec"]["generators"]:
@@ -84,6 +88,10 @@ def validate(root=ROOT):
                 continue
             rendered = subprocess.check_output(["kustomize", "build", str(path)], text=True)
             count += validate_rendered(rendered)
+            for doc in yaml.safe_load_all(rendered):
+                if doc:
+                    doc.setdefault("metadata", {}).setdefault("namespace", namespaces[target])
+                    policy_docs.append(doc)
             print(f"PASS {target}")
         chart = tree / "multi-whatsapp/worker-chart"
         subprocess.run(["helm", "lint", str(chart), "--set-string",
@@ -96,6 +104,11 @@ def validate(root=ROOT):
                 "--set", f"enabled={str(data['enabled']).lower()}",
                 "--set", f"generation={data['generation']}"], text=True)
             count += validate_rendered(rendered)
+            for doc in yaml.safe_load_all(rendered):
+                if doc:
+                    doc.setdefault("metadata", {}).setdefault("namespace", "multi-whatsapp")
+                    policy_docs.append(doc)
+        pod_security.validate(policy_docs)
         print(f"Validated {count} resources; encrypted secret contents are not decrypted in CI.")
 
 
