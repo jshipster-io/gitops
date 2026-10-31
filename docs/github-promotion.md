@@ -71,3 +71,5 @@ The independent PostgreSQL maintenance may hold Argo reconciliation and applicat
 The guarded retirement run [41217768930](https://github.com/jshipster-io/webtop-mcp/actions/runs/41217768930) checked all 18 successful migration runs and verified that the legacy token was distinct from owner CLI and Argo repository credentials. GitHub accepted revocation of that exact credential, and an authenticated read with it then returned HTTP 401. The obsolete organization secret and one-time retirement workflow were removed afterward. This is credential invalidation evidence, not merely deletion of a secret reference.
 
 Unrelated owner, Argo CD, upstream-sync and downstream-dispatch credentials were preserved. No workload, network policy, database maintenance hold or deployment approval requirement was changed by this migration.
+
+The post-retirement Webtop canary [41218033909](https://github.com/jshipster-io/webtop-mcp/actions/runs/41218033909) passed after the old PAT was invalidated and its secret removed, including token mint, promotion and confirmed token revocation. The audit also rejects any remaining organization or consumer-repository `GITOPS_PAT` secret.

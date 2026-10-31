@@ -24,6 +24,13 @@ def contents(org, repo, path):
 
 def audit_consumer(org, item, config, check_runs):
     repo = item['repo']
+    secret_names = {s['name'] for s in api(f'repos/{org}/{repo}/actions/secrets?per_page=100')['secrets']}
+    assert 'GITOPS_PAT' not in secret_names, 'legacy repository secret still exists'
+    if repo == 'blutag-findmy':
+        assert 'FINDMY_APP_PRIVATE_KEY' in secret_names, 'missing dependency App key'
+        assert api(f'repos/{org}/{repo}/actions/variables/FINDMY_APP_CLIENT_ID')['value'] == config['dependency']['client_id']
+    else:
+        assert 'FINDMY_APP_PRIVATE_KEY' not in secret_names, 'unexpected private dependency key grant'
     source = contents(org, repo, item['workflow'])
     assert 'GITOPS_PAT' not in source, 'legacy PAT reference'
     workflow = yaml.safe_load(source)
@@ -58,8 +65,9 @@ def audit_consumer(org, item, config, check_runs):
     if check_runs:
         head = api(f'repos/{org}/{repo}/commits/main')['sha']
         runs = api(f'repos/{org}/{repo}/actions/runs?branch=main&head_sha={head}&per_page=100')['workflow_runs']
-        runs = [r for r in runs if r['path'] == item['workflow'] and r['event'] != 'pull_request']
-        assert runs, 'no current main CI run'
+        # Scheduled quality/evaluation runs can intentionally skip deployment.
+        runs = [r for r in runs if r['path'] == item['workflow'] and r['event'] == 'push']
+        assert runs, 'no current main push CI run'
         run = max(runs, key=lambda r: r['id'])
         assert run['conclusion'] == 'success', f"CI {run['id']}: {run['status']}/{run['conclusion']}"
         jobs = api(f'repos/{org}/{repo}/actions/runs/{run["id"]}/jobs?per_page=100')['jobs']
@@ -87,6 +95,7 @@ def main():
     root = Path(__file__).resolve().parents[1]
     config = json.loads((root / 'github-promotion/consumers.json').read_text())
     org = config['organization']
+    assert 'GITOPS_PAT' not in {s['name'] for s in api(f'orgs/{org}/actions/secrets?per_page=100')['secrets']}, 'legacy organization secret still exists'
     expected = {x['repo'] for x in config['consumers']}
     installed = {i['app_id']: i for i in api(f'orgs/{org}/installations')['installations']}
     for name in ('promotion', 'dependency'):
