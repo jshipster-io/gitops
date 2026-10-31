@@ -37,3 +37,17 @@ port-forward permission can use `kubectl --context jshipster -n default
 port-forward service/jshipster-bastion 2222:22`, then connect to localhost:2222
 with the same key and `HostKeyAlias debug.jshipster.io`. Do not reopen public SSH
 as the default recovery procedure.
+
+## PostgreSQL 18 maintenance tools
+
+Use the pinned `postgres-tools` container for `psql`, `pg_dump`, `pg_restore`, and
+`pg_dumpall` against shared PostgreSQL 18. The SSH container and existing access
+remain unchanged; its older `pg_dump` must not be used for PostgreSQL 18 backups.
+
+```sh
+kubectl --context jshipster -n default exec deployment/jshipster-bastion \
+  -c postgres-tools -- pg_dump --version
+```
+
+Pass credentials through protected environment/input, never command history or logs.
+The tools container has no stored database credentials and opens no listener.

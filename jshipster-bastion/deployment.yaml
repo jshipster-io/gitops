@@ -55,7 +55,27 @@ spec:
           limits:
             memory: "128Mi"
             cpu: "50m"
+      # Version-matched database maintenance tools share the bastion's network
+      # identity, without replacing its SSH image or storing DB credentials.
+      - name: postgres-tools
+        image: postgres:18.6-alpine@sha256:10a5c69a83035ab5239f5620d708520e8b28f5aa1f2b20143e6024532edadfb5
+        command: ["/bin/sh", "-c", "sleep infinity"]
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1001
+          runAsGroup: 1001
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          capabilities: {drop: [ALL]}
+          seccompProfile: {type: RuntimeDefault}
+        resources:
+          requests: {memory: 16Mi, cpu: 10m}
+          limits: {memory: 256Mi, cpu: 200m}
+        volumeMounts:
+          - {name: postgres-tools-tmp, mountPath: /tmp}
       volumes:
+      - name: postgres-tools-tmp
+        emptyDir: {sizeLimit: 64Mi}
       - name: ssh-keys
         secret:
           secretName: jshipster-bastion-ssh-keys

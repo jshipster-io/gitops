@@ -1,0 +1,135 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: shared-postgres-18
+  namespace: postgres
+  labels:
+    app: shared-postgres-18
+spec:
+  serviceName: shared-postgres-18
+  replicas: 1
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Retain
+    whenScaled: Retain
+  selector:
+    matchLabels:
+      app: shared-postgres-18
+  template:
+    metadata:
+      labels:
+        app: shared-postgres-18
+    spec:
+      securityContext:
+        fsGroup: 999
+        fsGroupChangePolicy: OnRootMismatch
+      terminationGracePeriodSeconds: 60
+      containers:
+      - name: postgres
+        image: pgvector/pgvector:0.8.7-pg18-bookworm@sha256:c29f30688a9ad961691bdf0ec1650717cc132a5814619d80f80463d6e4c42e47
+        imagePullPolicy: IfNotPresent
+        args:
+        - -c
+        - max_connections=200
+        - -c
+        - shared_buffers=256MB
+        - -c
+        - effective_cache_size=1GB
+        - -c
+        - work_mem=4MB
+        - -c
+        - maintenance_work_mem=128MB
+        - -c
+        - wal_compression=on
+        - -c
+        - log_min_duration_statement=1000
+        - -c
+        - ssl=on
+        - -c
+        - ssl_cert_file=/etc/postgresql/tls/tls.crt
+        - -c
+        - ssl_key_file=/etc/postgresql/tls/tls.key
+        - -c
+        - ssl_min_protocol_version=TLSv1.2
+        ports:
+        - name: postgres
+          containerPort: 5432
+          protocol: TCP
+        env:
+        - name: POSTGRES_DB
+          value: postgres
+        - name: POSTGRES_USER
+          value: postgres
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: shared-postgres-secrets
+              key: POSTGRES_ADMIN_PASSWORD
+        - name: POSTGRES_INITDB_ARGS
+          value: --data-checksums --auth-host=scram-sha-256
+        - name: PGDATA
+          value: /var/lib/postgresql/18/docker
+        resources:
+          requests:
+            cpu: 100m
+            memory: 512Mi
+          limits:
+            cpu: '1'
+            memory: 1536Mi
+        readinessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - pg_isready -U postgres -d postgres
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 6
+        livenessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - pg_isready -U postgres -d postgres
+          initialDelaySeconds: 45
+          periodSeconds: 30
+          timeoutSeconds: 5
+          failureThreshold: 5
+        volumeMounts:
+        - name: postgres-data
+          mountPath: /var/lib/postgresql
+        - name: postgres-tls
+          mountPath: /etc/postgresql/tls
+          readOnly: true
+        - name: postgres-root-ca
+          mountPath: /etc/postgresql/ca
+          readOnly: true
+      volumes:
+      - name: postgres-tls
+        secret:
+          secretName: shared-postgres-server-tls
+          items:
+          - key: tls.crt
+            path: tls.crt
+            mode: 292
+          - key: tls.key
+            path: tls.key
+            mode: 288
+      - name: postgres-root-ca
+        secret:
+          secretName: shared-postgres-root-ca
+          items:
+          - key: tls.crt
+            path: ca.crt
+            mode: 292
+  volumeClaimTemplates:
+  - metadata:
+      name: postgres-data
+      labels:
+        app: shared-postgres-18
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 16Gi

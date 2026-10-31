@@ -23,7 +23,7 @@ spec:
           restartPolicy: OnFailure
           initContainers:
           - name: pg-dump
-            image: postgres:17-alpine
+            image: postgres:18.6-alpine@sha256:10a5c69a83035ab5239f5620d708520e8b28f5aa1f2b20143e6024532edadfb5
             command: ["/bin/sh", "-c"]
             args:
             - |
@@ -61,12 +61,12 @@ spec:
                 cpu: "200m"
           containers:
           - name: upload
-            image: mcr.microsoft.com/azure-cli:latest
+            image: mcr.microsoft.com/azure-cli:2.91.0@sha256:933eb8dcb81aecb6f77e03c5b8660f0a1dfa9e1d16525763a27f86ff3b83a044
             command: ["/bin/sh", "-c"]
             args:
             - |
               set -e
-              python3 /var/run/azure-workload-login/login.py
+              PYTHONPATH=/usr/lib64/az/lib/python3.12/site-packages python3.12 /var/run/azure-workload-login/login.py
               set -e
               TIMESTAMP=$(date +%Y-%m-%d)
               FILENAME="trainings-${TIMESTAMP}.sql.gz"

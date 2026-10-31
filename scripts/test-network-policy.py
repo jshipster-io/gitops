@@ -59,6 +59,15 @@ def connection(src, dst, port):
 
 
 class NetworkPolicyTests(unittest.TestCase):
+    def test_postgres_18_access_matrix(self):
+        target = ("postgres", {"app": "shared-postgres-18"})
+        self.assertTrue(connection(("pg-backups", {"app": "pg-backup"}), target, 5432))
+        self.assertTrue(connection(("postgres", {"app": "shared-postgres-backup"}), target, 5432))
+        self.assertFalse(connection(("default", {"app": "unrelated"}), target, 5432))
+        for ns in ("mashov-mcp", "webtop-mcp", "tivtaam-mcp"):
+            self.assertTrue(connection((ns, {"app": ns}), target, 5432))
+        self.assertTrue(connection(("multi-whatsapp", {"app.kubernetes.io/name": "multi-whatsapp-worker"}), target, 5432))
+
     def test_connection_matrix(self):
         db = ("postgres", {"app": "shared-postgres"})
         outsider = ("default", {"app": "unrelated"})

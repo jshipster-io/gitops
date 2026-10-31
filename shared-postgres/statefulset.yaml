@@ -7,7 +7,8 @@ metadata:
     app: shared-postgres
 spec:
   serviceName: shared-postgres
-  replicas: 1
+  # Retained PostgreSQL 17 rollback volume; never start alongside the writer.
+  replicas: 0
   persistentVolumeClaimRetentionPolicy:
     whenDeleted: Retain
     whenScaled: Retain
