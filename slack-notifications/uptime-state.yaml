@@ -11,6 +11,9 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: uptime-check
+  annotations:
+    azure.workload.identity/client-id: "4b0fa0be-5468-4d92-b083-14c6a010dacb"
+    azure.workload.identity/tenant-id: "4816ec0c-0a79-49e4-8844-2077c7c79460"
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role

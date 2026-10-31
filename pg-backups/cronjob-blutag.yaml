@@ -18,6 +18,7 @@ spec:
           labels:
             app: pg-backup
             database: blutag
+            azure.workload.identity/use: 'true'
         spec:
           restartPolicy: OnFailure
           initContainers:
@@ -65,12 +66,14 @@ spec:
             args:
             - |
               set -e
+              python3 /var/run/azure-workload-login/login.py
+              set -e
               TIMESTAMP=$(date +%Y-%m-%d)
               FILENAME="blutag-${TIMESTAMP}.sql.gz"
               echo "Uploading to pg-backups/blutag/${TIMESTAMP}.sql.gz..."
               az storage blob upload \
                 --account-name "${AZURE_STORAGE_ACCOUNT}" \
-                --account-key "${AZURE_STORAGE_KEY}" \
+                --auth-mode login \
                 --container-name pg-backups \
                 --name "blutag/${TIMESTAMP}.sql.gz" \
                 --file "/backups/${FILENAME}" \
@@ -82,14 +85,16 @@ spec:
                 secretKeyRef:
                   name: pg-backup-secrets
                   key: AZURE_STORAGE_ACCOUNT
-            - name: AZURE_STORAGE_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: pg-backup-secrets
-                  key: AZURE_STORAGE_KEY
+            - name: AZURE_CONFIG_DIR
+              value: /tmp/azure
+            - name: AZURE_STORAGE_AUTH_MODE
+              value: login
             volumeMounts:
             - name: backup-data
               mountPath: /backups
+            - name: azure-workload-login
+              mountPath: /var/run/azure-workload-login
+              readOnly: true
             resources:
               requests:
                 memory: "32Mi"
@@ -101,3 +106,8 @@ spec:
           - name: backup-data
             emptyDir:
               sizeLimit: 1Gi
+          - name: azure-workload-login
+            configMap:
+              name: azure-workload-login
+              defaultMode: 292
+          serviceAccountName: pg-backups

@@ -1,0 +1,18 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: pg-backup-report
+spec:
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            azure.workload.identity/use: 'true'
+        spec:
+          serviceAccountName: azure-backup-reporter
+          containers:
+          - name: pg-backup-report
+            env:
+            - name: PG_BACKUP_STORAGE_KEY
+              $patch: delete

@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blutag-app
+spec:
+  template:
+    metadata:
+      labels:
+        azure.workload.identity/use: 'true'
+    spec:
+      serviceAccountName: blutag-app
+      containers:
+      - name: blutag-app
+        env:
+        - name: AZURE_OPENAI_KEY
+          $patch: delete
+        - name: ACS_CONNECTION_STRING
+          $patch: delete
+        - name: ACS_ENDPOINT
+          valueFrom:
+            secretKeyRef:
+              name: blutag-acs-secret
+              key: ACS_ENDPOINT

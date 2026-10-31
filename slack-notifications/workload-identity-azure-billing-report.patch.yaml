@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: azure-billing-report
+spec:
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            azure.workload.identity/use: 'true'
+        spec:
+          serviceAccountName: azure-billing-reporter
+          containers:
+          - name: billing-reporter
+            env:
+            - name: AZURE_CLIENT_ID
+              $patch: delete
+            - name: AZURE_TENANT_ID
+              $patch: delete
+            - name: AZURE_CLIENT_SECRET
+              $patch: delete

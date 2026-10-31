@@ -4,6 +4,7 @@ kind: Kustomization
 namespace: loki
 
 resources:
+  - serviceaccount-loki.yaml
   - namespace.yaml
   - configmap.yaml
   - statefulset.yaml
@@ -20,3 +21,6 @@ configMapGenerator:
 
 generators:
   - secrets-auth-generator.yaml  # SOPS-encrypted secrets (loki-auth and loki-azure-storage)
+
+patches:
+  - path: workload-identity-loki.patch.yaml

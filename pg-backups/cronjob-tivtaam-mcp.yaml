@@ -15,7 +15,7 @@ spec:
       activeDeadlineSeconds: 1800
       template:
         metadata:
-          labels: {app: pg-backup, database: tivtaam-mcp}
+          labels: {app: pg-backup, database: tivtaam-mcp, azure.workload.identity/use: 'true'}
         spec:
           restartPolicy: OnFailure
           automountServiceAccountToken: false
@@ -67,6 +67,8 @@ spec:
               command: [/bin/sh, -ec]
               args:
                 - |
+                  set -e
+                  python3 /var/run/azure-workload-login/login.py
                   BACKUP_DATE=$(cat /backups/date)
                   az storage blob upload --container-name pg-backups \
                     --name "tivtaam_mcp/${BACKUP_DATE}.sql.gz" \
@@ -78,9 +80,8 @@ spec:
                 - name: AZURE_STORAGE_ACCOUNT
                   valueFrom:
                     secretKeyRef: {name: pg-backup-secrets, key: AZURE_STORAGE_ACCOUNT}
-                - name: AZURE_STORAGE_KEY
-                  valueFrom:
-                    secretKeyRef: {name: pg-backup-secrets, key: AZURE_STORAGE_KEY}
+                - name: AZURE_STORAGE_AUTH_MODE
+                  value: login
               securityContext:
                 readOnlyRootFilesystem: true
                 allowPrivilegeEscalation: false
@@ -88,6 +89,9 @@ spec:
               volumeMounts:
                 - {name: backup-data, mountPath: /backups, readOnly: true}
                 - {name: tmp, mountPath: /tmp}
+                - name: azure-workload-login
+                  mountPath: /var/run/azure-workload-login
+                  readOnly: true
               resources:
                 requests: {memory: 64Mi, cpu: 10m}
                 limits: {memory: 512Mi, cpu: 200m}
@@ -102,3 +106,8 @@ spec:
                 defaultMode: 0440
                 items:
                   - {key: postgres-ca.crt, path: postgres-ca.crt}
+            - name: azure-workload-login
+              configMap:
+                name: azure-workload-login
+                defaultMode: 292
+          serviceAccountName: pg-backups

@@ -1,0 +1,137 @@
+tenantID: 4816ec0c-0a79-49e4-8844-2077c7c79460
+issuer: https://eastus.oic.prod-aks.azure.com/4816ec0c-0a79-49e4-8844-2077c7c79460/bf0d37e5-a88d-4e76-94a9-e72a32b63634/
+workloads:
+- identity: hasadnaa
+  folder: hasadnaa
+  namespace: hasadnaa
+  serviceAccount: hasadnaa
+  kind: Deployment
+  name: hasadnaa
+  container: hasadnaa
+  remove:
+  - AZURE_STORAGE_ACCOUNT_KEY
+  clientID: 86a0236a-9432-47b3-83d0-a7f335a7e73f
+- identity: blutag-openai
+  folder: blutag-app
+  namespace: blutag
+  serviceAccount: blutag-app
+  kind: Deployment
+  name: blutag-app
+  container: blutag-app
+  remove:
+  - AZURE_OPENAI_KEY
+  - ACS_CONNECTION_STRING
+  clientID: 6aee0e51-4ef5-40c0-8da7-054cff58b04c
+- identity: loki
+  folder: loki
+  namespace: loki
+  serviceAccount: loki
+  kind: StatefulSet
+  name: loki
+  container: loki
+  remove:
+  - AZURE_STORAGE_KEY
+  clientID: af091dac-b231-4198-b65f-80d333df21ea
+- identity: slack-notifications
+  folder: slack-notifications
+  namespace: jshipster
+  serviceAccount: uptime-check
+  kind: Deployment
+  name: slack-notifications
+  container: slack-notifications
+  remove: []
+  clientID: 4b0fa0be-5468-4d92-b083-14c6a010dacb
+- identity: azure-billing
+  folder: slack-notifications
+  namespace: jshipster
+  serviceAccount: azure-billing-reporter
+  kind: CronJob
+  name: azure-billing-report
+  container: billing-reporter
+  remove:
+  - AZURE_CLIENT_ID
+  - AZURE_TENANT_ID
+  - AZURE_CLIENT_SECRET
+  clientID: 4aa0ab00-3267-4846-bc05-78290b5e02c9
+- identity: backup-report
+  folder: slack-notifications
+  namespace: jshipster
+  serviceAccount: azure-backup-reporter
+  kind: CronJob
+  name: pg-backup-report
+  container: pg-backup-report
+  remove:
+  - PG_BACKUP_STORAGE_KEY
+  clientID: 03efaa9d-cd32-4dba-8cb8-8c8e0c2632ff
+- identity: pg-backups
+  folder: pg-backups
+  namespace: pg-backups
+  serviceAccount: pg-backups
+  kind: CronJob
+  name: pg-backup-tivtaam-mcp
+  clientID: df936683-b0a0-401c-8d6f-13317c93a70a
+  remove:
+  - AZURE_STORAGE_KEY
+- identity: pg-backups
+  folder: pg-backups
+  namespace: pg-backups
+  serviceAccount: pg-backups
+  kind: CronJob
+  name: pg-backup-webtop-mcp
+  clientID: df936683-b0a0-401c-8d6f-13317c93a70a
+  remove:
+  - AZURE_STORAGE_KEY
+- identity: pg-backups
+  folder: pg-backups
+  namespace: pg-backups
+  serviceAccount: pg-backups
+  kind: CronJob
+  name: pg-backup-multi-whatsapp
+  clientID: df936683-b0a0-401c-8d6f-13317c93a70a
+  remove:
+  - AZURE_STORAGE_KEY
+- identity: pg-backups
+  folder: pg-backups
+  namespace: pg-backups
+  serviceAccount: pg-backups
+  kind: CronJob
+  name: pg-backup-ids
+  clientID: df936683-b0a0-401c-8d6f-13317c93a70a
+  remove:
+  - AZURE_STORAGE_KEY
+- identity: pg-backups
+  folder: pg-backups
+  namespace: pg-backups
+  serviceAccount: pg-backups
+  kind: CronJob
+  name: pg-backup-dirtbike
+  clientID: df936683-b0a0-401c-8d6f-13317c93a70a
+  remove:
+  - AZURE_STORAGE_KEY
+- identity: pg-backups
+  folder: pg-backups
+  namespace: pg-backups
+  serviceAccount: pg-backups
+  kind: CronJob
+  name: pg-backup-hasadnaa
+  clientID: df936683-b0a0-401c-8d6f-13317c93a70a
+  remove:
+  - AZURE_STORAGE_KEY
+- identity: pg-backups
+  folder: pg-backups
+  namespace: pg-backups
+  serviceAccount: pg-backups
+  kind: CronJob
+  name: pg-backup-blutag
+  clientID: df936683-b0a0-401c-8d6f-13317c93a70a
+  remove:
+  - AZURE_STORAGE_KEY
+- identity: pg-backups
+  folder: pg-backups
+  namespace: pg-backups
+  serviceAccount: pg-backups
+  kind: CronJob
+  name: pg-backup-trainings
+  clientID: df936683-b0a0-401c-8d6f-13317c93a70a
+  remove:
+  - AZURE_STORAGE_KEY

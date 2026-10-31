@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: loki
+  namespace: loki
+spec:
+  template:
+    metadata:
+      labels:
+        azure.workload.identity/use: 'true'
+    spec:
+      serviceAccountName: loki
+      containers:
+      - name: loki
+        env:
+        - name: AZURE_STORAGE_KEY
+          $patch: delete

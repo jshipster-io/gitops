@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hasadnaa
+spec:
+  template:
+    metadata:
+      labels:
+        azure.workload.identity/use: 'true'
+    spec:
+      serviceAccountName: hasadnaa
+      containers:
+      - name: hasadnaa
+        env:
+        - name: AZURE_STORAGE_ACCOUNT_KEY
+          $patch: delete

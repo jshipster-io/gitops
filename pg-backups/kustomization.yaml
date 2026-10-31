@@ -14,6 +14,8 @@ resources:
   # ANPR retired 2026-10-30; retain the manifest but prune the CronJob.
   # - cronjob-anpr.yaml
 
+  - workload-identity-serviceaccount.yaml
+  - workload-identity-login.yaml
 generators:
   - tivtaam-mcp-secrets-generator.yaml
   - webtop-mcp-secrets-generator.yaml

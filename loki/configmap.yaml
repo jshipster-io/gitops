@@ -58,7 +58,8 @@ data:
         cache_location: /loki/tsdb-cache
       azure:
         account_name: ${AZURE_STORAGE_ACCOUNT}
-        account_key: ${AZURE_STORAGE_KEY}
+        use_federated_token: true
+        user_assigned_id: ${AZURE_CLIENT_ID}
         container_name: loki-logs
         endpoint_suffix: blob.core.windows.net
     

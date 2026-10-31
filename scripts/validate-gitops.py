@@ -8,6 +8,7 @@ import tempfile
 
 import yaml
 import pod_security
+import workload_identity
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 CUSTOM = {"Application", "ApplicationSet", "AppProject", "Certificate", "ClusterIssuer",
@@ -109,6 +110,8 @@ def validate(root=ROOT):
                     doc.setdefault("metadata", {}).setdefault("namespace", "multi-whatsapp")
                     policy_docs.append(doc)
         pod_security.validate(policy_docs)
+        workload_identity.validate(policy_docs)
+        workload_identity.validate_secret_fields(yaml.safe_load((tree / "workload-identity/profiles.yaml").read_text()))
         print(f"Validated {count} resources; encrypted secret contents are not decrypted in CI.")
 
 
