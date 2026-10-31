@@ -31,5 +31,9 @@
       "name": "jshipster-communication",
       "group": "prod-rg"
     }
-  ]
+  ],
+  "ocr_operator": {
+    "client_id": "0a1af33a-846f-49ae-8df7-9df46a0c6751",
+    "tenant_id": "4816ec0c-0a79-49e4-8844-2077c7c79460"
+  }
 }

@@ -33,8 +33,8 @@ account is maintained by `setup-backend.sh`, which disables Shared Key and uses
 `--auth-mode login` for container access. Both the Terraform backend and AzureRM
 provider explicitly select Entra storage authentication. Key/connection-string
 outputs are removed. Named owner data roles enable interactive OpenAI, Speech
-and OCR v3.1 metadata access; OCR v4 delegated-user access remains unresolved
-(see below). CI identities do not receive those roles.
+and OCR v3.1 metadata access. OCR v4 uses the isolated operator federation
+described below. CI identities do not receive those roles.
 
 Terraform CI runs mocked plans asserting the resource settings plus checks for
 identity-only backend/provider/bootstrap configuration and absent key exports.
@@ -73,12 +73,12 @@ The original keys passed baseline requests before cutover. After cutover:
 - The live backup CronJob template uploads/downloads/verifies/deletes synthetic
   content using workload identity, without dumping or reading application data.
 
-Exact post-change Cognitive Services old-key data-plane probes remain unverified:
-Azure stopped returning their keys, and automatic approval review rejected
-recovering the pre-change values from the temporary Terraform plan. No alternate
-credential source was used. Azure documents a possible gateway propagation delay;
-control-plane success and blocked key retrieval are not an exact old-key rejection
-measurement. Do not describe that test as passed.
+After explicit owner authorization, both protected pre-change keys for each of
+OpenAI, Document Intelligence and Speech were used only in process memory for
+negative requests. All six requests returned HTTP 403. The request targets matched
+the pre-cutover API probes. No keys or response bodies were printed or written.
+The earlier approval blocker is resolved; this is now a data-plane rejection
+measurement, not merely a disabled-setting check.
 
 No email/Slack notification was sent, no service image was manually changed, and
 no unrelated database-maintenance or network-policy setting was modified.
@@ -95,19 +95,55 @@ References: [Storage Shared Key retirement](https://learn.microsoft.com/en-us/az
   The final targeted Terraform plan reported no changes.
 - Loki's service-account federation uploaded/read/deleted synthetic content in
   its own container and was denied access to the PostgreSQL backup container.
-- Owner Entra access passed OpenAI embeddings, Speech voice metadata and Document
-  Intelligence v3.1 model metadata. Document Intelligence v4 model metadata
-  returned HTTP 401 with the same delegated token. No active deployment consumes
-  that OCR endpoint, but full owner v4 access is **not** verified/preserved.
+- Owner Entra access passes OpenAI embeddings, Speech voice metadata and Document
+  Intelligence v3.1 model metadata. The delegated user token still does not serve
+  OCR v4; the new app-only operator identity passes v4 model metadata and correctly
+  recognizes a generated synthetic PDF page. It is denied unrelated OpenAI access.
+- Following the isolated operator deployment, all 32 Argo applications were
+  Healthy/Synced. No existing service workload was replaced for this change.
 
-Run `python3 scripts/verify-azure-key-auth.py --check-owner-ai` to include these
-operator checks. It deliberately exits nonzero while v4 access remains broken;
-it does not substitute v3.1 and report v4 success. The default audit checks the
-six authentication controls and Entra state access, not all operator APIs.
+## Isolated OCR v4 operator access
 
-Automatic approval review rejected a proposed new operator managed identity,
-Kubernetes federation and OCR data role because a service account in the default
-namespace could be acquired by other workloads. The command did not execute;
-no operator identity/federation was created. An approved, appropriately isolated
-access design and successful v4 verification remain necessary before claiming
-full operator access. Keys remain disabled. CI has no human approval gate.
+Terraform owns `jshipster-docintel-operator`, its sole federation subject
+`system:serviceaccount:azure-operators:docintel-operator`, and the
+`Cognitive Services User` role scoped only to `jshipster-docintel`.
+It has no client secret/certificate and no CI role or grant.
+
+GitOps owns a dedicated `azure-operators` namespace with Restricted PSA,
+default-deny ingress/egress, zero pod/secret quota and explicit admission denial
+of pods and secrets (including legacy service-account tokens). No workloads run
+there. The service account disables automounting and has no Kubernetes role of
+its own. A named-owner RoleBinding permits only that service account's TokenRequest.
+
+Fail-closed admission additionally restricts TokenRequests to the owner's Entra
+object ID, the exact service account, the Azure exchange audience and 600-second
+lifetime. It uses the namespace name, not a removable label selector. The resulting
+Azure access token has Azure's own expiry (not necessarily 600 seconds); the helper
+keeps both tokens in memory, prints neither, and refuses HTTP redirects.
+Cluster administrators who can modify these admission policies remain trusted.
+
+The live tests deny an otherwise privileged Argo controller's token request,
+owner requests with excessive lifetime/wrong audience, a pod using the account,
+and a persistent token Secret. Pod/Secret tests use server dry-run only.
+These policies do not change token issuance in other namespaces.
+
+```sh
+python3 scripts/verify-ocr-isolation.py --kubeconfig /Users/elad/.kube/prod-aks-entra
+python3 scripts/ocr_operator.py --kubeconfig /Users/elad/.kube/prod-aks-entra --analyze-synthetic
+python3 scripts/verify-azure-key-auth.py --check-owner-ai --kubeconfig /Users/elad/.kube/prod-aks-entra
+```
+
+The default auth audit remains read-only settings/state-metadata verification.
+The owner audit verifies v4 using the isolated identity rather than substituting
+v3.1 success. Application OCR clients must use their own scoped workload identity;
+they must never reuse the operator identity. The helper's `token()` and `request()`
+functions provide the owner CLI's in-memory v4 access path.
+
+Eight GitOps regression tests reject weakened isolation, and the standard gate
+checks the rendered controls. Terraform's mocked plan asserts the exact subject,
+audience and OCR-only role scope. Both hosted pipelines remain automatic with no
+human approval gate. The owner explicitly approved this isolated design after
+the earlier default-namespace proposal was rejected; that rejected design was
+never applied.
+
+Admission behavior follows the [Kubernetes validating admission policy contract](https://kubernetes.io/docs/reference/access-authn-authz/validating-admission-policy/).

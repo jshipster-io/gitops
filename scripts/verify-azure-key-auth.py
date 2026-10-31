@@ -6,10 +6,14 @@ from pathlib import Path
 import subprocess
 import urllib.request
 import urllib.error
+import ocr_operator
 
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('--check-owner-ai', action='store_true', help='Verify operator AI access with one synthetic embedding and metadata reads')
+parser.add_argument('--kubeconfig', help='Explicit owner kubeconfig for isolated OCR v4 verification')
 args = parser.parse_args()
+if args.check_owner_ai and not args.kubeconfig:
+    parser.error('--check-owner-ai requires --kubeconfig for the isolated OCR identity')
 
 root = Path(__file__).resolve().parents[1]
 config = json.loads((root / "azure-auth/resources.json").read_text())
@@ -42,12 +46,12 @@ if args.check_owner_ai:
         ('Document Intelligence v3.1', 'https://jshipster-docintel.cognitiveservices.azure.com/formrecognizer/documentModels?api-version=2023-07-31', token, None),
         ('Speech', 'https://jshipster-speech.cognitiveservices.azure.com/tts/cognitiveservices/voices/list', 'aad#' + speech_id + '#' + token, None),
     ]
-    checks.append(('Document Intelligence v4', 'https://jshipster-docintel.cognitiveservices.azure.com/documentintelligence/documentModels?api-version=2024-11-30', token, None))
+    checks.append(('Document Intelligence v4 isolated operator', 'https://jshipster-docintel.cognitiveservices.azure.com/documentintelligence/documentModels?api-version=2024-11-30', ocr_operator.token(args.kubeconfig), None))
     failures = []
     for name, url, bearer, body in checks:
         request = urllib.request.Request(url, data=body, headers={'Authorization': 'Bearer ' + bearer, 'Content-Type': 'application/json'})
         try:
-            with urllib.request.urlopen(request, timeout=30) as response:
+            with ocr_operator.HTTP.open(request, timeout=30) as response:
                 status = response.status
         except urllib.error.HTTPError as error:
             status = error.code
