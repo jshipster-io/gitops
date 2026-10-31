@@ -44,6 +44,11 @@ print(f'PASS: {checked} live controller/job templates admitted (server dry-run)'
 for ns,p in profiles.items():
     if config['phase']!='enforce' or p['enforce']=='privileged':continue
     safe={'apiVersion':'v1','kind':'Pod','metadata':{'name':'psa-admission-proof','namespace':ns},'spec':{'automountServiceAccountToken':False,'securityContext':{'runAsNonRoot':True,'runAsUser':1001,'seccompProfile':{'type':'RuntimeDefault'}},'containers':[{'name':'probe','image':'alpine:3.23','securityContext':{'allowPrivilegeEscalation':False,'capabilities':{'drop':['ALL']}}}]}}
+    if ns == 'azure-operators':
+        r=submit(safe)
+        assert r.returncode != 0 and 'operator namespace cannot run pods' in r.stderr, 'Operator no-workloads admission weakened: '+r.stderr
+        print('PASS:',ns,'intentionally rejects even compliant pods',flush=True)
+        continue
     assert submit(safe).returncode==0, ns+': compliant pod rejected'
     bad=copy.deepcopy(safe);bad['spec']['containers'][0]['securityContext'].update({'privileged':True,'allowPrivilegeEscalation':True})
     r=submit(bad)

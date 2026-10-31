@@ -28,6 +28,7 @@ generators:
   - gcp-secrets-generator.yaml
 
 patches:
+  - path: pod-hardening.patch.yaml
   - path: workload-identity-pg-backup-report.patch.yaml
   - path: workload-identity-azure-billing-report.patch.yaml
   - path: workload-identity-slack-notifications.patch.yaml

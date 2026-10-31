@@ -1,0 +1,315 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: slack-notifications
+spec:
+  template:
+    spec:
+      automountServiceAccountToken: true
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: slack-notifications
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+        volumeMounts:
+        - name: runtime-tmp
+          mountPath: /tmp
+      volumes:
+      - name: runtime-tmp
+        emptyDir:
+          sizeLimit: 32Mi
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: azure-billing-report
+spec:
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          automountServiceAccountToken: false
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
+            fsGroup: 1001
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+          - name: billing-reporter
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                - ALL
+            volumeMounts:
+            - name: runtime-tmp
+              mountPath: /tmp
+            command:
+            - /app/slack-notifications
+          volumes:
+          - name: runtime-tmp
+            emptyDir:
+              sizeLimit: 32Mi
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: blutag-findmy-status-check
+spec:
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          automountServiceAccountToken: false
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
+            fsGroup: 1001
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+          - name: blutag-findmy-status-checker
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                - ALL
+            volumeMounts:
+            - name: runtime-tmp
+              mountPath: /tmp
+            command:
+            - /app/slack-notifications
+          volumes:
+          - name: runtime-tmp
+            emptyDir:
+              sizeLimit: 32Mi
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: hasadnaa-weekly-summary
+spec:
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          automountServiceAccountToken: false
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
+            fsGroup: 1001
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+          - name: hasadnaa-weekly-summary
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                - ALL
+            volumeMounts:
+            - name: runtime-tmp
+              mountPath: /tmp
+            command:
+            - /app/slack-notifications
+          volumes:
+          - name: runtime-tmp
+            emptyDir:
+              sizeLimit: 32Mi
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: blutag-weekly-summary
+spec:
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          automountServiceAccountToken: false
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
+            fsGroup: 1001
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+          - name: blutag-weekly-summary
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                - ALL
+            volumeMounts:
+            - name: runtime-tmp
+              mountPath: /tmp
+            command:
+            - /app/slack-notifications
+          volumes:
+          - name: runtime-tmp
+            emptyDir:
+              sizeLimit: 32Mi
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: pg-backup-report
+spec:
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          automountServiceAccountToken: false
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
+            fsGroup: 1001
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+          - name: pg-backup-report
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                - ALL
+            volumeMounts:
+            - name: runtime-tmp
+              mountPath: /tmp
+            command:
+            - /app/slack-notifications
+          volumes:
+          - name: runtime-tmp
+            emptyDir:
+              sizeLimit: 32Mi
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: uptime-check
+spec:
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          automountServiceAccountToken: true
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
+            fsGroup: 1001
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+          - name: uptime-check
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                - ALL
+            volumeMounts:
+            - name: runtime-tmp
+              mountPath: /tmp
+            command:
+            - /app/slack-notifications
+          volumes:
+          - name: runtime-tmp
+            emptyDir:
+              sizeLimit: 32Mi
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: drc-weekly-summary
+spec:
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          automountServiceAccountToken: false
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
+            fsGroup: 1001
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+          - name: drc-weekly-summary
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                - ALL
+            volumeMounts:
+            - name: runtime-tmp
+              mountPath: /tmp
+            command:
+            - /app/slack-notifications
+          volumes:
+          - name: runtime-tmp
+            emptyDir:
+              sizeLimit: 32Mi
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: gcp-billing-report
+spec:
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          automountServiceAccountToken: false
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
+            fsGroup: 1001
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+          - name: billing-reporter
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                - ALL
+            volumeMounts:
+            - name: runtime-tmp
+              mountPath: /tmp
+            command:
+            - /app/slack-notifications
+          volumes:
+          - name: runtime-tmp
+            emptyDir:
+              sizeLimit: 32Mi

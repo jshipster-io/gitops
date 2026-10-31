@@ -46,3 +46,64 @@ workloads:
   uid: 101
   kubernetesToken: false
   reason: Static Nginx; writable runtime/cache volumes only, no Kubernetes API access.
+- namespace: jshipster
+  kind: Deployment
+  name: slack-notifications
+  uid: 1001
+  kubernetesToken: true
+  reason: Persists uptime recovery state through its scoped ConfigMap RBAC.
+- namespace: jshipster
+  kind: CronJob
+  name: azure-billing-report
+  uid: 1001
+  kubernetesToken: false
+  reason: No Kubernetes API dependency; preserve separately projected Azure tokens
+    and mounted GCP credentials.
+- namespace: jshipster
+  kind: CronJob
+  name: blutag-findmy-status-check
+  uid: 1001
+  kubernetesToken: false
+  reason: No Kubernetes API dependency; preserve separately projected Azure tokens
+    and mounted GCP credentials.
+- namespace: jshipster
+  kind: CronJob
+  name: hasadnaa-weekly-summary
+  uid: 1001
+  kubernetesToken: false
+  reason: No Kubernetes API dependency; preserve separately projected Azure tokens
+    and mounted GCP credentials.
+- namespace: jshipster
+  kind: CronJob
+  name: blutag-weekly-summary
+  uid: 1001
+  kubernetesToken: false
+  reason: No Kubernetes API dependency; preserve separately projected Azure tokens
+    and mounted GCP credentials.
+- namespace: jshipster
+  kind: CronJob
+  name: pg-backup-report
+  uid: 1001
+  kubernetesToken: false
+  reason: No Kubernetes API dependency; preserve separately projected Azure tokens
+    and mounted GCP credentials.
+- namespace: jshipster
+  kind: CronJob
+  name: uptime-check
+  uid: 1001
+  kubernetesToken: true
+  reason: Persists uptime recovery state through its scoped ConfigMap RBAC.
+- namespace: jshipster
+  kind: CronJob
+  name: drc-weekly-summary
+  uid: 1001
+  kubernetesToken: false
+  reason: No Kubernetes API dependency; preserve separately projected Azure tokens
+    and mounted GCP credentials.
+- namespace: jshipster
+  kind: CronJob
+  name: gcp-billing-report
+  uid: 1001
+  kubernetesToken: false
+  reason: No Kubernetes API dependency; preserve separately projected Azure tokens
+    and mounted GCP credentials.
