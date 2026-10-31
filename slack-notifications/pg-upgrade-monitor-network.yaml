@@ -1,0 +1,94 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: pg-upgrade-monitor
+spec:
+  podSelector:
+    matchLabels:
+      app: pg-upgrade-monitor
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress: []
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: postgres
+      podSelector:
+        matchLabels:
+          app: shared-postgres-18
+    ports:
+    - protocol: TCP
+      port: 5432
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: mashov-mcp
+      podSelector:
+        matchLabels:
+          app: mashov-mcp
+    ports:
+    - protocol: TCP
+      port: 8081
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: webtop-mcp
+      podSelector:
+        matchLabels:
+          app: webtop-mcp
+    ports:
+    - protocol: TCP
+      port: 8081
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: tivtaam-mcp
+      podSelector:
+        matchLabels:
+          app: tivtaam-mcp
+    ports:
+    - protocol: TCP
+      port: 8081
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: multi-whatsapp
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: multi-whatsapp-manager
+    ports:
+    - protocol: TCP
+      port: 8080
+  - to:
+    - ipBlock:
+        cidr: 10.0.0.1/32
+    - ipBlock:
+        cidr: 172.212.23.43/32
+    ports:
+    - protocol: TCP
+      port: 443
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        except:
+        - 10.0.0.0/8
+        - 172.16.0.0/12
+        - 192.168.0.0/16
+        - 169.254.0.0/16
+    ports:
+    - protocol: TCP
+      port: 443

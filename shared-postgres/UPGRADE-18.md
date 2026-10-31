@@ -171,8 +171,15 @@ backup report scheduled for **Monday 2026-11-02 08:30 UTC**; do not manually sen
 it as a test. Manual backup jobs are separate evidence, not a scheduled cycle.
 Use the CronJob scheduled-timestamp annotation to distinguish scheduled Jobs.
 
-The `verify-postgresql-18-recovery` heartbeat checks every 30 minutes and remains
-quiet while healthy. It must notify on failures, missing verification access, or
-completion, and pause only after all observation gates pass. Local scheduled
-checks require the owner computer and Codex app to remain running. Keep recovery
-resources through at least 2026-11-30 regardless of observation completion.
+The cluster-resident `jshipster/pg-upgrade-monitor` CronJob replaces the local
+Codex heartbeat. It checks every five minutes and sends failures, recovery, and
+one-time scheduled-backup/report/acceptance milestones to the existing backup
+Slack channel. The independent `pg-upgrade-watchdog` alerts on stale checks or
+undelivered alerts. Both retain state in ConfigMaps protected from Argo resets.
+They do not depend on the Mac or Codex, and health checks continue after acceptance.
+An outage of the entire cluster still needs external monitoring.
+
+The new `postgres_upgrade_monitor` login has read-only sessions and catalog
+access, with no application-table privileges. Existing credentials are unchanged.
+Keep recovery resources through at least 2026-11-30 regardless of observation
+completion. Monitor RBAC cannot delete recovery material or change workloads.
