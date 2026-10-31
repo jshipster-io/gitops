@@ -2,12 +2,6 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - pg-upgrade-monitor-state.yaml
-  - pg-upgrade-monitor-rbac.yaml
-  - pg-upgrade-monitor-cronjob.yaml
-  - pg-upgrade-watchdog-cronjob.yaml
-  - pg-upgrade-monitor-ca.yaml
-  - pg-upgrade-monitor-network.yaml
   - serviceaccount-azure-backup-reporter.yaml
   - uptime-state.yaml
   - deployment.yaml
