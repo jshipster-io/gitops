@@ -1,0 +1,352 @@
+{
+  "verifiedAt": "2026-11-01T21:12:12.590208+00:00",
+  "sourceCI": {
+    "terraform": {
+      "conclusion": "success",
+      "databaseId": 41349058047,
+      "headSha": "72287c8ad27da2643aa51b87db94ccb74c9a05aa",
+      "status": "completed",
+      "url": "https://github.com/jshipster-io/terraform/actions/runs/41349058047",
+      "nodeRuntimeAnnotationWarnings": []
+    },
+    "hasadnaa": {
+      "conclusion": "success",
+      "databaseId": 41349243485,
+      "headSha": "2bb64eb4b2628a231a4ac9f1373e25494ebf00c8",
+      "status": "completed",
+      "url": "https://github.com/jshipster-io/hasadnaa/actions/runs/41349243485",
+      "scanCounts": [
+        "CRITICAL: 0, HIGH: 0, MEDIUM: 3, LOW: 2, UNKNOWN: 5"
+      ],
+      "fixableCritical": [
+        "0"
+      ],
+      "scannedDigests": [
+        "sha256:417e5e3e2d6949f3cb0b1d768b22ee563d5c1bfcdcb3a0a4b1c279ec152153f4"
+      ],
+      "nodeRuntimeWarnings": [],
+      "nodeRuntimeAnnotationWarnings": []
+    },
+    "blutag-app": {
+      "conclusion": "success",
+      "databaseId": 41348804666,
+      "headSha": "66460de26046114a6394ac94338da01b6a48581e",
+      "status": "completed",
+      "url": "https://github.com/jshipster-io/blutag-app/actions/runs/41348804666",
+      "scanCounts": [
+        "CRITICAL: 0, HIGH: 9, MEDIUM: 8, LOW: 1, UNKNOWN: 3"
+      ],
+      "fixableCritical": [
+        "0"
+      ],
+      "scannedDigests": [
+        "sha256:1faef44a7bd396dbe2af1fdb41b844f8675bb9e31d58646c6a5ab9d154966f08"
+      ],
+      "nodeRuntimeWarnings": [],
+      "nodeRuntimeAnnotationWarnings": []
+    },
+    "blutag-findmy": {
+      "conclusion": "success",
+      "databaseId": 41349613668,
+      "headSha": "b483a204a552f4424b3cbba3d00dfd9e45581560",
+      "status": "completed",
+      "url": "https://github.com/jshipster-io/blutag-findmy/actions/runs/41349613668",
+      "scanCounts": [
+        "CRITICAL: 2, HIGH: 69, MEDIUM: 128, LOW: 155, UNKNOWN: 8"
+      ],
+      "fixableCritical": [
+        "0"
+      ],
+      "scannedDigests": [
+        "sha256:8e0eb1cb17f32bdab2229edbaf62ddef60f90debce0a4cb2cf4b447df2ec6560"
+      ],
+      "nodeRuntimeWarnings": [],
+      "nodeRuntimeAnnotationWarnings": []
+    },
+    "blutag-pointer-push": {
+      "conclusion": "success",
+      "databaseId": 41349616250,
+      "headSha": "efe2a2e3bc3a918377381cffe97a250966877ecc",
+      "status": "completed",
+      "url": "https://github.com/jshipster-io/blutag-pointer-push/actions/runs/41349616250",
+      "scanCounts": [
+        "CRITICAL: 2, HIGH: 69, MEDIUM: 128, LOW: 155, UNKNOWN: 8"
+      ],
+      "fixableCritical": [
+        "0"
+      ],
+      "scannedDigests": [
+        "sha256:372b651d22a1e7f97bd918a6466b0bda81cddbd5db9cdafae0e75884f26bc3ab"
+      ],
+      "nodeRuntimeWarnings": [],
+      "nodeRuntimeAnnotationWarnings": []
+    }
+  },
+  "live": {
+    "workloads": {
+      "hasadnaa": {
+        "expectedDigest": "sha256:417e5e3e2d6949f3cb0b1d768b22ee563d5c1bfcdcb3a0a4b1c279ec152153f4",
+        "verified": true,
+        "running": [
+          {
+            "name": "hasadnaa",
+            "ready": true,
+            "imageID": "prodacr1234.azurecr.io/hasadnaa@sha256:417e5e3e2d6949f3cb0b1d768b22ee563d5c1bfcdcb3a0a4b1c279ec152153f4"
+          }
+        ]
+      },
+      "blutag-app": {
+        "expectedDigest": "sha256:1faef44a7bd396dbe2af1fdb41b844f8675bb9e31d58646c6a5ab9d154966f08",
+        "verified": true,
+        "running": [
+          {
+            "name": "blutag-app",
+            "ready": true,
+            "imageID": "prodacr1234.azurecr.io/blutag-app@sha256:1faef44a7bd396dbe2af1fdb41b844f8675bb9e31d58646c6a5ab9d154966f08"
+          }
+        ]
+      },
+      "blutag-findmy": {
+        "expectedDigest": "sha256:8e0eb1cb17f32bdab2229edbaf62ddef60f90debce0a4cb2cf4b447df2ec6560",
+        "verified": true,
+        "running": [
+          {
+            "name": "blutag-findmy",
+            "ready": true,
+            "imageID": "prodacr1234.azurecr.io/blutag-findmy@sha256:8e0eb1cb17f32bdab2229edbaf62ddef60f90debce0a4cb2cf4b447df2ec6560"
+          }
+        ]
+      },
+      "blutag-pointer-push": {
+        "expectedDigest": "sha256:372b651d22a1e7f97bd918a6466b0bda81cddbd5db9cdafae0e75884f26bc3ab",
+        "verified": true,
+        "running": [
+          {
+            "name": "blutag-pointer-push",
+            "ready": true,
+            "imageID": "prodacr1234.azurecr.io/blutag-pointer-push@sha256:372b651d22a1e7f97bd918a6466b0bda81cddbd5db9cdafae0e75884f26bc3ab"
+          }
+        ]
+      }
+    },
+    "applications": [
+      {
+        "name": "apps",
+        "health": "Healthy",
+        "sync": "Synced",
+        "revision": "9ab76b6232af9eee39827c68975c8c2fd086a2f8"
+      },
+      {
+        "name": "argocd",
+        "health": "Healthy",
+        "sync": "Synced",
+        "revision": null
+      },
+      {
+        "name": "argocd-network-policy",
+        "health": "Healthy",
+        "sync": "Synced",
+        "revision": "9ab76b6232af9eee39827c68975c8c2fd086a2f8"
+      },
+      {
+        "name": "argocd-tunnel",
+        "health": "Healthy",
+        "sync": "Synced",
+        "revision": "9ab76b6232af9eee39827c68975c8c2fd086a2f8"
+      },
+      {
+        "name": "azure-operators",
+        "health": "Healthy",
+        "sync": "Synced",
+        "revision": "9ab76b6232af9eee39827c68975c8c2fd086a2f8"
+      },
+      {
+        "name": "blutag-app",
+        "health": "Healthy",
+        "sync": "Synced",
+        "revision": "9ab76b6232af9eee39827c68975c8c2fd086a2f8"
+      },
+      {
+        "name": "blutag-findmy",
+        "health": "Healthy",
+        "sync": "Synced",
+        "revision": "9ab76b6232af9eee39827c68975c8c2fd086a2f8"
+      },
+      {
+        "name": "blutag-omnisette",
+        "health": "Healthy",
+        "sync": "Synced",
+        "revision": "9ab76b6232af9eee39827c68975c8c2fd086a2f8"
+      },
+      {
+        "name": "blutag-pointer-push",
+        "health": "Healthy",
+        "sync": "Synced",
+        "revision": "1fe8d7d18ef843483d802714db37a08ecabd4adf"
+      },
+      {
+        "name": "blutag-postgres",
+        "health": "Healthy",
+        "sync": "Synced",
+        "revision": "9ab76b6232af9eee39827c68975c8c2fd086a2f8"
+      },
+      {
+        "name": "blutag-website",
+        "health": "Healthy",
+        "sync": "Synced",
+        "revision": "9ab76b6232af9eee39827c68975c8c2fd086a2f8"
+      },
+      {
+        "name": "cert-manager",
+        "health": "Healthy",
+        "sync": "Synced",
+        "revision": "9ab76b6232af9eee39827c68975c8c2fd086a2f8"
+      },
+      {
+        "name": "cyberghost-egress",
+        "health": "Healthy",
+        "sync": "Synced",
+        "revision": "9ab76b6232af9eee39827c68975c8c2fd086a2f8"
+      },
+      {
+        "name": "dirtbike-postgres",
+        "health": "Healthy",
+        "sync": "Synced",
+        "revision": "9ab76b6232af9eee39827c68975c8c2fd086a2f8"
+      },
+      {
+        "name": "drc-trainings",
+        "health": "Healthy",
+        "sync": "Synced",
+        "revision": "9ab76b6232af9eee39827c68975c8c2fd086a2f8"
+      },
+      {
+        "name": "drc-trainings-postgres",
+        "health": "Healthy",
+        "sync": "Synced",
+        "revision": "9ab76b6232af9eee39827c68975c8c2fd086a2f8"
+      },
+      {
+        "name": "external-dns",
+        "health": "Healthy",
+        "sync": "Synced",
+        "revision": "9ab76b6232af9eee39827c68975c8c2fd086a2f8"
+      },
+      {
+        "name": "hasadnaa",
+        "health": "Healthy",
+        "sync": "Synced",
+        "revision": "9ab76b6232af9eee39827c68975c8c2fd086a2f8"
+      },
+      {
+        "name": "ids-postgres",
+        "health": "Healthy",
+        "sync": "Synced",
+        "revision": "9ab76b6232af9eee39827c68975c8c2fd086a2f8"
+      },
+      {
+        "name": "jshipster-bastion",
+        "health": "Healthy",
+        "sync": "Synced",
+        "revision": "9ab76b6232af9eee39827c68975c8c2fd086a2f8"
+      },
+      {
+        "name": "loki",
+        "health": "Healthy",
+        "sync": "Synced",
+        "revision": "9ab76b6232af9eee39827c68975c8c2fd086a2f8"
+      },
+      {
+        "name": "mashov-mcp",
+        "health": "Healthy",
+        "sync": "Synced",
+        "revision": "9ab76b6232af9eee39827c68975c8c2fd086a2f8"
+      },
+      {
+        "name": "multi-whatsapp",
+        "health": "Healthy",
+        "sync": "Synced",
+        "revision": "9ab76b6232af9eee39827c68975c8c2fd086a2f8"
+      },
+      {
+        "name": "mw-account-47e9fd87-c53f-4111-bbc3-a73869994db3",
+        "health": "Healthy",
+        "sync": "Synced",
+        "revision": "9ab76b6232af9eee39827c68975c8c2fd086a2f8"
+      },
+      {
+        "name": "nginx-ingress-controller",
+        "health": "Healthy",
+        "sync": "Synced",
+        "revision": "9ab76b6232af9eee39827c68975c8c2fd086a2f8"
+      },
+      {
+        "name": "pg-backups",
+        "health": "Healthy",
+        "sync": "Synced",
+        "revision": "9ab76b6232af9eee39827c68975c8c2fd086a2f8"
+      },
+      {
+        "name": "pod-security",
+        "health": "Healthy",
+        "sync": "Synced",
+        "revision": "9ab76b6232af9eee39827c68975c8c2fd086a2f8"
+      },
+      {
+        "name": "shared-postgres",
+        "health": "Healthy",
+        "sync": "Synced",
+        "revision": "9ab76b6232af9eee39827c68975c8c2fd086a2f8"
+      },
+      {
+        "name": "slack-notifications",
+        "health": "Healthy",
+        "sync": "Synced",
+        "revision": "1fe8d7d18ef843483d802714db37a08ecabd4adf"
+      },
+      {
+        "name": "tailscale",
+        "health": "Healthy",
+        "sync": "Synced",
+        "revision": null
+      },
+      {
+        "name": "tivtaam-mcp",
+        "health": "Healthy",
+        "sync": "Synced",
+        "revision": "9ab76b6232af9eee39827c68975c8c2fd086a2f8"
+      },
+      {
+        "name": "trips",
+        "health": "Healthy",
+        "sync": "Synced",
+        "revision": "9ab76b6232af9eee39827c68975c8c2fd086a2f8"
+      },
+      {
+        "name": "webtop-mcp",
+        "health": "Healthy",
+        "sync": "Synced",
+        "revision": "9ab76b6232af9eee39827c68975c8c2fd086a2f8"
+      }
+    ]
+  },
+  "runtimeContractsPreserved": {
+    "hasadnaa": true,
+    "blutag-app": true,
+    "blutag-findmy": true,
+    "blutag-pointer-push": true
+  },
+  "gitopsValidation": {
+    "commit": "9ab76b6232af9eee39827c68975c8c2fd086a2f8",
+    "url": "https://github.com/jshipster-io/gitops/actions/runs/41350455106",
+    "conclusion": "success",
+    "productionPromoted": true
+  },
+  "accessChecks": {
+    "publicReadinessRoutes": 5,
+    "publicReadinessHTTP": 200,
+    "privatePythonHealthEndpoints": 2,
+    "privateHealthHTTP": 200,
+    "tailscaleSSH": true
+  }
+}

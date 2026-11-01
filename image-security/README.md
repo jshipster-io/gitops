@@ -40,6 +40,24 @@ an out-of-order push event cancelling the current main commit's pending run.
 The existing promotion check still refuses any SHA that is no longer main and
 requires a fast-forward from production; no approval or validation is bypassed.
 
+All four final scanned digests are running and ready; all 33 Argo applications
+are Healthy/Synced. Five public readiness routes and both private Python health
+endpoints returned 200; Tailscale SSH succeeded. Runtime security contexts and
+persistent volume claim names match the before snapshot. Twenty-one current
+check runs had no Node runtime deprecation annotations. See
+`verification-2026-11-01.json` for exact commits, CI links and running digests.
+
+| Updated runtime | Critical before → after | High before → after | Fixable critical after |
+|---|---:|---:|---:|
+| Hasadnaa | 3 → 0 | 10 → 0 | 0 |
+| Blutag App | 3 → 0 | 20 → 9 | 0 |
+| Blutag FindMy | 9 → 2 | 103 → 69 | 0 |
+| Blutag Pointer Push | 9 → 2 | 103 → 69 | 0 |
+
+The two remaining critical Python-image findings have no distro fix in the
+scanner database. They remain visible for vendor/applicability triage and are
+not silently suppressed. Residual HIGH findings are outside the initial gate.
+
 ## Automatic promotion gate
 
 `scan-image.sh` installs a checksum-pinned scanner, obtains a current vulnerability database, scans the exact digest emitted by Buildx, and fails the publishing job for scanner errors or **fixable CRITICAL** findings. Promotion depends on that job succeeding. Existing running workloads remain unchanged when a candidate fails. A sanitized job summary lists critical/high findings; no human approval, new credential or secret access was added.
