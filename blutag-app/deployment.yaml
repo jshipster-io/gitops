@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: blutag-app
-        image: prodacr1234.azurecr.io/blutag-app:main-b4ca579
+        image: prodacr1234.azurecr.io/blutag-app:main-66460de
         ports:
         - containerPort: 8080
           name: http
