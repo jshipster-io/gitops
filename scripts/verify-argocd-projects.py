@@ -25,7 +25,7 @@ def main():
             while time.monotonic()<deadline:
                 a=json.loads(run(['get','application',name,'-o','json']));s=a.get('status',{});op=s.get('operationState',{})
                 messages=[c.get('message','') for c in s.get('conditions',[])]+[op.get('message','')]+[r.get('message','') for r in op.get('syncResult',{}).get('resources',[])]
-                if any('not permitted' in m.lower() for m in messages):
+                if any('not permitted' in m.lower() or ('do not match any of the allowed destinations' in m.lower() and 'project' in m.lower()) for m in messages):
                     assert not a['metadata'].get('finalizers')
                     if doc.get('operation'):assert (a.get('operation') or op.get('operation',{})).get('sync',{}).get('dryRun') is True
                     print('PASS Argo rejects',case,flush=True);break

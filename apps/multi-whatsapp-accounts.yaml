@@ -22,7 +22,7 @@ spec:
       annotations:
         argocd.argoproj.io/manifest-generate-paths: .
     spec:
-      project: default
+      project: app-multi-whatsapp-workers
       source:
         repoURL: https://github.com/jshipster-io/gitops.git
         targetRevision: production

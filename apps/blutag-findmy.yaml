@@ -6,7 +6,7 @@ metadata:
   annotations:
     argocd.argoproj.io/manifest-generate-paths: .
 spec:
-  project: default
+  project: app-blutag-findmy
   source:
     repoURL: https://github.com/jshipster-io/gitops
     targetRevision: production

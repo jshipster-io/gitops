@@ -4,7 +4,7 @@ metadata:
   name: blutag-website
   namespace: argocd
 spec:
-  project: default
+  project: app-blutag-website
   source:
     repoURL: https://github.com/jshipster-io/gitops
     targetRevision: production

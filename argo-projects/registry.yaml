@@ -1,4 +1,4 @@
-phase: prepare
+phase: migrate
 applications:
   apps:
     project: platform-bootstrap

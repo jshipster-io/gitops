@@ -6,7 +6,7 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  project: default
+  project: platform-shared-postgres
   source:
     repoURL: https://github.com/jshipster-io/gitops
     targetRevision: production

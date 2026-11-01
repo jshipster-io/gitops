@@ -7,7 +7,7 @@ metadata:
     argocd.argoproj.io/sync-options: Prune=false,Delete=false
 # No cascading-deletion finalizer: deleting this Application must not erase Argo.
 spec:
-  project: default
+  project: platform-argocd
   sources:
     - repoURL: https://argoproj.github.io/argo-helm
       chart: argo-cd

@@ -4,7 +4,7 @@ metadata:
   name: cert-manager
   namespace: argocd
 spec:
-  project: default
+  project: platform-cert-manager
   source:
     repoURL: https://github.com/jshipster-io/gitops
     targetRevision: production

@@ -8,7 +8,7 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  project: default
+  project: app-hasadnaa
   source:
     repoURL: https://github.com/jshipster-io/gitops.git
     targetRevision: production

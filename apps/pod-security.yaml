@@ -4,7 +4,7 @@ metadata:
   name: pod-security
   namespace: argocd
 spec:
-  project: default
+  project: platform-pod-security
   source:
     repoURL: https://github.com/jshipster-io/gitops.git
     targetRevision: production

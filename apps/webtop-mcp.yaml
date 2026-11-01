@@ -5,7 +5,7 @@ metadata:
   namespace: argocd
   finalizers: [resources-finalizer.argocd.argoproj.io]
 spec:
-  project: default
+  project: app-webtop-mcp
   source:
     repoURL: https://github.com/jshipster-io/gitops.git
     targetRevision: production
