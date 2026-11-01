@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: platform-cyberghost-egress
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: '-10'
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false
+spec:
+  description: Scoped deployment permissions for cyberghost-egress
+  sourceRepos:
+  - https://github.com/jshipster-io/gitops.git
+  destinations:
+  - server: https://kubernetes.default.svc
+    namespace: cyberghost-egress
+  clusterResourceWhitelist:
+  - group: ''
+    kind: Namespace
+    name: cyberghost-egress
+  namespaceResourceWhitelist:
+  - group: ''
+    kind: ConfigMap
+  - group: ''
+    kind: Secret
+  - group: ''
+    kind: Service
+  - group: apps
+    kind: Deployment
+  sourceNamespaces: []

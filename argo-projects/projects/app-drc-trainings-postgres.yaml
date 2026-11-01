@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: app-drc-trainings-postgres
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: '-10'
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false
+spec:
+  description: Scoped deployment permissions for drc-trainings-postgres
+  sourceRepos:
+  - https://github.com/jshipster-io/gitops.git
+  destinations:
+  - server: https://kubernetes.default.svc
+    namespace: drc
+  clusterResourceWhitelist: []
+  namespaceResourceWhitelist:
+  - group: ''
+    kind: Secret
+  sourceNamespaces: []

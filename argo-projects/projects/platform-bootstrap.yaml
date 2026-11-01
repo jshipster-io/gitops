@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: platform-bootstrap
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: '-10'
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false
+spec:
+  description: Scoped deployment permissions for apps
+  sourceRepos:
+  - https://github.com/jshipster-io/gitops.git
+  destinations:
+  - server: https://kubernetes.default.svc
+    namespace: argocd
+  clusterResourceWhitelist: []
+  namespaceResourceWhitelist:
+  - group: argoproj.io
+    kind: AppProject
+  - group: argoproj.io
+    kind: Application
+  - group: argoproj.io
+    kind: ApplicationSet
+  - group: rbac.authorization.k8s.io
+    kind: Role
+  - group: rbac.authorization.k8s.io
+    kind: RoleBinding
+  sourceNamespaces: []

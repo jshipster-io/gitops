@@ -1,0 +1,63 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: platform-pod-security
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: '-10'
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false
+spec:
+  description: Scoped deployment permissions for pod-security
+  sourceRepos:
+  - https://github.com/jshipster-io/gitops.git
+  destinations:
+  - server: https://kubernetes.default.svc
+    namespace: argocd
+  clusterResourceWhitelist:
+  - group: ''
+    kind: Namespace
+    name: argocd
+  - group: ''
+    kind: Namespace
+    name: blutag
+  - group: ''
+    kind: Namespace
+    name: default
+  - group: ''
+    kind: Namespace
+    name: dirtbike
+  - group: ''
+    kind: Namespace
+    name: drc
+  - group: ''
+    kind: Namespace
+    name: external-dns
+  - group: ''
+    kind: Namespace
+    name: ids
+  - group: ''
+    kind: Namespace
+    name: jshipster
+  - group: ''
+    kind: Namespace
+    name: mashov-mcp
+  - group: ''
+    kind: Namespace
+    name: pg-backups
+  - group: ''
+    kind: Namespace
+    name: tailscale
+  - group: ''
+    kind: Namespace
+    name: tivtaam-mcp
+  - group: ''
+    kind: Namespace
+    name: trips
+  - group: ''
+    kind: Namespace
+    name: webtop-mcp
+  namespaceResourceWhitelist: []
+  sourceNamespaces: []
+  namespaceResourceBlacklist:
+  - group: '*'
+    kind: '*'

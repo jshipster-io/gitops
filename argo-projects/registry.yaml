@@ -1,0 +1,270 @@
+phase: prepare
+applications:
+  apps:
+    project: platform-bootstrap
+    destination:
+      namespace: argocd
+      server: https://kubernetes.default.svc
+    sources:
+    - path: apps
+      repoURL: https://github.com/jshipster-io/gitops.git
+  argocd:
+    project: platform-argocd
+    destination:
+      namespace: argocd
+      server: https://kubernetes.default.svc
+    sources:
+    - chart: argo-cd
+      repoURL: https://argoproj.github.io/argo-helm
+    - ref: values
+      repoURL: https://github.com/jshipster-io/gitops.git
+  argocd-network-policy:
+    project: platform-argocd-network-policy
+    destination:
+      namespace: argocd
+      server: https://kubernetes.default.svc
+    sources:
+    - path: argocd-network-policy
+      repoURL: https://github.com/jshipster-io/gitops.git
+  argocd-tunnel:
+    project: platform-argocd-tunnel
+    destination:
+      namespace: argocd
+      server: https://kubernetes.default.svc
+    sources:
+    - path: argocd-tunnel
+      repoURL: https://github.com/jshipster-io/gitops.git
+  azure-operators:
+    project: platform-azure-operators
+    destination:
+      namespace: azure-operators
+      server: https://kubernetes.default.svc
+    sources:
+    - path: azure-operators
+      repoURL: https://github.com/jshipster-io/gitops.git
+  blutag-app:
+    project: app-blutag-app
+    destination:
+      namespace: blutag
+      server: https://kubernetes.default.svc
+    sources:
+    - path: blutag-app
+      repoURL: https://github.com/jshipster-io/gitops
+  blutag-findmy:
+    project: app-blutag-findmy
+    destination:
+      namespace: blutag
+      server: https://kubernetes.default.svc
+    sources:
+    - path: blutag-findmy
+      repoURL: https://github.com/jshipster-io/gitops
+  blutag-omnisette:
+    project: app-blutag-omnisette
+    destination:
+      namespace: blutag
+      server: https://kubernetes.default.svc
+    sources:
+    - path: omnisette
+      repoURL: https://github.com/jshipster-io/gitops
+  blutag-pointer-push:
+    project: app-blutag-pointer-push
+    destination:
+      namespace: blutag
+      server: https://kubernetes.default.svc
+    sources:
+    - path: blutag-pointer-push
+      repoURL: https://github.com/jshipster-io/gitops
+  blutag-postgres:
+    project: app-blutag-postgres
+    destination:
+      namespace: blutag
+      server: https://kubernetes.default.svc
+    sources:
+    - path: blutag-postgres
+      repoURL: https://github.com/jshipster-io/gitops.git
+  blutag-website:
+    project: app-blutag-website
+    destination:
+      namespace: blutag
+      server: https://kubernetes.default.svc
+    sources:
+    - path: blutag-website
+      repoURL: https://github.com/jshipster-io/gitops
+  cert-manager:
+    project: platform-cert-manager
+    destination:
+      namespace: cert-manager
+      server: https://kubernetes.default.svc
+    sources:
+    - path: cert-manager
+      repoURL: https://github.com/jshipster-io/gitops
+  cyberghost-egress:
+    project: platform-cyberghost-egress
+    destination:
+      namespace: cyberghost-egress
+      server: https://kubernetes.default.svc
+    sources:
+    - path: cyberghost-egress
+      repoURL: https://github.com/jshipster-io/gitops.git
+  dirtbike-postgres:
+    project: app-dirtbike-postgres
+    destination:
+      namespace: dirtbike
+      server: https://kubernetes.default.svc
+    sources:
+    - path: dirtbike-postgres
+      repoURL: https://github.com/jshipster-io/gitops.git
+  drc-trainings:
+    project: app-drc-trainings
+    destination:
+      namespace: drc
+      server: https://kubernetes.default.svc
+    sources:
+    - path: trainings
+      repoURL: https://github.com/jshipster-io/gitops.git
+  drc-trainings-postgres:
+    project: app-drc-trainings-postgres
+    destination:
+      namespace: drc
+      server: https://kubernetes.default.svc
+    sources:
+    - path: trainings-postgres
+      repoURL: https://github.com/jshipster-io/gitops.git
+  external-dns:
+    project: platform-external-dns
+    destination:
+      namespace: external-dns
+      server: https://kubernetes.default.svc
+    sources:
+    - path: external-dns
+      repoURL: https://github.com/jshipster-io/gitops.git
+  hasadnaa:
+    project: app-hasadnaa
+    destination:
+      namespace: hasadnaa
+      server: https://kubernetes.default.svc
+    sources:
+    - path: hasadnaa
+      repoURL: https://github.com/jshipster-io/gitops.git
+  ids-postgres:
+    project: app-ids-postgres
+    destination:
+      namespace: ids
+      server: https://kubernetes.default.svc
+    sources:
+    - path: ids-postgres
+      repoURL: https://github.com/jshipster-io/gitops.git
+  jshipster-bastion:
+    project: platform-jshipster-bastion
+    destination:
+      namespace: default
+      server: https://kubernetes.default.svc
+    sources:
+    - path: jshipster-bastion
+      repoURL: https://github.com/jshipster-io/gitops.git
+  loki:
+    project: platform-loki
+    destination:
+      namespace: loki
+      server: https://kubernetes.default.svc
+    sources:
+    - path: loki
+      repoURL: https://github.com/jshipster-io/gitops
+  mashov-mcp:
+    project: app-mashov-mcp
+    destination:
+      namespace: mashov-mcp
+      server: https://kubernetes.default.svc
+    sources:
+    - path: mashov-mcp
+      repoURL: https://github.com/jshipster-io/gitops.git
+  multi-whatsapp:
+    project: app-multi-whatsapp
+    destination:
+      namespace: multi-whatsapp
+      server: https://kubernetes.default.svc
+    sources:
+    - path: multi-whatsapp/manager
+      repoURL: https://github.com/jshipster-io/gitops.git
+  multi-whatsapp-workers:
+    project: app-multi-whatsapp-workers
+    destination:
+      namespace: multi-whatsapp
+      server: https://kubernetes.default.svc
+    sources:
+    - path: multi-whatsapp/worker-chart
+      repoURL: https://github.com/jshipster-io/gitops.git
+  nginx-ingress-controller:
+    project: platform-nginx-ingress-controller
+    destination:
+      namespace: ingress-nginx
+      server: https://kubernetes.default.svc
+    sources:
+    - path: ingress-controller
+      repoURL: https://github.com/jshipster-io/gitops.git
+  pg-backups:
+    project: platform-pg-backups
+    destination:
+      namespace: pg-backups
+      server: https://kubernetes.default.svc
+    sources:
+    - path: pg-backups
+      repoURL: https://github.com/jshipster-io/gitops.git
+  pod-security:
+    project: platform-pod-security
+    destination:
+      namespace: argocd
+      server: https://kubernetes.default.svc
+    sources:
+    - path: pod-security
+      repoURL: https://github.com/jshipster-io/gitops.git
+  shared-postgres:
+    project: platform-shared-postgres
+    destination:
+      namespace: postgres
+      server: https://kubernetes.default.svc
+    sources:
+    - path: shared-postgres
+      repoURL: https://github.com/jshipster-io/gitops
+  slack-notifications:
+    project: platform-slack-notifications
+    destination:
+      namespace: jshipster
+      server: https://kubernetes.default.svc
+    sources:
+    - path: slack-notifications
+      repoURL: https://github.com/jshipster-io/gitops.git
+  tailscale:
+    project: platform-tailscale
+    destination:
+      namespace: tailscale
+      server: https://kubernetes.default.svc
+    sources:
+    - chart: tailscale-operator
+      repoURL: https://pkgs.tailscale.com/helmcharts
+    - path: tailscale
+      repoURL: https://github.com/jshipster-io/gitops.git
+  tivtaam-mcp:
+    project: app-tivtaam-mcp
+    destination:
+      namespace: tivtaam-mcp
+      server: https://kubernetes.default.svc
+    sources:
+    - path: tivtaam-mcp
+      repoURL: https://github.com/jshipster-io/gitops.git
+  trips:
+    project: app-trips
+    destination:
+      namespace: trips
+      server: https://kubernetes.default.svc
+    sources:
+    - path: trips
+      repoURL: https://github.com/jshipster-io/gitops.git
+  webtop-mcp:
+    project: app-webtop-mcp
+    destination:
+      namespace: webtop-mcp
+      server: https://kubernetes.default.svc
+    sources:
+    - path: webtop-mcp
+      repoURL: https://github.com/jshipster-io/gitops.git

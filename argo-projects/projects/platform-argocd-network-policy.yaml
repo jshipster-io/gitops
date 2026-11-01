@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: platform-argocd-network-policy
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: '-10'
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false
+spec:
+  description: Scoped deployment permissions for argocd-network-policy
+  sourceRepos:
+  - https://github.com/jshipster-io/gitops.git
+  destinations:
+  - server: https://kubernetes.default.svc
+    namespace: argocd
+  clusterResourceWhitelist: []
+  namespaceResourceWhitelist:
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+  sourceNamespaces: []

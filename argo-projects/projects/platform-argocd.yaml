@@ -1,0 +1,60 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: platform-argocd
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: '-10'
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false
+spec:
+  description: Scoped deployment permissions for argocd
+  sourceRepos:
+  - https://argoproj.github.io/argo-helm
+  - https://github.com/jshipster-io/gitops.git
+  destinations:
+  - server: https://kubernetes.default.svc
+    namespace: argocd
+  clusterResourceWhitelist:
+  - group: apiextensions.k8s.io
+    kind: CustomResourceDefinition
+    name: applications.argoproj.io
+  - group: apiextensions.k8s.io
+    kind: CustomResourceDefinition
+    name: applicationsets.argoproj.io
+  - group: apiextensions.k8s.io
+    kind: CustomResourceDefinition
+    name: appprojects.argoproj.io
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: argocd-application-controller
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: argocd-notifications-controller
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: argocd-server
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: argocd-application-controller
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: argocd-notifications-controller
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: argocd-server
+  namespaceResourceWhitelist:
+  - group: ''
+    kind: ConfigMap
+  - group: ''
+    kind: Service
+  - group: ''
+    kind: ServiceAccount
+  - group: apps
+    kind: Deployment
+  - group: apps
+    kind: StatefulSet
+  - group: rbac.authorization.k8s.io
+    kind: Role
+  - group: rbac.authorization.k8s.io
+    kind: RoleBinding
+  sourceNamespaces: []

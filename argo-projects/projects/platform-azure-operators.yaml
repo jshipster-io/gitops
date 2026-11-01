@@ -1,0 +1,43 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: platform-azure-operators
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: '-10'
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false
+spec:
+  description: Scoped deployment permissions for azure-operators
+  sourceRepos:
+  - https://github.com/jshipster-io/gitops.git
+  destinations:
+  - server: https://kubernetes.default.svc
+    namespace: azure-operators
+  clusterResourceWhitelist:
+  - group: ''
+    kind: Namespace
+    name: azure-operators
+  - group: admissionregistration.k8s.io
+    kind: ValidatingAdmissionPolicy
+    name: azure-operators-no-pods-or-secrets
+  - group: admissionregistration.k8s.io
+    kind: ValidatingAdmissionPolicy
+    name: azure-operators-owner-token-only
+  - group: admissionregistration.k8s.io
+    kind: ValidatingAdmissionPolicyBinding
+    name: azure-operators-no-pods-or-secrets
+  - group: admissionregistration.k8s.io
+    kind: ValidatingAdmissionPolicyBinding
+    name: azure-operators-owner-token-only
+  namespaceResourceWhitelist:
+  - group: ''
+    kind: ResourceQuota
+  - group: ''
+    kind: ServiceAccount
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+  - group: rbac.authorization.k8s.io
+    kind: Role
+  - group: rbac.authorization.k8s.io
+    kind: RoleBinding
+  sourceNamespaces: []

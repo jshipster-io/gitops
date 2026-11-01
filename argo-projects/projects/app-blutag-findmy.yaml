@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: app-blutag-findmy
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: '-10'
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false
+spec:
+  description: Scoped deployment permissions for blutag-findmy
+  sourceRepos:
+  - https://github.com/jshipster-io/gitops
+  destinations:
+  - server: https://kubernetes.default.svc
+    namespace: blutag
+  clusterResourceWhitelist: []
+  namespaceResourceWhitelist:
+  - group: ''
+    kind: PersistentVolumeClaim
+  - group: ''
+    kind: Service
+  - group: apps
+    kind: Deployment
+  sourceNamespaces: []

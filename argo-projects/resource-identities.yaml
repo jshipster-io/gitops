@@ -1,0 +1,1441 @@
+apps:
+  namespaced:
+  - group: rbac.authorization.k8s.io
+    kind: Role
+    name: multi-whatsapp-refresh
+    namespace: argocd
+  - group: rbac.authorization.k8s.io
+    kind: RoleBinding
+    name: multi-whatsapp-refresh
+    namespace: argocd
+  - group: argoproj.io
+    kind: Application
+    name: '*'
+    namespace: argocd
+  - group: argoproj.io
+    kind: ApplicationSet
+    name: '*'
+    namespace: argocd
+  - group: argoproj.io
+    kind: AppProject
+    name: '*'
+    namespace: argocd
+  cluster: []
+argocd:
+  namespaced:
+  - group: ''
+    kind: ServiceAccount
+    name: argocd-application-controller
+    namespace: argocd
+  - group: ''
+    kind: ServiceAccount
+    name: argocd-applicationset-controller
+    namespace: argocd
+  - group: ''
+    kind: ServiceAccount
+    name: argocd-notifications-controller
+    namespace: argocd
+  - group: ''
+    kind: ServiceAccount
+    name: argocd-repo-server
+    namespace: argocd
+  - group: ''
+    kind: ServiceAccount
+    name: argocd-server
+    namespace: argocd
+  - group: ''
+    kind: ServiceAccount
+    name: argocd-dex-server
+    namespace: argocd
+  - group: ''
+    kind: ConfigMap
+    name: argocd-cm
+    namespace: argocd
+  - group: ''
+    kind: ConfigMap
+    name: argocd-cmd-params-cm
+    namespace: argocd
+  - group: ''
+    kind: ConfigMap
+    name: argocd-gpg-keys-cm
+    namespace: argocd
+  - group: ''
+    kind: ConfigMap
+    name: argocd-notifications-cm
+    namespace: argocd
+  - group: ''
+    kind: ConfigMap
+    name: argocd-rbac-cm
+    namespace: argocd
+  - group: ''
+    kind: ConfigMap
+    name: argocd-ssh-known-hosts-cm
+    namespace: argocd
+  - group: ''
+    kind: ConfigMap
+    name: argocd-tls-certs-cm
+    namespace: argocd
+  - group: ''
+    kind: ConfigMap
+    name: argocd-redis-health-configmap
+    namespace: argocd
+  - group: rbac.authorization.k8s.io
+    kind: Role
+    name: argocd-application-controller
+    namespace: argocd
+  - group: rbac.authorization.k8s.io
+    kind: Role
+    name: argocd-applicationset-controller
+    namespace: argocd
+  - group: rbac.authorization.k8s.io
+    kind: Role
+    name: argocd-notifications-controller
+    namespace: argocd
+  - group: rbac.authorization.k8s.io
+    kind: Role
+    name: argocd-repo-server
+    namespace: argocd
+  - group: rbac.authorization.k8s.io
+    kind: Role
+    name: argocd-server
+    namespace: argocd
+  - group: rbac.authorization.k8s.io
+    kind: Role
+    name: argocd-dex-server
+    namespace: argocd
+  - group: rbac.authorization.k8s.io
+    kind: RoleBinding
+    name: argocd-application-controller
+    namespace: argocd
+  - group: rbac.authorization.k8s.io
+    kind: RoleBinding
+    name: argocd-applicationset-controller
+    namespace: argocd
+  - group: rbac.authorization.k8s.io
+    kind: RoleBinding
+    name: argocd-notifications-controller
+    namespace: argocd
+  - group: rbac.authorization.k8s.io
+    kind: RoleBinding
+    name: argocd-repo-server
+    namespace: argocd
+  - group: rbac.authorization.k8s.io
+    kind: RoleBinding
+    name: argocd-server
+    namespace: argocd
+  - group: rbac.authorization.k8s.io
+    kind: RoleBinding
+    name: argocd-dex-server
+    namespace: argocd
+  - group: ''
+    kind: Service
+    name: argocd-applicationset-controller
+    namespace: argocd
+  - group: ''
+    kind: Service
+    name: argocd-repo-server
+    namespace: argocd
+  - group: ''
+    kind: Service
+    name: argocd-server
+    namespace: argocd
+  - group: ''
+    kind: Service
+    name: argocd-dex-server
+    namespace: argocd
+  - group: ''
+    kind: Service
+    name: argocd-redis
+    namespace: argocd
+  - group: apps
+    kind: Deployment
+    name: argocd-applicationset-controller
+    namespace: argocd
+  - group: apps
+    kind: Deployment
+    name: argocd-notifications-controller
+    namespace: argocd
+  - group: apps
+    kind: Deployment
+    name: argocd-repo-server
+    namespace: argocd
+  - group: apps
+    kind: Deployment
+    name: argocd-server
+    namespace: argocd
+  - group: apps
+    kind: Deployment
+    name: argocd-dex-server
+    namespace: argocd
+  - group: apps
+    kind: Deployment
+    name: argocd-redis
+    namespace: argocd
+  - group: apps
+    kind: StatefulSet
+    name: argocd-application-controller
+    namespace: argocd
+  cluster:
+  - group: apiextensions.k8s.io
+    kind: CustomResourceDefinition
+    name: applications.argoproj.io
+  - group: apiextensions.k8s.io
+    kind: CustomResourceDefinition
+    name: applicationsets.argoproj.io
+  - group: apiextensions.k8s.io
+    kind: CustomResourceDefinition
+    name: appprojects.argoproj.io
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: argocd-application-controller
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: argocd-notifications-controller
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: argocd-server
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: argocd-application-controller
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: argocd-notifications-controller
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: argocd-server
+argocd-network-policy:
+  namespaced:
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: application-controller-external
+    namespace: argocd
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: application-controller-to-redis
+    namespace: argocd
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: application-controller-to-repo-server
+    namespace: argocd
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: applicationset-controller-external
+    namespace: argocd
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: applicationset-controller-to-repo-server
+    namespace: argocd
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: cloudflared-dependencies
+    namespace: argocd
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: default-deny
+    namespace: argocd
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: dex-server-external
+    namespace: argocd
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: dex-server-ingress
+    namespace: argocd
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: dns-egress
+    namespace: argocd
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: notifications-controller-external
+    namespace: argocd
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: notifications-controller-to-repo-server
+    namespace: argocd
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: redis-ingress
+    namespace: argocd
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: redis-secret-init-to-api
+    namespace: argocd
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: repo-server-external
+    namespace: argocd
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: repo-server-ingress
+    namespace: argocd
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: repo-server-to-redis
+    namespace: argocd
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: server-external
+    namespace: argocd
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: server-private-ingress
+    namespace: argocd
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: server-to-dex-server
+    namespace: argocd
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: server-to-redis
+    namespace: argocd
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: server-to-repo-server
+    namespace: argocd
+  cluster: []
+argocd-tunnel:
+  namespaced:
+  - group: ''
+    kind: ConfigMap
+    name: cloudflared-config
+    namespace: argocd
+  - group: ''
+    kind: Secret
+    name: tunnel-credentials
+    namespace: argocd
+  - group: apps
+    kind: Deployment
+    name: cloudflared
+    namespace: argocd
+  cluster: []
+azure-operators:
+  namespaced:
+  - group: ''
+    kind: ResourceQuota
+    name: no-workloads-or-secrets
+    namespace: azure-operators
+  - group: ''
+    kind: ServiceAccount
+    name: docintel-operator
+    namespace: azure-operators
+  - group: rbac.authorization.k8s.io
+    kind: Role
+    name: request-docintel-token
+    namespace: azure-operators
+  - group: rbac.authorization.k8s.io
+    kind: RoleBinding
+    name: owner-docintel-token
+    namespace: azure-operators
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: deny-all
+    namespace: azure-operators
+  cluster:
+  - group: ''
+    kind: Namespace
+    name: azure-operators
+  - group: admissionregistration.k8s.io
+    kind: ValidatingAdmissionPolicy
+    name: azure-operators-no-pods-or-secrets
+  - group: admissionregistration.k8s.io
+    kind: ValidatingAdmissionPolicy
+    name: azure-operators-owner-token-only
+  - group: admissionregistration.k8s.io
+    kind: ValidatingAdmissionPolicyBinding
+    name: azure-operators-no-pods-or-secrets
+  - group: admissionregistration.k8s.io
+    kind: ValidatingAdmissionPolicyBinding
+    name: azure-operators-owner-token-only
+blutag-app:
+  namespaced:
+  - group: ''
+    kind: ServiceAccount
+    name: blutag-app
+    namespace: blutag
+  - group: ''
+    kind: ConfigMap
+    name: blutag-app-config
+    namespace: blutag
+  - group: ''
+    kind: Secret
+    name: blutag-acs-secret
+    namespace: blutag
+  - group: ''
+    kind: Secret
+    name: blutag-gemini-secret
+    namespace: blutag
+  - group: ''
+    kind: Secret
+    name: blutag-jwt-secret
+    namespace: blutag
+  - group: ''
+    kind: Secret
+    name: blutag-location-webhook-secret
+    namespace: blutag
+  - group: ''
+    kind: Secret
+    name: blutag-openai-secret
+    namespace: blutag
+  - group: ''
+    kind: Service
+    name: blutag-app
+    namespace: blutag
+  - group: apps
+    kind: Deployment
+    name: blutag-app
+    namespace: blutag
+  - group: networking.k8s.io
+    kind: Ingress
+    name: blutag-app
+    namespace: blutag
+  cluster: []
+blutag-findmy:
+  namespaced:
+  - group: ''
+    kind: Service
+    name: blutag-findmy
+    namespace: blutag
+  - group: ''
+    kind: PersistentVolumeClaim
+    name: blutag-findmy-data
+    namespace: blutag
+  - group: apps
+    kind: Deployment
+    name: blutag-findmy
+    namespace: blutag
+  cluster: []
+blutag-omnisette:
+  namespaced:
+  - group: ''
+    kind: Service
+    name: omnisette
+    namespace: blutag
+  - group: apps
+    kind: Deployment
+    name: omnisette
+    namespace: blutag
+  cluster: []
+blutag-pointer-push:
+  namespaced:
+  - group: ''
+    kind: ConfigMap
+    name: blutag-pointer-push-config
+    namespace: blutag
+  - group: ''
+    kind: Secret
+    name: blutag-pointer-push-secret
+    namespace: blutag
+  - group: ''
+    kind: Service
+    name: blutag-pointer-push
+    namespace: blutag
+  - group: ''
+    kind: PersistentVolumeClaim
+    name: blutag-pointer-push-data
+    namespace: blutag
+  - group: apps
+    kind: Deployment
+    name: blutag-pointer-push
+    namespace: blutag
+  cluster: []
+blutag-postgres:
+  namespaced:
+  - group: ''
+    kind: Secret
+    name: blutag-postgres-secret
+    namespace: blutag
+  cluster: []
+blutag-website:
+  namespaced:
+  - group: ''
+    kind: Service
+    name: blutag-website
+    namespace: blutag
+  - group: apps
+    kind: Deployment
+    name: blutag-website
+    namespace: blutag
+  - group: networking.k8s.io
+    kind: Ingress
+    name: blutag-website
+    namespace: blutag
+  cluster: []
+cert-manager:
+  namespaced:
+  - group: ''
+    kind: ServiceAccount
+    name: cert-manager
+    namespace: cert-manager
+  - group: ''
+    kind: ServiceAccount
+    name: cert-manager-cainjector
+    namespace: cert-manager
+  - group: ''
+    kind: ServiceAccount
+    name: cert-manager-webhook
+    namespace: cert-manager
+  - group: rbac.authorization.k8s.io
+    kind: Role
+    name: cert-manager-cainjector:leaderelection
+    namespace: cert-manager
+  - group: rbac.authorization.k8s.io
+    kind: Role
+    name: cert-manager-tokenrequest
+    namespace: cert-manager
+  - group: rbac.authorization.k8s.io
+    kind: Role
+    name: cert-manager-webhook:dynamic-serving
+    namespace: cert-manager
+  - group: rbac.authorization.k8s.io
+    kind: Role
+    name: cert-manager:leaderelection
+    namespace: cert-manager
+  - group: rbac.authorization.k8s.io
+    kind: RoleBinding
+    name: cert-manager-cainjector:leaderelection
+    namespace: cert-manager
+  - group: rbac.authorization.k8s.io
+    kind: RoleBinding
+    name: cert-manager-tokenrequest
+    namespace: cert-manager
+  - group: rbac.authorization.k8s.io
+    kind: RoleBinding
+    name: cert-manager-webhook:dynamic-serving
+    namespace: cert-manager
+  - group: rbac.authorization.k8s.io
+    kind: RoleBinding
+    name: cert-manager:leaderelection
+    namespace: cert-manager
+  - group: ''
+    kind: Service
+    name: cert-manager
+    namespace: cert-manager
+  - group: ''
+    kind: Service
+    name: cert-manager-cainjector
+    namespace: cert-manager
+  - group: ''
+    kind: Service
+    name: cert-manager-webhook
+    namespace: cert-manager
+  - group: apps
+    kind: Deployment
+    name: cert-manager
+    namespace: cert-manager
+  - group: apps
+    kind: Deployment
+    name: cert-manager-cainjector
+    namespace: cert-manager
+  - group: apps
+    kind: Deployment
+    name: cert-manager-webhook
+    namespace: cert-manager
+  cluster:
+  - group: ''
+    kind: Namespace
+    name: cert-manager
+  - group: apiextensions.k8s.io
+    kind: CustomResourceDefinition
+    name: certificaterequests.cert-manager.io
+  - group: apiextensions.k8s.io
+    kind: CustomResourceDefinition
+    name: certificates.cert-manager.io
+  - group: apiextensions.k8s.io
+    kind: CustomResourceDefinition
+    name: challenges.acme.cert-manager.io
+  - group: apiextensions.k8s.io
+    kind: CustomResourceDefinition
+    name: clusterissuers.cert-manager.io
+  - group: apiextensions.k8s.io
+    kind: CustomResourceDefinition
+    name: issuers.cert-manager.io
+  - group: apiextensions.k8s.io
+    kind: CustomResourceDefinition
+    name: orders.acme.cert-manager.io
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cert-manager-cainjector
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cert-manager-cluster-view
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cert-manager-controller-approve:cert-manager-io
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cert-manager-controller-certificates
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cert-manager-controller-certificatesigningrequests
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cert-manager-controller-challenges
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cert-manager-controller-clusterissuers
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cert-manager-controller-ingress-shim
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cert-manager-controller-issuers
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cert-manager-controller-orders
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cert-manager-edit
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cert-manager-view
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cert-manager-webhook:subjectaccessreviews
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: cert-manager-cainjector
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: cert-manager-controller-approve:cert-manager-io
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: cert-manager-controller-certificates
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: cert-manager-controller-certificatesigningrequests
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: cert-manager-controller-challenges
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: cert-manager-controller-clusterissuers
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: cert-manager-controller-ingress-shim
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: cert-manager-controller-issuers
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: cert-manager-controller-orders
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: cert-manager-webhook:subjectaccessreviews
+  - group: cert-manager.io
+    kind: ClusterIssuer
+    name: letsencrypt-prod
+  - group: admissionregistration.k8s.io
+    kind: MutatingWebhookConfiguration
+    name: cert-manager-webhook
+  - group: admissionregistration.k8s.io
+    kind: ValidatingWebhookConfiguration
+    name: cert-manager-webhook
+cyberghost-egress:
+  namespaced:
+  - group: ''
+    kind: ConfigMap
+    name: cyberghost-egress-config
+    namespace: cyberghost-egress
+  - group: ''
+    kind: Secret
+    name: cyberghost-egress-secrets
+    namespace: cyberghost-egress
+  - group: ''
+    kind: Service
+    name: cyberghost-egress
+    namespace: cyberghost-egress
+  - group: apps
+    kind: Deployment
+    name: cyberghost-egress
+    namespace: cyberghost-egress
+  cluster:
+  - group: ''
+    kind: Namespace
+    name: cyberghost-egress
+dirtbike-postgres:
+  namespaced:
+  - group: ''
+    kind: Secret
+    name: dirtbike-postgres-secret
+    namespace: dirtbike
+  cluster: []
+drc-trainings:
+  namespaced:
+  - group: ''
+    kind: ConfigMap
+    name: trainings-config
+    namespace: drc
+  - group: ''
+    kind: Secret
+    name: trainings-secrets
+    namespace: drc
+  - group: ''
+    kind: Service
+    name: trainings
+    namespace: drc
+  - group: apps
+    kind: Deployment
+    name: trainings
+    namespace: drc
+  - group: networking.k8s.io
+    kind: Ingress
+    name: trainings
+    namespace: drc
+  cluster: []
+drc-trainings-postgres:
+  namespaced:
+  - group: ''
+    kind: Secret
+    name: trainings-postgres-secret
+    namespace: drc
+  cluster: []
+external-dns:
+  namespaced:
+  - group: ''
+    kind: ServiceAccount
+    name: external-dns
+    namespace: external-dns
+  - group: ''
+    kind: Secret
+    name: cloudflare-api-token
+    namespace: external-dns
+  - group: apps
+    kind: Deployment
+    name: external-dns
+    namespace: external-dns
+  cluster:
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: external-dns
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: external-dns
+hasadnaa:
+  namespaced:
+  - group: ''
+    kind: ServiceAccount
+    name: hasadnaa
+    namespace: hasadnaa
+  - group: ''
+    kind: Secret
+    name: hasadnaa-secrets
+    namespace: hasadnaa
+  - group: ''
+    kind: Service
+    name: hasadnaa
+    namespace: hasadnaa
+  - group: apps
+    kind: Deployment
+    name: hasadnaa
+    namespace: hasadnaa
+  - group: networking.k8s.io
+    kind: Ingress
+    name: hasadnaa
+    namespace: hasadnaa
+  cluster:
+  - group: ''
+    kind: Namespace
+    name: hasadnaa
+ids-postgres:
+  namespaced:
+  - group: ''
+    kind: Secret
+    name: ids-postgres-secret
+    namespace: ids
+  cluster: []
+jshipster-bastion:
+  namespaced:
+  - group: ''
+    kind: Secret
+    name: jshipster-bastion-ssh-keys
+    namespace: default
+  - group: ''
+    kind: Service
+    name: jshipster-bastion
+    namespace: default
+  - group: apps
+    kind: Deployment
+    name: jshipster-bastion
+    namespace: default
+  cluster: []
+loki:
+  namespaced:
+  - group: ''
+    kind: ServiceAccount
+    name: alloy
+    namespace: loki
+  - group: ''
+    kind: ServiceAccount
+    name: loki
+    namespace: loki
+  - group: ''
+    kind: ConfigMap
+    name: alloy-config-d2cbbg828t
+    namespace: loki
+  - group: ''
+    kind: ConfigMap
+    name: loki-config
+    namespace: loki
+  - group: ''
+    kind: Secret
+    name: loki-auth
+    namespace: loki
+  - group: ''
+    kind: Secret
+    name: loki-azure-storage
+    namespace: loki
+  - group: ''
+    kind: Service
+    name: loki
+    namespace: loki
+  - group: apps
+    kind: StatefulSet
+    name: loki
+    namespace: loki
+  - group: apps
+    kind: DaemonSet
+    name: alloy
+    namespace: loki
+  cluster:
+  - group: ''
+    kind: Namespace
+    name: loki
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: alloy
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: alloy
+mashov-mcp:
+  namespaced:
+  - group: ''
+    kind: ConfigMap
+    name: mashov-mcp-config
+    namespace: mashov-mcp
+  - group: ''
+    kind: Secret
+    name: cyberghost-egress-proxy
+    namespace: mashov-mcp
+  - group: ''
+    kind: Secret
+    name: mashov-login
+    namespace: mashov-mcp
+  - group: ''
+    kind: Secret
+    name: mashov-mcp-secrets
+    namespace: mashov-mcp
+  - group: ''
+    kind: Secret
+    name: mashov-session
+    namespace: mashov-mcp
+  - group: ''
+    kind: Service
+    name: mashov-mcp
+    namespace: mashov-mcp
+  - group: apps
+    kind: Deployment
+    name: mashov-mcp
+    namespace: mashov-mcp
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: default-deny
+    namespace: mashov-mcp
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: mcp-dependencies
+    namespace: mashov-mcp
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: mcp-owner-access
+    namespace: mashov-mcp
+  cluster: []
+multi-whatsapp:
+  namespaced:
+  - group: ''
+    kind: ServiceAccount
+    name: multi-whatsapp-manager
+    namespace: multi-whatsapp
+  - group: ''
+    kind: ServiceAccount
+    name: multi-whatsapp-monitor
+    namespace: multi-whatsapp
+  - group: rbac.authorization.k8s.io
+    kind: Role
+    name: multi-whatsapp-monitor
+    namespace: multi-whatsapp
+  - group: rbac.authorization.k8s.io
+    kind: RoleBinding
+    name: multi-whatsapp-monitor
+    namespace: multi-whatsapp
+  - group: ''
+    kind: ConfigMap
+    name: multi-whatsapp-config
+    namespace: multi-whatsapp
+  - group: ''
+    kind: ConfigMap
+    name: multi-whatsapp-monitor-state
+    namespace: multi-whatsapp
+  - group: ''
+    kind: Secret
+    name: multi-whatsapp-manager
+    namespace: multi-whatsapp
+  - group: ''
+    kind: Secret
+    name: multi-whatsapp-mcp
+    namespace: multi-whatsapp
+  - group: ''
+    kind: Secret
+    name: multi-whatsapp-migration
+    namespace: multi-whatsapp
+  - group: ''
+    kind: Secret
+    name: multi-whatsapp-runtime
+    namespace: multi-whatsapp
+  - group: ''
+    kind: Service
+    name: multi-whatsapp-manager
+    namespace: multi-whatsapp
+  - group: apps
+    kind: Deployment
+    name: multi-whatsapp-manager
+    namespace: multi-whatsapp
+  - group: batch
+    kind: CronJob
+    name: multi-whatsapp-monitor
+    namespace: multi-whatsapp
+  - group: batch
+    kind: Job
+    name: multi-whatsapp-migrate
+    namespace: multi-whatsapp
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: multi-whatsapp-manager-workers
+    namespace: multi-whatsapp
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: multi-whatsapp-monitor
+    namespace: multi-whatsapp
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: multi-whatsapp-monitor-readiness
+    namespace: multi-whatsapp
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: multi-whatsapp-owner-mcp
+    namespace: multi-whatsapp
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: multi-whatsapp-private
+    namespace: multi-whatsapp
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: multi-whatsapp-slack-relay
+    namespace: multi-whatsapp
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: multi-whatsapp-worker-api
+    namespace: multi-whatsapp
+  cluster:
+  - group: ''
+    kind: Namespace
+    name: multi-whatsapp
+multi-whatsapp-workers:
+  namespaced:
+  - group: ''
+    kind: Service
+    name: mw-account-*
+    namespace: multi-whatsapp
+  - group: apps
+    kind: Deployment
+    name: mw-account-*
+    namespace: multi-whatsapp
+  cluster: []
+nginx-ingress-controller:
+  namespaced:
+  - group: ''
+    kind: ServiceAccount
+    name: traefik
+    namespace: ingress-nginx
+  - group: ''
+    kind: ConfigMap
+    name: traefik-dynamic-4fhf896hf5
+    namespace: ingress-nginx
+  - group: ''
+    kind: ConfigMap
+    name: traefik-static-29f68hk95b
+    namespace: ingress-nginx
+  - group: ''
+    kind: Service
+    name: ingress-nginx-controller
+    namespace: ingress-nginx
+  - group: apps
+    kind: Deployment
+    name: traefik
+    namespace: ingress-nginx
+  - group: policy
+    kind: PodDisruptionBudget
+    name: traefik
+    namespace: ingress-nginx
+  cluster:
+  - group: ''
+    kind: Namespace
+    name: ingress-nginx
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: traefik-ingress-controller
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: traefik-ingress-controller
+  - group: networking.k8s.io
+    kind: IngressClass
+    name: nginx
+pg-backups:
+  namespaced:
+  - group: ''
+    kind: ServiceAccount
+    name: pg-backups
+    namespace: pg-backups
+  - group: ''
+    kind: ConfigMap
+    name: azure-workload-login
+    namespace: pg-backups
+  - group: ''
+    kind: Secret
+    name: multi-whatsapp-backup-secrets
+    namespace: pg-backups
+  - group: ''
+    kind: Secret
+    name: pg-backup-secrets
+    namespace: pg-backups
+  - group: ''
+    kind: Secret
+    name: tivtaam-mcp-backup-secrets
+    namespace: pg-backups
+  - group: ''
+    kind: Secret
+    name: mashov-mcp-backup-secrets
+    namespace: pg-backups
+  - group: ''
+    kind: Secret
+    name: webtop-mcp-backup-secrets
+    namespace: pg-backups
+  - group: batch
+    kind: CronJob
+    name: pg-backup-anpr
+    namespace: pg-backups
+  - group: batch
+    kind: CronJob
+    name: pg-backup-blutag
+    namespace: pg-backups
+  - group: batch
+    kind: CronJob
+    name: pg-backup-dirtbike
+    namespace: pg-backups
+  - group: batch
+    kind: CronJob
+    name: pg-backup-hasadnaa
+    namespace: pg-backups
+  - group: batch
+    kind: CronJob
+    name: pg-backup-ids
+    namespace: pg-backups
+  - group: batch
+    kind: CronJob
+    name: pg-backup-mashov-mcp
+    namespace: pg-backups
+  - group: batch
+    kind: CronJob
+    name: pg-backup-multi-whatsapp
+    namespace: pg-backups
+  - group: batch
+    kind: CronJob
+    name: pg-backup-tivtaam-mcp
+    namespace: pg-backups
+  - group: batch
+    kind: CronJob
+    name: pg-backup-trainings
+    namespace: pg-backups
+  - group: batch
+    kind: CronJob
+    name: pg-backup-webtop-mcp
+    namespace: pg-backups
+  cluster: []
+pod-security:
+  namespaced: []
+  cluster:
+  - group: ''
+    kind: Namespace
+    name: argocd
+  - group: ''
+    kind: Namespace
+    name: blutag
+  - group: ''
+    kind: Namespace
+    name: default
+  - group: ''
+    kind: Namespace
+    name: dirtbike
+  - group: ''
+    kind: Namespace
+    name: drc
+  - group: ''
+    kind: Namespace
+    name: external-dns
+  - group: ''
+    kind: Namespace
+    name: ids
+  - group: ''
+    kind: Namespace
+    name: jshipster
+  - group: ''
+    kind: Namespace
+    name: mashov-mcp
+  - group: ''
+    kind: Namespace
+    name: pg-backups
+  - group: ''
+    kind: Namespace
+    name: tailscale
+  - group: ''
+    kind: Namespace
+    name: tivtaam-mcp
+  - group: ''
+    kind: Namespace
+    name: trips
+  - group: ''
+    kind: Namespace
+    name: webtop-mcp
+shared-postgres:
+  namespaced:
+  - group: ''
+    kind: ServiceAccount
+    name: postgres-backup-recovery
+    namespace: postgres
+  - group: ''
+    kind: ConfigMap
+    name: shared-postgres-bootstrap
+    namespace: postgres
+  - group: ''
+    kind: ConfigMap
+    name: azure-workload-login
+    namespace: postgres
+  - group: ''
+    kind: Secret
+    name: shared-postgres-secrets
+    namespace: postgres
+  - group: ''
+    kind: Secret
+    name: shared-postgres-tls-reload
+    namespace: postgres
+  - group: ''
+    kind: Service
+    name: shared-postgres
+    namespace: postgres
+  - group: apps
+    kind: StatefulSet
+    name: shared-postgres
+    namespace: postgres
+  - group: apps
+    kind: StatefulSet
+    name: shared-postgres-18
+    namespace: postgres
+  - group: batch
+    kind: CronJob
+    name: pg-backup-cluster-recovery
+    namespace: postgres
+  - group: batch
+    kind: CronJob
+    name: shared-postgres-tls-reload
+    namespace: postgres
+  - group: cert-manager.io
+    kind: Certificate
+    name: shared-postgres-root-ca
+    namespace: postgres
+  - group: cert-manager.io
+    kind: Certificate
+    name: shared-postgres-server
+    namespace: postgres
+  - group: cert-manager.io
+    kind: Issuer
+    name: shared-postgres-ca
+    namespace: postgres
+  - group: cert-manager.io
+    kind: Issuer
+    name: shared-postgres-selfsigned
+    namespace: postgres
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: default-deny
+    namespace: postgres
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: postgres-backup-upload
+    namespace: postgres
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: postgres-clients
+    namespace: postgres
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: postgres-maintenance-egress
+    namespace: postgres
+  cluster:
+  - group: ''
+    kind: Namespace
+    name: postgres
+slack-notifications:
+  namespaced:
+  - group: ''
+    kind: ServiceAccount
+    name: azure-backup-reporter
+    namespace: jshipster
+  - group: ''
+    kind: ServiceAccount
+    name: azure-billing-reporter
+    namespace: jshipster
+  - group: ''
+    kind: ServiceAccount
+    name: gcp-billing-reporter
+    namespace: jshipster
+  - group: ''
+    kind: ServiceAccount
+    name: uptime-check
+    namespace: jshipster
+  - group: rbac.authorization.k8s.io
+    kind: Role
+    name: uptime-state
+    namespace: jshipster
+  - group: rbac.authorization.k8s.io
+    kind: RoleBinding
+    name: uptime-state
+    namespace: jshipster
+  - group: ''
+    kind: ConfigMap
+    name: uptime-health-state
+    namespace: jshipster
+  - group: ''
+    kind: Secret
+    name: gcp-credentials-secret
+    namespace: default
+  - group: ''
+    kind: Secret
+    name: slack-notifications-secrets
+    namespace: jshipster
+  - group: ''
+    kind: Service
+    name: slack-notifications
+    namespace: jshipster
+  - group: apps
+    kind: Deployment
+    name: slack-notifications
+    namespace: jshipster
+  - group: batch
+    kind: CronJob
+    name: azure-billing-report
+    namespace: jshipster
+  - group: batch
+    kind: CronJob
+    name: blutag-findmy-status-check
+    namespace: jshipster
+  - group: batch
+    kind: CronJob
+    name: blutag-weekly-summary
+    namespace: jshipster
+  - group: batch
+    kind: CronJob
+    name: drc-weekly-summary
+    namespace: jshipster
+  - group: batch
+    kind: CronJob
+    name: gcp-billing-report
+    namespace: jshipster
+  - group: batch
+    kind: CronJob
+    name: hasadnaa-weekly-summary
+    namespace: jshipster
+  - group: batch
+    kind: CronJob
+    name: pg-backup-report
+    namespace: jshipster
+  - group: batch
+    kind: CronJob
+    name: uptime-check
+    namespace: jshipster
+  - group: networking.k8s.io
+    kind: Ingress
+    name: slack-notifications
+    namespace: jshipster
+  cluster: []
+tailscale:
+  namespaced:
+  - group: ''
+    kind: ServiceAccount
+    name: operator
+    namespace: tailscale
+  - group: ''
+    kind: ServiceAccount
+    name: proxies
+    namespace: tailscale
+  - group: rbac.authorization.k8s.io
+    kind: Role
+    name: operator
+    namespace: tailscale
+  - group: rbac.authorization.k8s.io
+    kind: Role
+    name: proxies
+    namespace: tailscale
+  - group: rbac.authorization.k8s.io
+    kind: RoleBinding
+    name: operator
+    namespace: tailscale
+  - group: rbac.authorization.k8s.io
+    kind: RoleBinding
+    name: proxies
+    namespace: tailscale
+  - group: apps
+    kind: Deployment
+    name: operator
+    namespace: tailscale
+  - group: ''
+    kind: Secret
+    name: operator-oauth
+    namespace: tailscale
+  - group: ''
+    kind: Service
+    name: tailscale-cluster-dns
+    namespace: kube-system
+  cluster:
+  - group: apiextensions.k8s.io
+    kind: CustomResourceDefinition
+    name: connectors.tailscale.com
+  - group: apiextensions.k8s.io
+    kind: CustomResourceDefinition
+    name: dnsconfigs.tailscale.com
+  - group: apiextensions.k8s.io
+    kind: CustomResourceDefinition
+    name: peerrelays.tailscale.com
+  - group: apiextensions.k8s.io
+    kind: CustomResourceDefinition
+    name: proxyclasses.tailscale.com
+  - group: apiextensions.k8s.io
+    kind: CustomResourceDefinition
+    name: proxygrouppolicies.tailscale.com
+  - group: apiextensions.k8s.io
+    kind: CustomResourceDefinition
+    name: proxygroups.tailscale.com
+  - group: apiextensions.k8s.io
+    kind: CustomResourceDefinition
+    name: recorders.tailscale.com
+  - group: apiextensions.k8s.io
+    kind: CustomResourceDefinition
+    name: tailnets.tailscale.com
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: tailscale-operator
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: tailscale-operator
+  - group: tailscale.com
+    kind: Connector
+    name: jshipster-aks
+  - group: tailscale.com
+    kind: ProxyClass
+    name: jshipster-resources
+tivtaam-mcp:
+  namespaced:
+  - group: ''
+    kind: ConfigMap
+    name: tivtaam-mcp-config
+    namespace: tivtaam-mcp
+  - group: ''
+    kind: Secret
+    name: cyberghost-egress-proxy
+    namespace: tivtaam-mcp
+  - group: ''
+    kind: Secret
+    name: tivtaam-mcp-secrets
+    namespace: tivtaam-mcp
+  - group: ''
+    kind: Secret
+    name: tivtaam-session
+    namespace: tivtaam-mcp
+  - group: ''
+    kind: Service
+    name: tivtaam-mcp
+    namespace: tivtaam-mcp
+  - group: apps
+    kind: Deployment
+    name: tivtaam-mcp
+    namespace: tivtaam-mcp
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: default-deny
+    namespace: tivtaam-mcp
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: mcp-dependencies
+    namespace: tivtaam-mcp
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: mcp-owner-access
+    namespace: tivtaam-mcp
+  cluster: []
+trips:
+  namespaced:
+  - group: ''
+    kind: Secret
+    name: trips-auth
+    namespace: trips
+  - group: ''
+    kind: Service
+    name: trips
+    namespace: trips
+  - group: apps
+    kind: Deployment
+    name: trips
+    namespace: trips
+  - group: networking.k8s.io
+    kind: Ingress
+    name: trips
+    namespace: trips
+  cluster: []
+webtop-mcp:
+  namespaced:
+  - group: ''
+    kind: ConfigMap
+    name: webtop-mcp-config
+    namespace: webtop-mcp
+  - group: ''
+    kind: Secret
+    name: cyberghost-egress-proxy
+    namespace: webtop-mcp
+  - group: ''
+    kind: Secret
+    name: webtop-mcp-secrets
+    namespace: webtop-mcp
+  - group: ''
+    kind: Secret
+    name: webtop-session
+    namespace: webtop-mcp
+  - group: ''
+    kind: Service
+    name: webtop-mcp
+    namespace: webtop-mcp
+  - group: apps
+    kind: Deployment
+    name: webtop-mcp
+    namespace: webtop-mcp
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: default-deny
+    namespace: webtop-mcp
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: mcp-dependencies
+    namespace: webtop-mcp
+  - group: networking.k8s.io
+    kind: NetworkPolicy
+    name: mcp-owner-access
+    namespace: webtop-mcp
+  cluster: []

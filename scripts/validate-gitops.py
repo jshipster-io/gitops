@@ -13,6 +13,7 @@ import workload_identity
 import operator_identity
 import argocd_bootstrap
 import argocd_self_management
+import argocd_projects
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 CUSTOM = {"Application", "ApplicationSet", "AppProject", "Certificate", "ClusterIssuer",
@@ -47,21 +48,32 @@ def validate(root=ROOT):
             if src.suffix in {".yaml", ".yml"} and "templates" not in src.parts:
                 load(src)  # Parse all YAML, including workflows and inactive manifests.
 
+        identities = yaml.safe_load((tree / "argo-projects/secret-identities.yaml").read_text())
         # KSOPS is intentionally not executed in CI. Verify encryption and remove
         # generators in the disposable copy; Argo CD alone holds the age key.
         for path in tree.rglob("kustomization.yaml"):
             data = load(path)[0]
+            stub_index = 0
             for generator in data.pop("generators", []):
                 gen = load(path.parent / generator)[0]
                 assert gen.get("kind") == "ksops", f"Unexpected generator: {generator}"
                 for filename in gen["files"]:
                     secret = (path.parent / filename).resolve()
                     assert secret.is_relative_to(tree), "Generator escapes repository"
-                    for doc in load(secret):
+                    records = identities[str(secret.relative_to(tree))]
+                    docs = load(secret)
+                    assert len(records) == len(docs), "Secret identity registry count changed"
+                    for doc, record in zip(docs, records):
                         assert doc.get("sops", {}).get("mac", "").startswith("ENC["), f"Missing SOPS integrity metadata: {filename}"
                         payload = doc.get("data", {}) | doc.get("stringData", {})
                         assert payload, f"Empty encrypted payload: {filename}"
                         assert all(isinstance(v, str) and v.startswith("ENC[") for v in payload.values()), f"Plaintext secret: {filename}"
+                        # Render only public resource identity through normal Kustomize namespace transforms.
+                        assert record['identityFingerprint'] == argocd_projects.identity_hash(doc), 'Secret identity changed: re-record public metadata with the owner key'
+                        meta = record['metadata']
+                        stub = f'.project-secret-{stub_index}.yaml'; stub_index += 1
+                        (path.parent / stub).write_text(yaml.safe_dump({'apiVersion': 'v1', 'kind': 'Secret', 'metadata': meta}))
+                        data.setdefault('resources', []).append(stub)
             assert not data.get("transformers"), "Executable transformers are not allowed"
             path.write_text(yaml.safe_dump(data, sort_keys=False))
 
@@ -83,15 +95,19 @@ def validate(root=ROOT):
                     assert generator["git"]["revision"] == "production", "ApplicationSet must read production"
         # Root app is not listed in apps/kustomization.yaml.
         check_source(load(tree / "apps/apps.yaml")[0]["spec"]["source"])
+        rendered_targets = {}
+        worker_docs = []
         count = 0
         for target in sorted(targets):
             path = (tree / target).resolve()
             assert path.is_relative_to(tree), "Application path escapes repository"
             config = load(path / "kustomization.yaml")[0]
             if not any(config.get(k) for k in ("resources", "components", "configMapGenerator", "secretGenerator", "helmCharts")):
+                rendered_targets[target] = []
                 print(f"PASS {target} (empty retirement manifest)")
                 continue
             rendered = subprocess.check_output(["kustomize", "build", str(path)], text=True)
+            rendered_targets[target] = [d for d in yaml.safe_load_all(rendered) if d]
             count += validate_rendered(rendered)
             for doc in yaml.safe_load_all(rendered):
                 if doc:
@@ -108,6 +124,7 @@ def validate(root=ROOT):
                 "--set-string", f"accountID={data['account_id']}",
                 "--set", f"enabled={str(data['enabled']).lower()}",
                 "--set", f"generation={data['generation']}"], text=True)
+            worker_docs.extend(d for d in yaml.safe_load_all(rendered) if d)
             count += validate_rendered(rendered)
             for doc in yaml.safe_load_all(rendered):
                 if doc:
@@ -122,6 +139,7 @@ def validate(root=ROOT):
         argocd_bootstrap.validate(managed)
         argocd_self_management.validate(tree, managed)
         count += validate_rendered(yaml.safe_dump_all(managed))
+        argocd_projects.validate(tree, apps, rendered_targets, worker_docs, managed)
         # Both recovery and self-management templates must meet admission policy.
         policy_docs.extend(bootstrap)
         policy_docs.extend(managed)

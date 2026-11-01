@@ -1,0 +1,40 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: platform-nginx-ingress-controller
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: '-10'
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false
+spec:
+  description: Scoped deployment permissions for nginx-ingress-controller
+  sourceRepos:
+  - https://github.com/jshipster-io/gitops.git
+  destinations:
+  - server: https://kubernetes.default.svc
+    namespace: ingress-nginx
+  clusterResourceWhitelist:
+  - group: ''
+    kind: Namespace
+    name: ingress-nginx
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: traefik-ingress-controller
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: traefik-ingress-controller
+  - group: networking.k8s.io
+    kind: IngressClass
+    name: nginx
+  namespaceResourceWhitelist:
+  - group: ''
+    kind: ConfigMap
+  - group: ''
+    kind: Service
+  - group: ''
+    kind: ServiceAccount
+  - group: apps
+    kind: Deployment
+  - group: policy
+    kind: PodDisruptionBudget
+  sourceNamespaces: []

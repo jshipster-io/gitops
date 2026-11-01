@@ -1,0 +1,127 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: platform-cert-manager
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: '-10'
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false
+spec:
+  description: Scoped deployment permissions for cert-manager
+  sourceRepos:
+  - https://github.com/jshipster-io/gitops
+  destinations:
+  - server: https://kubernetes.default.svc
+    namespace: cert-manager
+  clusterResourceWhitelist:
+  - group: ''
+    kind: Namespace
+    name: cert-manager
+  - group: apiextensions.k8s.io
+    kind: CustomResourceDefinition
+    name: certificaterequests.cert-manager.io
+  - group: apiextensions.k8s.io
+    kind: CustomResourceDefinition
+    name: certificates.cert-manager.io
+  - group: apiextensions.k8s.io
+    kind: CustomResourceDefinition
+    name: challenges.acme.cert-manager.io
+  - group: apiextensions.k8s.io
+    kind: CustomResourceDefinition
+    name: clusterissuers.cert-manager.io
+  - group: apiextensions.k8s.io
+    kind: CustomResourceDefinition
+    name: issuers.cert-manager.io
+  - group: apiextensions.k8s.io
+    kind: CustomResourceDefinition
+    name: orders.acme.cert-manager.io
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cert-manager-cainjector
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cert-manager-cluster-view
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cert-manager-controller-approve:cert-manager-io
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cert-manager-controller-certificates
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cert-manager-controller-certificatesigningrequests
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cert-manager-controller-challenges
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cert-manager-controller-clusterissuers
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cert-manager-controller-ingress-shim
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cert-manager-controller-issuers
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cert-manager-controller-orders
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cert-manager-edit
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cert-manager-view
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRole
+    name: cert-manager-webhook:subjectaccessreviews
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: cert-manager-cainjector
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: cert-manager-controller-approve:cert-manager-io
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: cert-manager-controller-certificates
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: cert-manager-controller-certificatesigningrequests
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: cert-manager-controller-challenges
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: cert-manager-controller-clusterissuers
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: cert-manager-controller-ingress-shim
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: cert-manager-controller-issuers
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: cert-manager-controller-orders
+  - group: rbac.authorization.k8s.io
+    kind: ClusterRoleBinding
+    name: cert-manager-webhook:subjectaccessreviews
+  - group: cert-manager.io
+    kind: ClusterIssuer
+    name: letsencrypt-prod
+  - group: admissionregistration.k8s.io
+    kind: MutatingWebhookConfiguration
+    name: cert-manager-webhook
+  - group: admissionregistration.k8s.io
+    kind: ValidatingWebhookConfiguration
+    name: cert-manager-webhook
+  namespaceResourceWhitelist:
+  - group: ''
+    kind: Service
+  - group: ''
+    kind: ServiceAccount
+  - group: apps
+    kind: Deployment
+  - group: rbac.authorization.k8s.io
+    kind: Role
+  - group: rbac.authorization.k8s.io
+    kind: RoleBinding
+  sourceNamespaces: []
