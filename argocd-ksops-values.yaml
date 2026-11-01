@@ -59,6 +59,13 @@ server:
       memory: 256Mi
 
 repoServer:
+  # The bounded two-node pool has no surge slot. Running apps and the API remain
+  # available, while manifest rendering briefly pauses during singleton updates.
+  deploymentStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
   # Rendering uses repository credentials over RPC, not the Kubernetes API.
   automountServiceAccountToken: false
   resources:

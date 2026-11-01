@@ -13,6 +13,7 @@ SOPS_AGE_KEY_FILE := $(SOPS_KEY)
 # KUBECONFIG can point to a non-default credential file.
 .PHONY: argocd-upgrade
 argocd-upgrade:
+	python3 scripts/verify-argocd-api-egress.py
 	helm upgrade argocd argo-cd \
 		--repo https://argoproj.github.io/argo-helm \
 		--version 10.11.6 --kube-context $(CONTEXT) -n $(NAMESPACE) \

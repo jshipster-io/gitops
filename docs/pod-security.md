@@ -209,3 +209,17 @@ Helm-managed changes do not deploy merely because GitOps production advanced.
 Stage runtime settings before changing argocd admission to Restricted, and verify
 all controller/init/hook templates plus UI, deployment and private owner access.
 Keep a Helm recovery path even if Argo CD is later made self-managing.
+
+The Helm Redis initialization hook needs its existing scoped secret RBAC and API
+connectivity. `redis-secret-init-to-api` permits only its pod selector to the API
+Service and observed endpoint addresses on TCP 443; it adds no general internet
+or application access. `make argocd-upgrade` checks these against live EndpointSlices
+before running hooks. If AKS addressing changes, update the narrow policy through
+GitOps first. Preserve the existing Redis secret rather than generating a new one.
+
+On a full two-node pool, a surge replica may remain Pending even after the hook
+passes. Check scheduling and autoscaler bounds rather than treating desired
+Deployment fields as a completed rollout. The repo-server uses maxSurge 0/maxUnavailable 1 to fit
+within the existing budget; singleton replacements briefly pause manifest rendering. Verify the new pod itself and repeat hard refreshes only after
+rollout convergence. `verify-pod-security.py --namespace argocd` scopes live
+admission checks to this change; omitting the flag checks every managed namespace.

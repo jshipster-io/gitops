@@ -2,6 +2,7 @@
 """Verify live namespace labels and PSA admission without creating any pod.
 Requires an explicit KUBECONFIG. Includes live Helm/operator workload templates.
 """
+import argparse
 import copy
 import hashlib
 import json
@@ -18,6 +19,13 @@ def submit(pod):
     return subprocess.run(K+['create','--dry-run=server','-f','-'],input=json.dumps(pod),capture_output=True,text=True)
 config=yaml.safe_load((Path(__file__).resolve().parents[1]/'pod-security/profiles.yaml').read_text())
 profiles=config['namespaces']
+parser=argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--namespace', action='append', help='Limit checks to named profile(s); default is all')
+args=parser.parse_args()
+if args.namespace:
+    assert set(args.namespace)<=set(profiles), 'Unknown namespace profile'
+    profiles={n:p for n,p in profiles.items() if n in args.namespace}
+
 for ns,p in profiles.items():
     live=get('get','namespace',ns)['metadata']['labels']
     expected=p['enforce'] if config['phase']=='enforce' else 'privileged'

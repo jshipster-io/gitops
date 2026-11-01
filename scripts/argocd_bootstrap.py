@@ -21,6 +21,12 @@ def validate(docs):
     deployment = next(d for d in docs if d['kind']=='Deployment' and d['metadata']['name']=='argocd-repo-server')
     spec = deployment['spec']['template']['spec']
     assert spec['automountServiceAccountToken'] is False, 'Repo-server API token is not needed'
+    for container in spec['initContainers']+spec['containers']:
+        sc=container['securityContext']
+        assert sc['runAsNonRoot'] is True and sc['readOnlyRootFilesystem'] is True
+        assert sc['allowPrivilegeEscalation'] is False and sc['capabilities']=={'drop':['ALL']}
+        assert sc['seccompProfile']=={'type':'RuntimeDefault'}
+
     init = next(c for c in spec['initContainers'] if c['name']=='install-ksops')
     assert '@sha256:' in init['image'], 'Pin KSOPS by digest'
     assert init['command']==['/usr/local/bin/ksops','install','/custom-tools'], 'Preserve bundled Kustomize'
