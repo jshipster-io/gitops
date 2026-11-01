@@ -19,7 +19,7 @@ spec:
       labels:
         app: tivtaam-mcp
       annotations:
-        jshipster.io/revision: dfd23bad01f53df1412055a6cc96a967df4bee29
+        jshipster.io/revision: b7b80aef5ad7cb8678af89fafcfdcbfafa2fdab2
     spec:
       automountServiceAccountToken: false
       terminationGracePeriodSeconds: 30
