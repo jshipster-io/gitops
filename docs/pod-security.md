@@ -107,7 +107,7 @@ namespace enforcement. Hasadnaa, drc, trips, external-dns and jshipster complete
 this staged sequence. Blutag App/Website and cloudflared have per-workload guards;
 the shared blutag and argocd namespaces retain Baseline until their other workloads
 are migrated. Persistent FindMy/Pointer workers, the
-third-party anisette cache and root-dependent bastion/KSOPS bootstrap are separate
+third-party anisette cache and root-dependent bastion are separate
 compatibility work; do not infer they were migrated by this stateless stage.
 
 ```sh
@@ -173,3 +173,39 @@ it does not claim that the next scheduled full backup has already run. Remove on
 temporary probe artifacts/recovery snapshots created for this rollout, preserving
 normal backups and previous recovery points. If the replacement fails, revert the
 runtime change through automatic GitOps validation and reuse the current data PVC.
+
+## Argo CD / KSOPS bootstrap
+
+Argo CD remains a separately Helm-managed release, pinned by `make argocd-upgrade`.
+The automatic gate now renders its pinned chart as well as GitOps Applications,
+checks all chart workload templates against the namespace PSA profile, and enforces
+the bootstrap contract in `scripts/argocd_bootstrap.py`. A credential-free Docker
+check proves the exact installer image can install with the same non-root user,
+read-only root, capability drops, memory limit and bounded temporary volume.
+
+The distroless KSOPS image uses UID/GID 65532; preserve that identity separately
+from Argo CD's UID 999. It installs only KSOPS into a 64Mi emptyDir and never mounts
+the production age key. Its root is read-only, privilege escalation is disabled,
+capabilities are dropped and seccomp is RuntimeDefault. The repo-server mounts the
+installed plugin read-only, retains its existing read-only age-key path, and no
+longer mounts a Kubernetes API token. Preserve Argo CD's bundled Kustomize and
+`--enable-alpha-plugins --enable-exec`; do not install a shell into the distroless
+image or expose decryption keys to CI.
+
+For an authorized upgrade, run the normal gate and the opt-in rehearsal:
+
+```sh
+python3 scripts/test-argocd-bootstrap.py
+KUBECONFIG="$HOME/.kube/prod-aks-entra" python3 scripts/verify-ksops-bootstrap.py --run
+```
+
+The rehearsal creates only a disposable age key, synthetic ciphertext, a temporary
+Secret and an isolated Job. It checks both successful rendering and missing-key
+rejection, then removes its resources. Existing production secret rendering must
+also be verified after the real rollout, using hard refreshes and secret integrity
+checks without printing rendered Secrets. Preserve the installed chart, live Helm
+values and prior release for recovery. Upgrade only after automatic CI passes;
+Helm-managed changes do not deploy merely because GitOps production advanced.
+Stage runtime settings before changing argocd admission to Restricted, and verify
+all controller/init/hook templates plus UI, deployment and private owner access.
+Keep a Helm recovery path even if Argo CD is later made self-managing.

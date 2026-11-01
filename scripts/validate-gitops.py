@@ -11,6 +11,7 @@ import pod_security
 import workload_hardening
 import workload_identity
 import operator_identity
+import argocd_bootstrap
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 CUSTOM = {"Application", "ApplicationSet", "AppProject", "Certificate", "ClusterIssuer",
@@ -111,6 +112,12 @@ def validate(root=ROOT):
                 if doc:
                     doc.setdefault("metadata", {}).setdefault("namespace", "multi-whatsapp")
                     policy_docs.append(doc)
+        bootstrap = argocd_bootstrap.render(tree)
+        argocd_bootstrap.validate(bootstrap)
+        # Helm may synthesize throwaway Secret values. Do not print or commit them;
+        # production secrets are never supplied to this credential-free render.
+        count += validate_rendered(yaml.safe_dump_all(d for d in bootstrap if d['kind'] != 'Secret'))
+        policy_docs.extend(bootstrap)
         operator_identity.validate(policy_docs)
         pod_security.validate(policy_docs)
         workload_hardening.validate(policy_docs)

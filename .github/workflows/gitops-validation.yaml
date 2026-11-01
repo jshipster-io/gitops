@@ -40,6 +40,8 @@ jobs:
       - run: python scripts/test-pod-security.py
       - run: python scripts/test-workload-hardening.py
       - run: python scripts/test-database-hardening.py
+      - run: python scripts/test-argocd-bootstrap.py
+      - run: python scripts/check-ksops-image.py
       - run: python scripts/test-network-policy.py
       - run: python scripts/test-operator-identity.py
       - run: python scripts/test-security-audit.py

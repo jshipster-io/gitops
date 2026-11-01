@@ -59,6 +59,8 @@ server:
       memory: 256Mi
 
 repoServer:
+  # Rendering uses repository credentials over RPC, not the Kubernetes API.
+  automountServiceAccountToken: false
   resources:
     requests:
       cpu: 25m
@@ -68,7 +70,8 @@ repoServer:
   # Add volumes for custom tools and SOPS age key
   volumes:
     - name: custom-tools
-      emptyDir: {}
+      emptyDir:
+        sizeLimit: 64Mi
     - name: sops-age
       secret:
         secretName: sops-age
@@ -79,6 +82,23 @@ repoServer:
     - name: install-ksops
       image: viaductoss/ksops:v4.5.1@sha256:4def9fdd4e2f850265740ebe9592c5455d19b76891e88e602df8b52d74b95334
       command: ["/usr/local/bin/ksops", "install", "/custom-tools"]
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        capabilities:
+          drop: [ALL]
+        seccompProfile:
+          type: RuntimeDefault
+      resources:
+        requests:
+          cpu: 10m
+          memory: 32Mi
+        limits:
+          cpu: 200m
+          memory: 128Mi
       volumeMounts:
         - mountPath: /custom-tools
           name: custom-tools
@@ -88,6 +108,7 @@ repoServer:
     - mountPath: /home/argocd/.config/kustomize/plugin/viaduct.ai/v1/ksops/ksops
       name: custom-tools
       subPath: ksops
+      readOnly: true
     - mountPath: /.config/sops/age
       name: sops-age
       readOnly: true
