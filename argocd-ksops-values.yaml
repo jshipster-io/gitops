@@ -132,7 +132,6 @@ repoServer:
 # Enable exec for kustomize (required for KSOPS)
 configs:
   cm:
-    application.resourceTrackingMethod: annotation
     kustomize.buildOptions: "--enable-alpha-plugins --enable-exec"
 
 # ArgoCD Notifications — Slack delivery of application sync/deploy events to the

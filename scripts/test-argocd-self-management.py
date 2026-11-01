@@ -29,7 +29,8 @@ class SelfManagementTests(unittest.TestCase):
         with patch.object(recovery,'app',side_effect=lambda n:{'metadata':{'uid':state[n]['uid']}}),patch.object(recovery,'patch') as mutate:
             recovery.restore(state)
             self.assertEqual([x.args[0] for x in mutate.call_args_list],['argocd','apps'])
-            self.assertEqual(mutate.call_args_list[0].args[1]['spec']['syncPolicy']['automated'],state['argocd']['automated'])
+            self.assertEqual(mutate.call_args_list[0].args[1][-1]['value'],state['argocd']['automated'])
+            self.assertEqual(mutate.call_args_list[1].args[1][-1],{'op':'replace','path':'/spec/syncPolicy/automated','value':state['apps']['automated']})
         with patch.object(recovery,'app',return_value={'metadata':{'uid':'replacement'}}),patch.object(recovery,'patch') as mutate,self.assertRaises(AssertionError):
             recovery.restore(state)
         mutate.assert_not_called()

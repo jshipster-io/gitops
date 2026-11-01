@@ -17,7 +17,7 @@ def snapshot(apps):
     return {a['metadata']['name']:{'uid':a['metadata']['uid'],'automated':a['spec'].get('syncPolicy',{}).get('automated')} for a in apps if a}
 
 def patch(name,value):
-    subprocess.run(K+['patch','application',name,'--type=merge','-p',json.dumps(value)],capture_output=True,check=True)
+    subprocess.run(K+['patch','application',name,'--type='+('json' if isinstance(value,list) else 'merge'),'-p',json.dumps(value)],capture_output=True,check=True)
 
 def paused(a):
     if not a:return True
@@ -35,7 +35,10 @@ def restore(state):
         current=app(name)
         assert current and current['metadata']['uid']==state[name]['uid'], 'Application identity changed; inspect before resuming'
     for name in ('argocd','apps'):
-        if name in state:patch(name,{'spec':{'syncPolicy':{'automated':state[name]['automated']}}})
+        if name in state:
+            saved=state[name]
+            change={'op':'replace','path':'/spec/syncPolicy/automated','value':saved['automated']} if saved['automated'] is not None else {'op':'remove','path':'/spec/syncPolicy/automated'}
+            patch(name,[{'op':'test','path':'/metadata/uid','value':saved['uid']},change])
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)

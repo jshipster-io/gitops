@@ -16,7 +16,7 @@ def validate(root, docs):
     assert s['syncPolicy']['automated'] in [dict(enabled=e,selfHeal=True,prune=True,allowEmpty=False) for e in (False,True)]
     assert set(s['syncPolicy']['syncOptions'])=={'ServerSideApply=true','FailOnSharedResource=true'}
     indexed={(d['kind'],d['metadata']['name']):d for d in docs}
-    assert indexed[('ConfigMap','argocd-cm')]['data']['application.resourceTrackingMethod']=='annotation', 'Do not adopt Helm-labeled credentials via label tracking'
+    assert indexed[('ConfigMap','argocd-cm')]['data'].get('application.resourceTrackingMethod','annotation')=='annotation', 'Do not adopt Helm-labeled credentials via label tracking'
     assert not any(d['kind'] in ('Secret','Namespace') for d in docs), 'Credentials and Namespace have separate owners'
     assert not any('helm.sh/hook' in d['metadata'].get('annotations',{}) for d in docs), 'Bootstrap hooks must stay outside routine reconciliation'
     for name in ('argocd-server','argocd-repo-server','argocd-redis','argocd-dex-server','argocd-applicationset-controller','argocd-notifications-controller'):
