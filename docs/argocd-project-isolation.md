@@ -83,6 +83,9 @@ kustomize build argo-projects | kubectl --context jshipster apply --server-side 
   --field-manager=argocd-project-recovery --force-conflicts -f -
 ```
 
+For a fresh control-plane bootstrap, install these projects before applying
+`apps/apps.yaml`; its restricted project must already exist.
+
 Set the trusted KUBECONFIG explicitly. Verify policy and source validity before
 resuming; restore only the intended policies, not broader permissions or old Secret
 contents. Keep project names and Application UIDs stable during recovery.
