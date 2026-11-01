@@ -13,10 +13,11 @@ Enforcement protects newly created pods, including controller replacements.
 
 - Restricted: cert-manager, ingress-nginx, mashov-mcp, webtop-mcp, tivtaam-mcp,
   multi-whatsapp (including workers and migration/monitor jobs), hasadnaa, drc,
-  trips, external-dns and jshipster (including all notification CronJobs). The
+  trips, external-dns and jshipster (including all notification CronJobs), plus
+  postgres and pg-backups (including recovery and TLS reload jobs). The
   isolated azure-operators namespace also has Restricted labels but deliberately
   denies every pod through its separate admission policy.
-- Baseline: ordinary legacy application, backup and database namespaces. Existing
+- Baseline: remaining legacy application namespaces. Existing
   images/init scripts and jobs are not assumed to support forced non-root startup.
   Baseline rejects privileged containers, host namespace sharing and hostPath,
   while Restricted audit/warnings expose the remaining migration work.

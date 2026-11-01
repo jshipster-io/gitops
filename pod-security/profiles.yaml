@@ -50,11 +50,11 @@ namespaces:
     enforce: restricted
     reason: Workloads meet Restricted standards.
   pg-backups:
-    enforce: baseline
-    reason: Existing workloads require a staged migration to non-root Restricted settings.
+    enforce: restricted
+    reason: All application backup templates have verified non-root dump and workload-identity upload runtimes.
   postgres:
-    enforce: baseline
-    reason: Existing workloads require a staged migration to non-root Restricted settings.
+    enforce: restricted
+    reason: PostgreSQL, retained offline templates and recovery/TLS jobs have verified non-root runtimes.
   tailscale:
     enforce: privileged
     reason: Subnet router requires privileged networking containers.
