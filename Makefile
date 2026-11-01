@@ -13,6 +13,7 @@ SOPS_AGE_KEY_FILE := $(SOPS_KEY)
 # KUBECONFIG can point to a non-default credential file.
 .PHONY: argocd-upgrade
 argocd-upgrade:
+	python3 scripts/argocd_recovery.py guard
 	python3 scripts/verify-argocd-api-egress.py
 	@set -eu; chart_cache=$$(mktemp -d); trap 'rm -rf "$$chart_cache"' EXIT; \
 		case "$$(helm version --short)" in \

@@ -132,15 +132,15 @@ repoServer:
 # Enable exec for kustomize (required for KSOPS)
 configs:
   cm:
+    application.resourceTrackingMethod: annotation
     kustomize.buildOptions: "--enable-alpha-plugins --enable-exec"
 
 # ArgoCD Notifications — Slack delivery of application sync/deploy events to the
 # #deployments channel. This codifies what previously lived only in-cluster as
 # the argocd-notifications-cm so the routing is version-controlled.
 #
-# NOTE: ArgoCD does not self-manage in this repo — it is installed via
-# `helm upgrade` using these values. Editing here is config-only and takes
-# effect on the next helm upgrade; it does not auto-sync via ArgoCD.
+# Normal delivery uses apps/argocd.yaml and the self-management overlay.
+# Helm remains the external recovery path; see docs/argocd-self-management.md.
 # The Slack credentials already live in the existing argocd-notifications-secret
 # (keys: slack-token, slack-webhook-url), so we do not recreate it here.
 notifications:

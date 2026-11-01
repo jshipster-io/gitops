@@ -12,6 +12,7 @@ import workload_hardening
 import workload_identity
 import operator_identity
 import argocd_bootstrap
+import argocd_self_management
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 CUSTOM = {"Application", "ApplicationSet", "AppProject", "Certificate", "ClusterIssuer",
@@ -73,7 +74,7 @@ def validate(root=ROOT):
                 spec = app["spec"]
                 for source in spec.get("sources", [spec.get("source", {})]):
                     check_source(source)
-                    if "github.com/jshipster-io/gitops" in source.get("repoURL", ""):
+                    if "github.com/jshipster-io/gitops" in source.get("repoURL", "") and source.get("path"):
                         targets.add(source["path"])
                         namespaces[source["path"]] = spec["destination"]["namespace"]
             elif app["kind"] == "ApplicationSet":
@@ -117,7 +118,13 @@ def validate(root=ROOT):
         # Helm may synthesize throwaway Secret values. Do not print or commit them;
         # production secrets are never supplied to this credential-free render.
         count += validate_rendered(yaml.safe_dump_all(d for d in bootstrap if d['kind'] != 'Secret'))
+        managed = argocd_bootstrap.render(tree, self_managed=True)
+        argocd_bootstrap.validate(managed)
+        argocd_self_management.validate(tree, managed)
+        count += validate_rendered(yaml.safe_dump_all(managed))
+        # Both recovery and self-management templates must meet admission policy.
         policy_docs.extend(bootstrap)
+        policy_docs.extend(managed)
         operator_identity.validate(policy_docs)
         pod_security.validate(policy_docs)
         workload_hardening.validate(policy_docs)

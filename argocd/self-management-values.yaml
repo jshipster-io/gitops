@@ -1,0 +1,13 @@
+# Normal reconciliation must never generate or take ownership of credentials.
+# Base values retain these bootstrap functions for Helm recovery only.
+configs:
+  secret:
+    createSecret: false
+redis:
+  existingSecret: argocd-redis
+redisSecretInit:
+  enabled: false
+crds:
+  keep: true
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false,Delete=false

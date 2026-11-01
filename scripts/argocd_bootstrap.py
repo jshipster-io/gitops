@@ -8,13 +8,16 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 CHART_VERSION = '10.11.6'
 
-def render(root=ROOT):
+def render(root=ROOT, self_managed=False):
     assert '--version '+CHART_VERSION in (root/'Makefile').read_text(), 'Helm bootstrap chart pin drift'
     with tempfile.TemporaryDirectory(prefix='argocd-chart-') as tmp:
         env = dict(os.environ, HELM_CACHE_HOME=tmp+'/cache', HELM_CONFIG_HOME=tmp+'/config', HELM_DATA_HOME=tmp+'/data')
-        output = subprocess.check_output(['helm','template','argocd','argo-cd','--repo','https://argoproj.github.io/argo-helm','--version',CHART_VERSION,'--namespace','argocd','-f',str(root/'argocd-ksops-values.yaml')], text=True, env=env)
+        extra = ['-f', str(root/'argocd/self-management-values.yaml')] if self_managed else []
+        output = subprocess.check_output(['helm','template','argocd','argo-cd','--repo','https://argoproj.github.io/argo-helm','--version',CHART_VERSION,'--namespace','argocd','-f',str(root/'argocd-ksops-values.yaml')]+extra, text=True, env=env)
     docs = [d for d in yaml.safe_load_all(output) if d]
-    for d in docs:d.setdefault('metadata',{}).setdefault('namespace','argocd')
+    for d in docs:
+        if d['kind'] not in ('CustomResourceDefinition','ClusterRole','ClusterRoleBinding','Namespace'):
+            d.setdefault('metadata',{}).setdefault('namespace','argocd')
     return docs
 
 def validate(docs):
