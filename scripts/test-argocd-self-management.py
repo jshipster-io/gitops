@@ -24,6 +24,10 @@ class SelfManagementTests(unittest.TestCase):
         for root,child in [(True,False),(False,True),(True,True)]:
             with patch.object(recovery,'app',side_effect=lambda n:a(n,root if n=='apps' else child)),self.assertRaises(AssertionError):recovery.guard()
         with patch.object(recovery,'app',side_effect=lambda n:a(n,False)):recovery.guard()
+        pending=a('argocd',False);pending['operation']={'sync':{}}
+        with patch.object(recovery,'app',return_value=pending),self.assertRaises(AssertionError):recovery.guard()
+        pending.pop('operation');pending['status']={'operationState':{'phase':'Terminating'}}
+        with patch.object(recovery,'app',return_value=pending),self.assertRaises(AssertionError):recovery.guard()
     def test_restore_preserves_policies_and_checks_identity(self):
         state={'apps':{'uid':'root','automated':{'selfHeal':True,'prune':True}},'argocd':{'uid':'child','automated':{'enabled':True,'selfHeal':True,'prune':True}}}
         with patch.object(recovery,'app',side_effect=lambda n:{'metadata':{'uid':state[n]['uid']}}),patch.object(recovery,'patch') as mutate:
@@ -36,9 +40,10 @@ class SelfManagementTests(unittest.TestCase):
         mutate.assert_not_called()
 
     def test_unsafe_ownership_and_delivery_are_rejected(self):
-        for change in ('main','cascade','empty','credentials','crd-prune','hook','missing-controller'):
+        for change in ('main','manual-gate','cascade','empty','credentials','crd-prune','hook','missing-controller'):
             app=copy.deepcopy(self.app);docs=copy.deepcopy(self.docs)
             if change=='main':app['spec']['sources'][1]['targetRevision']='main'
+            elif change=='manual-gate':app['spec']['syncPolicy']['automated']['enabled']=False
             elif change=='cascade':app['metadata']['finalizers']=['resources-finalizer.argocd.argoproj.io']
             elif change=='empty':app['spec']['syncPolicy']['automated']['allowEmpty']=True
             elif change=='credentials':docs.append({'kind':'Secret','metadata':{'name':'sops-age'}})

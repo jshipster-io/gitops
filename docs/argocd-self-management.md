@@ -4,7 +4,8 @@
 chart and release name. A second source reads values only from the validated
 `production` branch. Normal changes follow main → automatic CI → production →
 Argo sync, with no human approval or Kubernetes deployment credentials in CI.
-The initial migration observes the live comparison before enabling automatic sync.
+Adoption first observed the live comparison with automatic sync disabled; normal
+operation enables automatic sync and CI rejects disabling it.
 
 The shared `argocd-ksops-values.yaml` is used by both Argo and external Helm.
 `argocd/self-management-values.yaml` prevents normal reconciliation from creating
@@ -12,6 +13,9 @@ credentials or rerunning bootstrap hooks. Existing `sops-age`, repository, Redis
 admin and tunnel secrets stay outside this Application. Redis authentication
 remains required. The Namespace keeps its single owner in `pod-security`.
 Application name and Helm release name both remain `argocd`, preserving selectors.
+Pinned Argo CD v3.5.6 uses annotation tracking by default; do not switch to label
+tracking, which could adopt excluded Helm-labeled credentials. Preserve this
+verified default without changing ConfigMap checksums during adoption.
 
 The Application has no cascading-delete finalizer and is protected from parent
 pruning/deletion. Argo CRDs have Prune=false/Delete=false. CI rejects missing core
@@ -42,7 +46,8 @@ python3 scripts/argocd_recovery.py resume --run --state-file /tmp/argocd-recover
 Choose a new state filename for each recovery. The owner-only file records the
 exact original automation policies and Application UIDs, never secret values.
 Recovery pauses the parent `apps` Application first, then `argocd`, and requests
-termination of their active sync operations before Helm. Other service Applications
+termination of their active sync operations and waits for pending/running operations
+to clear before Helm. A timeout leaves them paused without starting Helm. Other service Applications
 remain independent. On success or failure it leaves these two Apps paused so a
 broken Git revision cannot immediately undo recovery. Resume checks their UIDs and
 restores the child policy before the parent's original policy. A missing/changed

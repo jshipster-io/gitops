@@ -5,6 +5,7 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import time
 
 ROOT=Path(__file__).resolve().parents[1]
 K=['kubectl','--context','jshipster','--request-timeout=30s','-n','argocd']
@@ -24,9 +25,27 @@ def paused(a):
     policy=a['spec'].get('syncPolicy',{}).get('automated')
     return policy is None or policy.get('enabled') is False
 
+def active(a):
+    return bool(a and (a.get('operation') or a.get('status',{}).get('operationState',{}).get('phase') in ('Running','Terminating')))
+
+def wait_for_idle():
+    deadline=time.monotonic()+120
+    while True:
+        busy=[]
+        for name in ('apps','argocd'):
+            current=app(name)
+            assert current and paused(current), 'Recovery pause changed; refusing concurrent Helm'
+            if active(current):
+                busy.append(name)
+                if current.get('status',{}).get('operationState',{}).get('phase')=='Running':
+                    patch(name,{'status':{'operationState':{'phase':'Terminating'}}})
+        if not busy:return
+        assert time.monotonic()<deadline, 'Sync did not terminate; leaving reconciliation paused without running Helm'
+        time.sleep(2)
+
 def guard():
     if app('argocd'):
-        assert all(paused(app(n)) for n in ('apps','argocd')), 'Use argocd_recovery.py recover: pause parent and self-management before Helm'
+        assert all(paused(a) and not active(a) for a in [app(n) for n in ('apps','argocd')]), 'Use argocd_recovery.py recover: pause parent and self-management before Helm'
 
 def restore(state):
     # Restore child before parent so the parent cannot race the saved policy.
@@ -68,6 +87,7 @@ def main():
         if current.get('status',{}).get('operationState',{}).get('phase') in ('Running','Terminating'):
             # Same termination request as Argo's API, sent directly to Kubernetes.
             patch(name,{'status':{'operationState':{'phase':'Terminating'}}})
+    wait_for_idle()
     guard()
     print('Parent and self-management paused. Running external Helm recovery.',flush=True)
     subprocess.run(['make','argocd-upgrade'],cwd=ROOT,check=True)

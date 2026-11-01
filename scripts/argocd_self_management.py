@@ -13,7 +13,7 @@ def validate(root, docs):
     assert chart['targetRevision']==argocd_bootstrap.CHART_VERSION
     assert chart['helm']=={'releaseName':'argocd','valueFiles':['$values/argocd-ksops-values.yaml','$values/argocd/self-management-values.yaml']}
     assert values=={'repoURL':'https://github.com/jshipster-io/gitops.git','targetRevision':'production','ref':'values'}
-    assert s['syncPolicy']['automated'] in [dict(enabled=e,selfHeal=True,prune=True,allowEmpty=False) for e in (False,True)]
+    assert s['syncPolicy']['automated']==dict(enabled=True,selfHeal=True,prune=True,allowEmpty=False)
     assert set(s['syncPolicy']['syncOptions'])=={'ServerSideApply=true','FailOnSharedResource=true'}
     indexed={(d['kind'],d['metadata']['name']):d for d in docs}
     assert indexed[('ConfigMap','argocd-cm')]['data'].get('application.resourceTrackingMethod','annotation')=='annotation', 'Do not adopt Helm-labeled credentials via label tracking'

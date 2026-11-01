@@ -1,7 +1,7 @@
 # jshipster GitOps
 
 Kubernetes manifests for the `jshipster` Azure AKS cluster. Argo CD reconciles
-`main` from this repository. Always select `--context jshipster`; set
+the automatically validated `production` branch from this repository. Always select `--context jshipster`; set
 `KUBECONFIG` explicitly when using a non-default credential file.
 
 ## Layout and ownership
@@ -10,9 +10,9 @@ Kubernetes manifests for the `jshipster` Azure AKS cluster. Argo CD reconciles
 - `apps/apps.yaml` bootstraps the Argo CD app-of-apps.
 - Service directories contain Kustomize resources and KSOPS secret generators.
 - `multi-whatsapp/worker-chart` supplies dynamically generated account workloads.
-- `argocd-ksops-values.yaml` configures the Helm-managed Argo CD installation.
-  Argo CD does not manage its own installation; edit these values and run
-  `make argocd-upgrade` to deploy them.
+- `apps/argocd.yaml` manages Argo CD itself using the pinned Helm chart,
+  `argocd-ksops-values.yaml` and `argocd/self-management-values.yaml`.
+  Keep external [Helm recovery](docs/argocd-self-management.md) and existing credentials.
 - Commented-out applications and unreferenced manifests are retained recovery
   scaffolding, not proof that a workload is running. Check Kustomize references.
 
@@ -47,8 +47,9 @@ is not a substitute for verifying uploaded archives and testing restores.
    protected `production` branch without human approval. See
    [deployment gate](docs/deployment-gate.md). Then check Argo sync, health, rollout status,
    restart counts, warning events, and the affected service endpoints.
-4. For Helm-managed Argo CD, run `make argocd-upgrade` separately. It pins chart
-   10.11.6 and application v3.5.6, retaining existing release overrides and KSOPS.
+4. Argo CD changes use the same automatic gate. For external recovery, follow
+   [pause → Helm → resume](docs/argocd-self-management.md); direct Helm upgrades
+   are blocked while parent or self-management reconciliation is active.
 
 ```sh
 kubectl --context jshipster get applications -n argocd

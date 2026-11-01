@@ -25,7 +25,7 @@ spec:
     namespace: argocd
   syncPolicy:
     automated:
-      enabled: false # Observation stage; enabled after live adoption checks.
+      enabled: true
       selfHeal: true
       prune: true
       allowEmpty: false

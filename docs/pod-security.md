@@ -176,7 +176,8 @@ runtime change through automatic GitOps validation and reuse the current data PV
 
 ## Argo CD / KSOPS bootstrap
 
-Argo CD remains a separately Helm-managed release, pinned by `make argocd-upgrade`.
+Argo CD self-manages through `apps/argocd.yaml`, with the existing Helm release
+retained for [external recovery](argocd-self-management.md).
 The automatic gate now renders its pinned chart as well as GitOps Applications,
 checks all chart workload templates against the namespace PSA profile, and enforces
 the bootstrap contract in `scripts/argocd_bootstrap.py`. A credential-free Docker
@@ -204,11 +205,12 @@ Secret and an isolated Job. It checks both successful rendering and missing-key
 rejection, then removes its resources. Existing production secret rendering must
 also be verified after the real rollout, using hard refreshes and secret integrity
 checks without printing rendered Secrets. Preserve the installed chart, live Helm
-values and prior release for recovery. Upgrade only after automatic CI passes;
-Helm-managed changes do not deploy merely because GitOps production advanced.
+values and prior release for recovery. Normal changes deploy automatically only
+after CI promotes them to production. Recovery pauses both parent and self-management
+Applications and waits for operations to stop before Helm.
 Stage runtime settings before changing argocd admission to Restricted, and verify
 all controller/init/hook templates plus UI, deployment and private owner access.
-Keep a Helm recovery path even if Argo CD is later made self-managing.
+Keep the tested external Helm recovery path and restore saved automation afterward.
 
 The Helm Redis initialization hook needs its existing scoped secret RBAC and API
 connectivity. `redis-secret-init-to-api` permits only its pod selector to the API
