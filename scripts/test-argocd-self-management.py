@@ -28,6 +28,12 @@ class SelfManagementTests(unittest.TestCase):
         with patch.object(recovery,'app',return_value=pending),self.assertRaises(AssertionError):recovery.guard()
         pending.pop('operation');pending['status']={'operationState':{'phase':'Terminating'}}
         with patch.object(recovery,'app',return_value=pending),self.assertRaises(AssertionError):recovery.guard()
+    def test_busy_parent_prevents_child_pause_and_recovery(self):
+        with patch.object(recovery,'wait_for_idle',side_effect=RuntimeError('parent busy')) as wait,patch.object(recovery,'patch') as mutate,self.assertRaises(RuntimeError):
+            recovery.pause_control_plane()
+        wait.assert_called_once_with(('apps',))
+        self.assertEqual([x.args[0] for x in mutate.call_args_list],['apps'])
+
     def test_restore_preserves_policies_and_checks_identity(self):
         state={'apps':{'uid':'root','automated':{'selfHeal':True,'prune':True}},'argocd':{'uid':'child','automated':{'enabled':True,'selfHeal':True,'prune':True}}}
         with patch.object(recovery,'app',side_effect=lambda n:{'metadata':{'uid':state[n]['uid']}}),patch.object(recovery,'patch') as mutate:

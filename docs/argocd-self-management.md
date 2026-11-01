@@ -45,10 +45,12 @@ python3 scripts/argocd_recovery.py resume --run --state-file /tmp/argocd-recover
 
 Choose a new state filename for each recovery. The owner-only file records the
 exact original automation policies and Application UIDs, never secret values.
-Recovery pauses the parent `apps` Application first, then `argocd`, and requests
-termination of their active sync operations and waits for pending/running operations
-to clear before Helm. A timeout leaves them paused without starting Helm. Other service Applications
-remain independent. On success or failure it leaves these two Apps paused so a
+Recovery pauses the parent `apps` Application and waits for it to become idle
+before pausing `argocd`, so an in-flight parent sync cannot re-enable the child.
+It requests termination of active sync operations and waits for pending/running
+operations to clear before Helm. A timeout stops recovery without starting Helm;
+already-paused Applications remain paused and the saved policies allow recovery. Other service Applications
+remain independent. Once Helm starts, success or failure leaves both Apps paused so a
 broken Git revision cannot immediately undo recovery. Resume checks their UIDs and
 restores the child policy before the parent's original policy. A missing/changed
 Application requires inspection rather than blindly restoring an old snapshot.
@@ -66,3 +68,18 @@ sync/health states, Restricted admission, authenticated Argo access, application
 readiness and private access from both Macs. Never print decrypted manifests.
 A recovery drill should exercise pause → Helm → resume without inducing a failure
 or deleting existing secrets. Remove only its temporary state file after success.
+
+## Adoption verification (2026-11-01)
+
+The observation stage rendered 47 resources without Secrets or Namespace ownership;
+all seven workload specifications matched the deployed Helm baseline. Automatic
+production promotion and controller-initiated adoption passed. A harmless Service
+metadata drift was repaired by automatic self-heal without changing routing.
+
+External recovery advanced Helm revision 15 to 16 with the pinned chart unchanged;
+the Redis initialization hook completed, then exact parent/child automation policies
+were restored. All seven running Argo pod UIDs and six protected access/rendering
+secret fingerprints were unchanged. All 33 Applications freshly rendered and were
+Synced/Healthy. Restricted positive/negative admission, actual KSOPS runtime,
+authenticated Argo access, five public readiness endpoints and private access from
+both Macs passed. These are migration evidence, not a substitute for future checks.

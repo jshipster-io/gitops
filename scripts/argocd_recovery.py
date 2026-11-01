@@ -28,11 +28,11 @@ def paused(a):
 def active(a):
     return bool(a and (a.get('operation') or a.get('status',{}).get('operationState',{}).get('phase') in ('Running','Terminating')))
 
-def wait_for_idle():
+def wait_for_idle(names=('apps','argocd')):
     deadline=time.monotonic()+120
     while True:
         busy=[]
-        for name in ('apps','argocd'):
+        for name in names:
             current=app(name)
             assert current and paused(current), 'Recovery pause changed; refusing concurrent Helm'
             if active(current):
@@ -46,6 +46,12 @@ def wait_for_idle():
 def guard():
     if app('argocd'):
         assert all(paused(a) and not active(a) for a in [app(n) for n in ('apps','argocd')]), 'Use argocd_recovery.py recover: pause parent and self-management before Helm'
+
+def pause_control_plane():
+    # Parent must be idle before pausing the child it can otherwise re-enable.
+    for name in ('apps','argocd'):
+        patch(name,{'spec':{'syncPolicy':{'automated':{'enabled':False}}}})
+        wait_for_idle((name,))
 
 def restore(state):
     # Restore child before parent so the parent cannot race the saved policy.
@@ -81,13 +87,7 @@ def main():
     assert 'apps' in state and 'argocd' in state,'Recovery expects an existing self-managed installation'
     # Fail before touching reconciliation if state cannot be saved exclusively.
     with os.fdopen(os.open(args.state_file,os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o600),'w') as f:json.dump(state,f)
-    for name in ('apps','argocd'):
-        patch(name,{'spec':{'syncPolicy':{'automated':{'enabled':False}}}})
-        current=app(name)
-        if current.get('status',{}).get('operationState',{}).get('phase') in ('Running','Terminating'):
-            # Same termination request as Argo's API, sent directly to Kubernetes.
-            patch(name,{'status':{'operationState':{'phase':'Terminating'}}})
-    wait_for_idle()
+    pause_control_plane()
     guard()
     print('Parent and self-management paused. Running external Helm recovery.',flush=True)
     subprocess.run(['make','argocd-upgrade'],cwd=ROOT,check=True)
