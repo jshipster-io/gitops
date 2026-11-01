@@ -59,6 +59,15 @@ def connection(src, dst, port):
 
 
 class NetworkPolicyTests(unittest.TestCase):
+    def test_redis_bootstrap_api_allowance_is_scoped(self):
+        p=next(p['spec'] for p in POLICIES['argocd'] if p['metadata']['name']=='redis-secret-init-to-api')
+        self.assertEqual(p['podSelector'], {'matchLabels': {'app.kubernetes.io/name': 'argocd-redis-secret-init'}})
+        self.assertEqual(p['policyTypes'], ['Egress'])
+        self.assertEqual(len(p['egress']), 1)
+        self.assertEqual(p['egress'][0]['ports'], [{'protocol':'TCP','port':443}])
+        self.assertEqual({p['ipBlock']['cidr'] for p in p['egress'][0]['to']}, {'10.0.0.1/32','172.212.23.43/32'})
+        self.assertFalse(connection(('argocd', {'app.kubernetes.io/name':'argocd-redis-secret-init'}), ('postgres', {'app':'shared-postgres-18'}), 5432))
+
     def test_postgres_18_access_matrix(self):
         target = ("postgres", {"app": "shared-postgres-18"})
         self.assertTrue(connection(("pg-backups", {"app": "pg-backup"}), target, 5432))
