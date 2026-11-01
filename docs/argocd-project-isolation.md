@@ -40,7 +40,9 @@ or rekeying a KSOPS file, the authorized owner runs:
 SOPS_AGE_KEY_FILE=/path/to/owner/keys.txt python3 scripts/record-secret-identities.py
 ```
 
-This decrypts in memory and writes only public resource identities/fingerprints.
+`make sops-encrypt` and `make sops-edit` run this binding refresh automatically
+after successful encryption/editing. Direct SOPS/rekey workflows run it explicitly.
+It decrypts in memory and writes only public resource identities/fingerprints.
 Never commit the key or decrypted output. Update the resource identity and project
 contracts deliberately when adding resources; do not generate broad permissions
 just to make a failing gate pass. Ordinary image-digest promotions require no new

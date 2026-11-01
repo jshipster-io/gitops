@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 import copy
+import os
+import subprocess
+import tempfile
 from pathlib import Path
 import unittest
 import yaml
@@ -11,6 +14,21 @@ def resource(kind,name,namespace=None,group=''):
     if namespace:d['metadata']['namespace']=namespace
     return d
 class ProjectBoundaryTests(unittest.TestCase):
+    def test_owner_sops_workflows_refresh_bindings_only_after_success(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            folder=Path(tmp);(folder/'key').touch();(folder/'fixture.yaml').write_text('synthetic fixture')
+            (folder/'sops').write_text('#!/bin/sh\nexit "$SOPS_TEST_EXIT"\n')
+            (folder/'python3').write_text('#!/bin/sh\ntouch "$BINDING_MARKER"\n')
+            for name in ('sops','python3'):(folder/name).chmod(0o700)
+            marker=folder/'bound'
+            for target in ('sops-encrypt','sops-edit'):
+                for status in ('0','42'):
+                    marker.unlink(missing_ok=True)
+                    env=dict(os.environ,PATH=tmp+os.pathsep+os.environ['PATH'],SOPS_TEST_EXIT=status,BINDING_MARKER=str(marker))
+                    result=subprocess.run(['make','-f',str(ROOT/'Makefile'),target,'FILE=fixture.yaml','SOPS_KEY='+str(folder/'key')],cwd=folder,env=env,capture_output=True)
+                    self.assertEqual(result.returncode==0,status=='0')
+                    self.assertEqual(marker.exists(),status=='0')
+
     def test_encrypted_identity_binding_survives_payload_only_rotation(self):
         doc={'apiVersion':'ENC[version]','kind':'ENC[kind]','metadata':{'name':'ENC[name]'},'data':{'token':'ENC[value]'}}
         before=policy.identity_hash(doc);doc['data']['token']='ENC[rotated]'
@@ -36,7 +54,7 @@ class ProjectBoundaryTests(unittest.TestCase):
         for d in [resource('Deployment','mw-account-new','argocd','apps'),resource('Secret','mw-account-new','multi-whatsapp')]:
             self.assertFalse(policy.permits_resource(p,d,'multi-whatsapp'))
     def test_default_deny_and_namespace_only_project(self):
-        p={'spec':policy.DENY}
+        p=project('default');self.assertEqual(p['spec'],policy.DENY)
         for d in [resource('Namespace','hasadnaa'),resource('Deployment','hasadnaa','hasadnaa','apps')]:self.assertFalse(policy.permits_resource(p,d,'hasadnaa'))
         p=project('platform-pod-security')
         self.assertFalse(policy.permits_resource(p,resource('Secret','sops-age','argocd'),'argocd'))

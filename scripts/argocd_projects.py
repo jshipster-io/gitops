@@ -52,11 +52,11 @@ def external_chart(source,namespace):
 
 def validate(root,apps,rendered,workers,managed):
     registry=yaml.safe_load((root/'argo-projects/registry.yaml').read_text());phase=registry['phase']
-    assert phase in ('prepare','migrate','enforce')
+    assert phase=='enforce','Migration completed: do not reopen temporary phases'
     projects={d['metadata']['name']:d for d in apps if d['kind']=='AppProject'}
     identities=yaml.safe_load((root/'argo-projects/resource-identities.yaml').read_text())
     expected=registry['applications'];assert len({x['project'] for x in expected.values()})==len(expected),'Project boundaries must be separate'
-    assert set(projects)=={x['project'] for x in expected.values()}|({'default'} if phase=='enforce' else set()),'Unexpected project or missing registration'
+    assert set(projects)=={x['project'] for x in expected.values()}|{'default'},'Unexpected project or missing registration'
     for name,p in projects.items():
         assert p['metadata']['namespace']=='argocd'
         assert p['metadata']['annotations']['argocd.argoproj.io/sync-options']=='Prune=false,Delete=false'
@@ -79,11 +79,17 @@ def validate(root,apps,rendered,workers,managed):
     assert {a['metadata']['name'] for a in applications}==set(expected),'Every Application and generator needs an explicit project contract'
     for a in applications:
         name=a['metadata']['name'];s=a['spec'];contract=expected[name];p=projects[contract['project']]
-        assert s['project'] in ({'default',contract['project']} if phase=='prepare' else {contract['project']}),name+': incorrect project'
+        assert s['project']==contract['project'],name+': incorrect project'
         assert s['destination']==contract['destination'],name+': destination contract changed'
         sources=s.get('sources',[s.get('source',{})])
         assert [{k:v for k,v in src.items() if k in ('repoURL','path','chart','ref')} for src in sources]==contract['sources'],name+': source path/identity changed'
         grant=p['spec'];identity=identities[name]
+        for rule in identity['namespaced']:
+            assert set(rule)=={'group','kind','name','namespace'}
+            assert not any(c in rule['namespace'] for c in '*?[')
+            if any(c in rule['name'] for c in '*?['):
+                assert (name=='apps' and rule['group']=='argoproj.io' and rule['kind'] in ('Application','ApplicationSet','AppProject') and rule['name']=='*') or (name=='multi-whatsapp-workers' and rule['name']=='mw-account-*' and rule['kind'] in ('Deployment','Service')),'Unexpected resource identity wildcard'
+
         assert sorted(grant['sourceRepos'])==sorted({src['repoURL'] for src in sources}),'Unused source permission'
         namespaces={s['destination']['namespace']}|{r['namespace'] for r in identity['namespaced']}
         assert sorted(d['namespace'] for d in grant['destinations'])==sorted(namespaces),'Unused namespace permission'
@@ -104,4 +110,4 @@ def validate(root,apps,rendered,workers,managed):
         for doc in docs:
             assert permits_identity(identities[name],doc,s['destination']['namespace']),'Unregistered resource identity: '+name+'/'+doc['metadata'].get('name','')
             assert permits_resource(p,doc,s['destination']['namespace']),f"{name}: project denies {doc['kind']}/{doc['metadata'].get('name')}"
-    print('PASS 33 Argo project contracts: sources, destinations, cluster names, CI resource identities, hooks and generated workers')
+    print(f'PASS {len(applications)} Argo project contracts: sources, destinations, cluster names, CI resource identities, hooks and generated workers')

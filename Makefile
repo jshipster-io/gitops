@@ -256,7 +256,8 @@ sops-encrypt:
 		exit 1; \
 	fi; \
 	echo "🔒 Encrypting $(FILE) with key $(SOPS_AGE_KEY_FILE)..."; \
-	SOPS_AGE_KEY_FILE=$(SOPS_AGE_KEY_FILE) sops -e -i $(FILE); \
+	SOPS_AGE_KEY_FILE="$(SOPS_AGE_KEY_FILE)" sops -e -i "$(FILE)" && \
+	SOPS_AGE_KEY_FILE="$(SOPS_AGE_KEY_FILE)" python3 scripts/record-secret-identities.py && \
 	echo "✅ $(FILE) encrypted successfully!"
 
 # Decrypt a specific secrets file (for editing/viewing)
@@ -288,7 +289,8 @@ sops-edit:
 		exit 1; \
 	fi; \
 	echo "✏️  Editing $(FILE) with SOPS..."; \
-	SOPS_AGE_KEY_FILE=$(SOPS_AGE_KEY_FILE) sops $(FILE)
+	SOPS_AGE_KEY_FILE="$(SOPS_AGE_KEY_FILE)" sops "$(FILE)" && \
+	SOPS_AGE_KEY_FILE="$(SOPS_AGE_KEY_FILE)" python3 scripts/record-secret-identities.py
 
 # Encrypt all secrets.yaml files in the repository
 sops-encrypt-all:

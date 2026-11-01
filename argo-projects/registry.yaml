@@ -1,4 +1,4 @@
-phase: migrate
+phase: enforce
 applications:
   apps:
     project: platform-bootstrap

@@ -34,3 +34,4 @@ resources:
 - projects/platform-shared-postgres.yaml
 - projects/platform-slack-notifications.yaml
 - projects/platform-tailscale.yaml
+- projects/default.yaml

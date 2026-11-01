@@ -26,6 +26,10 @@ renders pass the same security and schema checks.
 
 ## Recovery without a working Argo API
 
+Keep the [project boundaries](argocd-project-isolation.md) during recovery.
+`apps` uses `platform-bootstrap`, `argocd` uses `platform-argocd`, and default is
+locked. Helm preserves these projects; do not revert Applications to default.
+
 Keep the existing Helm release/history. Never run `helm uninstall`, delete Argo
 CRDs or namespaces, or recreate credentials as part of an ownership migration.
 The Helm release records the last bootstrap/recovery operation, not subsequent

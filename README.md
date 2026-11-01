@@ -8,6 +8,8 @@ the automatically validated `production` branch from this repository. Always sel
 
 - `apps/kustomization.yaml` is the authoritative list of active applications.
 - `apps/apps.yaml` bootstraps the Argo CD app-of-apps.
+- `argo-projects/` defines [restricted project boundaries](docs/argocd-project-isolation.md);
+  each Application has an explicit project and `default` denies deployments.
 - Service directories contain Kustomize resources and KSOPS secret generators.
 - `multi-whatsapp/worker-chart` supplies dynamically generated account workloads.
 - `apps/argocd.yaml` manages Argo CD itself using the pinned Helm chart,
