@@ -11,7 +11,7 @@ validated running pods and live controller/CronJob templates, then advanced to t
 compatible enforcement levels. Labels do not restart or evict existing pods.
 Enforcement protects newly created pods, including controller replacements.
 
-- Restricted: cert-manager, ingress-nginx, mashov-mcp, webtop-mcp, tivtaam-mcp,
+- Restricted: argocd, cert-manager, ingress-nginx, mashov-mcp, webtop-mcp, tivtaam-mcp,
   multi-whatsapp (including workers and migration/monitor jobs), hasadnaa, drc,
   trips, external-dns and jshipster (including all notification CronJobs), plus
   postgres and pg-backups (including recovery and TLS reload jobs). The
@@ -105,8 +105,8 @@ no network before promotion. Tests must not send reports, notifications or email
 Deploy hardened templates first, verify replacements and access, then promote
 namespace enforcement. Hasadnaa, drc, trips, external-dns and jshipster completed
 this staged sequence. Blutag App/Website and cloudflared have per-workload guards;
-the shared blutag and argocd namespaces retain Baseline until their other workloads
-are migrated. Persistent FindMy/Pointer workers, the
+the shared blutag namespace retains Baseline until its other workloads
+are migrated. Argo CD completed its separate bootstrap migration below. Persistent FindMy/Pointer workers, the
 third-party anisette cache and root-dependent bastion are separate
 compatibility work; do not infer they were migrated by this stateless stage.
 

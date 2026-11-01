@@ -14,11 +14,18 @@ SOPS_AGE_KEY_FILE := $(SOPS_KEY)
 .PHONY: argocd-upgrade
 argocd-upgrade:
 	python3 scripts/verify-argocd-api-egress.py
-	helm upgrade argocd argo-cd \
+	@set -eu; chart_cache=$$(mktemp -d); trap 'rm -rf "$$chart_cache"' EXIT; \
+		case "$$(helm version --short)" in \
+		  v4.*) rollback_flag=--rollback-on-failure ;; \
+		  v3.*) rollback_flag=--atomic ;; \
+		  *) echo "Verify rollback support for this Helm version" >&2; exit 1 ;; \
+		esac; \
+		HELM_CACHE_HOME="$$chart_cache/cache" HELM_CONFIG_HOME="$$chart_cache/config" \
+		HELM_DATA_HOME="$$chart_cache/data" helm upgrade argocd argo-cd \
 		--repo https://argoproj.github.io/argo-helm \
 		--version 10.11.6 --kube-context $(CONTEXT) -n $(NAMESPACE) \
 		--reset-then-reuse-values -f argocd-ksops-values.yaml \
-		--wait --timeout 10m
+		--wait --timeout 10m "$$rollback_flag"
 
 argocd-repo-add:
 	@echo "Adding ArgoCD Helm repository..."

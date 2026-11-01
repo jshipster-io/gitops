@@ -5,8 +5,8 @@ namespaces:
     enforce: restricted
     reason: Owner-only federation; pods and secrets are forbidden by admission.
   argocd:
-    enforce: baseline
-    reason: Existing workloads require a staged migration to non-root Restricted settings.
+    enforce: restricted
+    reason: Helm controller/hook templates and the non-root KSOPS bootstrap are verified.
   blutag:
     enforce: baseline
     reason: Existing workloads require a staged migration to non-root Restricted settings.
