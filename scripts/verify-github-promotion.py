@@ -8,6 +8,7 @@ import argparse
 import base64
 import concurrent.futures
 import json
+import re
 from pathlib import Path
 import subprocess
 import yaml
@@ -64,6 +65,13 @@ def audit_consumer(org, item, config, check_runs):
     detail = 'configuration'
     if check_runs:
         head = api(f'repos/{org}/{repo}/commits/main')['sha']
+        if repo == 'gitops':
+            # The image workflow promotes a child commit that deliberately does
+            # not rebuild the images. Audit the recorded image source instead.
+            values = yaml.safe_load(contents(org, repo, 'argocd-ksops-values.yaml'))
+            head = values['global']['image']['tag'].split('@')[0]
+            assert re.fullmatch(r'[0-9a-f]{40}', head), 'missing image source commit'
+            assert api(f'repos/{org}/{repo}/compare/{head}...main')['status'] in ('ahead', 'identical'), 'image source is not an ancestor of main'
         runs = api(f'repos/{org}/{repo}/actions/runs?branch=main&head_sha={head}&per_page=100')['workflow_runs']
         # Scheduled quality/evaluation runs can intentionally skip deployment.
         runs = [r for r in runs if r['path'] == item['workflow'] and r['event'] == 'push']

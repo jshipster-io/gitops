@@ -1,5 +1,6 @@
 """Credential-free validation for the separately Helm-managed Argo CD bootstrap."""
 import os
+import re
 from pathlib import Path
 import subprocess
 import tempfile
@@ -21,6 +22,17 @@ def render(root=ROOT, self_managed=False):
     return docs
 
 def validate(docs):
+    argo_names={'application-controller','applicationset-controller','notifications-controller',
+                'server','repo-server','copyutil','secret-init'}
+    argo_images=set()
+    for doc in docs:
+        pod=doc.get('spec',{}).get('template',{}).get('spec',{})
+        for container in pod.get('initContainers',[])+pod.get('containers',[]):
+            if container['name'] in argo_names:
+                image=container['image']
+                assert re.fullmatch(r'prodacr1234\.azurecr\.io/platform-argocd:[0-9a-f]{40}@sha256:[0-9a-f]{64}',image), 'Pin the rebuilt Argo image by source and digest'
+                argo_images.add(image)
+    assert len(argo_images)==1, 'Argo components and Helm hooks must use the same validated image'
     deployment = next(d for d in docs if d['kind']=='Deployment' and d['metadata']['name']=='argocd-repo-server')
     spec = deployment['spec']['template']['spec']
     assert spec['automountServiceAccountToken'] is False, 'Repo-server API token is not needed'
@@ -31,7 +43,7 @@ def validate(docs):
         assert sc['seccompProfile']=={'type':'RuntimeDefault'}
 
     init = next(c for c in spec['initContainers'] if c['name']=='install-ksops')
-    assert '@sha256:' in init['image'], 'Pin KSOPS by digest'
+    assert re.fullmatch(r'prodacr1234\.azurecr\.io/platform-ksops@sha256:[0-9a-f]{64}',init['image']), 'Pin the rebuilt KSOPS image by digest'
     assert init['command']==['/usr/local/bin/ksops','install','/custom-tools'], 'Preserve bundled Kustomize'
     context=init['securityContext']
     assert context['runAsNonRoot'] is True and context['runAsUser']==65532 and context['runAsGroup']==65532

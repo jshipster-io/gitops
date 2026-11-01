@@ -93,16 +93,26 @@ jobs:
         run: bash argocd-images/test-runtime.sh "$(cat receipts/argocd.txt)" "$(cat receipts/ksops.txt)"
   promote:
     needs: runtime
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     permissions:
-      contents: write
-      actions: write
+      contents: read
     steps:
+      - name: Short-lived GitOps promotion token
+        id: gitops_token
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0, Node 24
+        with:
+          client-id: ${{ vars.GITOPS_APP_CLIENT_ID }}
+          private-key: ${{ secrets.GITOPS_APP_PRIVATE_KEY }}
+          owner: jshipster-io
+          repositories: gitops
+          permission-contents: write
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           ref: main
           fetch-depth: 0
+          token: ${{ steps.gitops_token.outputs.token }}
       - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131
         with:
           pattern: image-*
@@ -112,7 +122,6 @@ jobs:
       - name: Promote the validated pair through normal GitOps validation
         env:
           BUILT_SHA: ${{ github.sha }}
-          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
@@ -139,5 +148,5 @@ jobs:
               exit 1
             fi
           done
-          # GITHUB_TOKEN pushes do not emit another push workflow event.
-          gh workflow run gitops-validation.yaml --ref main
+          # The App-token push emits the normal required-check workflow event.
+          # Its post-step revokes the token; no PAT or branch-protection bypass.

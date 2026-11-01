@@ -3,10 +3,11 @@
 # allowing automatic decryption of SOPS-encrypted secrets
 # 
 # Versions:
-# - ArgoCD: v3.5.6 (Helm chart 10.11.6, explicit image tag)
-# - KSOPS: v4.5.1 (native install command; no shell required)
+# - ArgoCD: v3.5.6 security rebuild (Helm chart 10.11.6)
+# - KSOPS: v4.5.1 security rebuild (native install; no shell required)
 
-# Pin the stable release; preserves the list-pager nil-pointer fix (#25192).
+# CI owns both digest pins; update argocd-images inputs to build a new pair.
+# Retain the stable release's list-pager nil-pointer fix (#25192).
 global:
   # Fine-grained ingress and egress policies are managed by GitOps instead.
   # Helm's server ingress rule otherwise permits every source additively.
