@@ -1,0 +1,466 @@
+{
+  "organization": [
+    {
+      "repository": "gitops",
+      "sha": "dedd7920a1bb4b9d8ab73f254e4c26f9af6c4b72",
+      "branch": "main",
+      "truncated": false,
+      "files": [
+        {
+          "path": ".github/workflows/gitops-validation.yaml",
+          "sha": "76fb0ddcb2641c84b20d8e572e71e2adbb3db293"
+        },
+        {
+          "path": "jshipster-bastion/Dockerfile",
+          "sha": "318af4cb268f985f60b8653485adf611e0f93768"
+        },
+        {
+          "path": "jshipster-bastion/Dockerfile.postgres18",
+          "sha": "022c8d3026148d67ccec1c2412c26a82c3adc790"
+        }
+      ]
+    },
+    {
+      "repository": "tivtaam-mcp",
+      "sha": "b7b80aef5ad7cb8678af89fafcfdcbfafa2fdab2",
+      "branch": "main",
+      "truncated": false,
+      "files": [
+        {
+          "path": ".github/workflows/check.yml",
+          "sha": "bc3ccb7c1ecb106e1d089e58293df2d6793d8974"
+        },
+        {
+          "path": "Dockerfile",
+          "sha": "b583e05ee4f8a70811895e8f47b2bfddacfb1744"
+        }
+      ]
+    },
+    {
+      "repository": "jshipster-workspace",
+      "sha": "e75e696414d115b05f33e4623100684984f4aca9",
+      "branch": "main",
+      "truncated": false,
+      "files": []
+    },
+    {
+      "repository": "multi-whatsapp",
+      "sha": "958740bfc9407ae11665bcad778c1fb336e622f9",
+      "branch": "main",
+      "truncated": false,
+      "files": [
+        {
+          "path": ".github/workflows/check.yml",
+          "sha": "e4d4973998b6f76bacc0d06527030f7f81418a07"
+        },
+        {
+          "path": "Dockerfile",
+          "sha": "bd3b97124f0c99d1ac82fe3f037e783761910aae"
+        }
+      ]
+    },
+    {
+      "repository": "terraform",
+      "sha": "17f9632370ef5439e8d3530cc8ef8856c8a6da14",
+      "branch": "main",
+      "truncated": false,
+      "files": [
+        {
+          "path": ".github/workflows/validate.yaml",
+          "sha": "f71dabef1d9f281d7832435df92a2cca8bdf7f23"
+        }
+      ]
+    },
+    {
+      "repository": "webtop-mcp",
+      "sha": "be98df819125e57e3c1142b53a7052f5ce09c5f2",
+      "branch": "main",
+      "truncated": false,
+      "files": [
+        {
+          "path": ".github/workflows/check.yml",
+          "sha": "d67c02aeea7151b15984c50b1f41396f158fbb0a"
+        },
+        {
+          "path": "Dockerfile",
+          "sha": "3206daceae4097f2f3c9e2b1bb76dac2ecf34a4a"
+        }
+      ]
+    },
+    {
+      "repository": "slack-notifications",
+      "sha": "301add0cf5f624c90352a080d2e5200af3a824e2",
+      "branch": "main",
+      "truncated": false,
+      "files": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha": "1acc7360fcc46ca2d8eb775b037949cb4aa016a5"
+        },
+        {
+          "path": "Dockerfile",
+          "sha": "9b92e05a3955f30528113822378978b7ae65d653"
+        }
+      ]
+    },
+    {
+      "repository": "blutag-findmy",
+      "sha": "8de62eea844dc56eb5dd13c334442d2f1f63b4ec",
+      "branch": "main",
+      "truncated": false,
+      "files": [
+        {
+          "path": ".github/workflows/ci-cd.yml",
+          "sha": "eb1ecd40cde698365b6b8357d51b6c05ab715123"
+        },
+        {
+          "path": "Dockerfile",
+          "sha": "8494a49e52934d07ce5ab451005245eb6a1ee128"
+        }
+      ]
+    },
+    {
+      "repository": "johnson",
+      "sha": "62a8aaa5fd2c46489b62416f2a04518ab4e4c2a8",
+      "branch": "main",
+      "truncated": false,
+      "files": [
+        {
+          "path": ".github/workflows/johnson.yml",
+          "sha": "f38ef99034048afaa2f6040dd15b26419d8c140f"
+        },
+        {
+          "path": "Dockerfile",
+          "sha": "356357b8285e1a6b7e882dfbae957b1cfa1f8cb7"
+        },
+        {
+          "path": "backend/Dockerfile",
+          "sha": "c415ed645f132b88b2581c75eefad189603611ec"
+        },
+        {
+          "path": "backend/Dockerfile.flyway",
+          "sha": "08eed1a3651eefff87b51ab6a3aeb87e990475a7"
+        },
+        {
+          "path": "frontend/Dockerfile",
+          "sha": "66c77ad84ad4cd17f814a955f8c5e1154a04f0a5"
+        }
+      ]
+    },
+    {
+      "repository": "ANPR-Shikmim",
+      "sha": "2b233f276d8a749959da5420f5441db9522b2252",
+      "branch": "main",
+      "truncated": false,
+      "files": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha": "839fea50b281bd3c20e1589282f40736a19eecff"
+        },
+        {
+          "path": "Dockerfile",
+          "sha": "a81ce0d6edcbcf8914568e8b40e08c2c7e604af2"
+        },
+        {
+          "path": "Dockerfile.ocr",
+          "sha": "e8cedba22f8de7a2404c430cb8a26f5cb63e03a1"
+        }
+      ]
+    },
+    {
+      "repository": "gen-rag",
+      "sha": "2b90c694db8d2615c977d249674ed9b13506508d",
+      "branch": "main",
+      "truncated": false,
+      "files": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha": "98773b523282bfcbc99a95e1bb86ed58ef3a8af4"
+        },
+        {
+          "path": "Dockerfile",
+          "sha": "5c7195ba9df57efab77a8790ef17e676f5c3523b"
+        }
+      ]
+    },
+    {
+      "repository": "trips",
+      "sha": "52398e34d3875b27e4970928b5744c3e4262ef86",
+      "branch": "main",
+      "truncated": false,
+      "files": [
+        {
+          "path": ".github/workflows/ci.yaml",
+          "sha": "de5b8d496f6191a90fe8b710fd856e11345310c1"
+        },
+        {
+          "path": "Dockerfile",
+          "sha": "69baf6c22fc4e03cff52243506521a877bbce43d"
+        }
+      ]
+    },
+    {
+      "repository": "dirtbike-specialist",
+      "sha": "0eed7f6ff0ba549671544d1db6feaf6066d4c3af",
+      "branch": "main",
+      "truncated": false,
+      "files": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha": "7fc9cecaa88c922a477ff71a9edbdc269044758e"
+        },
+        {
+          "path": "Dockerfile",
+          "sha": "9d048aeecda06fa4d711b0342990a93367f2e9e5"
+        }
+      ]
+    },
+    {
+      "repository": "hasadnaa",
+      "sha": "0d932d83f094052f01e835589fb4660afb469d36",
+      "branch": "main",
+      "truncated": false,
+      "files": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "sha": "a42ac2bbef1647b2177e18df288a5ecfc5e5eb89"
+        },
+        {
+          "path": "Dockerfile",
+          "sha": "a5e673c6305e3371a080b9d13bafd7d4b9ad8ee0"
+        }
+      ]
+    },
+    {
+      "repository": "mashov-mcp",
+      "sha": "8fe6a814a986f8ce51c91e5111ebce0ac706cc1f",
+      "branch": "main",
+      "truncated": false,
+      "files": [
+        {
+          "path": ".github/workflows/check.yml",
+          "sha": "59845c0296f228120f264e8a00bc95ed1c9b81f5"
+        },
+        {
+          "path": "Dockerfile",
+          "sha": "3206daceae4097f2f3c9e2b1bb76dac2ecf34a4a"
+        }
+      ]
+    },
+    {
+      "repository": "ids",
+      "sha": "0551e3e5398e4982e408b32c39eb24b3178ccf24",
+      "branch": "main",
+      "truncated": false,
+      "files": [
+        {
+          "path": ".github/workflows/e2e-test.yml",
+          "sha": "729c2a09ab158b6ce491aa9d31fcab1b37aa15c5"
+        },
+        {
+          "path": ".github/workflows/ids.yml",
+          "sha": "d2637f272959b5673ba52f93323af9bafa2aad63"
+        },
+        {
+          "path": "Dockerfile",
+          "sha": "dbda3ddd5777fd8870ecd6ddf04e8496669cdaae"
+        }
+      ]
+    },
+    {
+      "repository": "padel-booking",
+      "sha": "292751c651752c444f8b860430bc434b9d7491b5",
+      "branch": "main",
+      "truncated": false,
+      "files": [
+        {
+          "path": ".github/workflows/check.yml",
+          "sha": "a11f832ed3ff42881c13f09cfc0a62bfeb4e8dee"
+        },
+        {
+          "path": ".github/workflows/public-pages.yml",
+          "sha": "c152b6c486fc46718334dc141555782ed33d3bed"
+        },
+        {
+          "path": "Dockerfile",
+          "sha": "919525539285bb7d027f48f7cc9ef54a43ad8fd9"
+        }
+      ]
+    },
+    {
+      "repository": "blutag-pointer-push",
+      "sha": "909fdf8753efcedcad3625c1dacd22430e159ca4",
+      "branch": "main",
+      "truncated": false,
+      "files": [
+        {
+          "path": ".github/workflows/ci-cd.yml",
+          "sha": "9e49f761e2d8f91fa66bb0d397395dba61f9547d"
+        },
+        {
+          "path": "Dockerfile",
+          "sha": "04b696997831c3c1bb643b68db31a700bbb87730"
+        }
+      ]
+    },
+    {
+      "repository": "drc",
+      "sha": "55ce9ced078bb42714497c649d45b2e046febb5b",
+      "branch": "main",
+      "truncated": false,
+      "files": [
+        {
+          "path": ".github/workflows/trainings.yml",
+          "sha": "78ca76d0149c9de0f56988d624421e4f9e9f1783"
+        },
+        {
+          "path": "trainings/Dockerfile",
+          "sha": "b823c3ae8092039072f504584bd4b33bb59eb2a1"
+        }
+      ]
+    },
+    {
+      "repository": "blutag-app",
+      "sha": "b4ca57910b2c57e1ecfa06515e5674a556d091b9",
+      "branch": "main",
+      "truncated": false,
+      "files": [
+        {
+          "path": ".github/workflows/ci-cd.yml",
+          "sha": "76f374e768810b7542b203b1265a09e1664ed107"
+        },
+        {
+          "path": "Dockerfile",
+          "sha": "0d3d8bc59d27704a7a79da92daf50a650b9280b3"
+        }
+      ]
+    },
+    {
+      "repository": "blutag-website",
+      "sha": "3d83c663c923907ce30c1ad0ef8eae0e5a91f410",
+      "branch": "main",
+      "truncated": false,
+      "files": [
+        {
+          "path": ".github/workflows/ci-cd.yml",
+          "sha": "6aa3716a43c78f61e66997fedc9d94d9a2604b11"
+        },
+        {
+          "path": "Dockerfile",
+          "sha": "58bb01fac73e9bf64786243460e828d0dc86a651"
+        }
+      ]
+    },
+    {
+      "repository": "asd-ste100-skill",
+      "sha": "1853354f00cd7eb80627f0f8fe2e8cd5c234fe65",
+      "branch": "master",
+      "truncated": false,
+      "files": [
+        {
+          "path": ".github/workflows/validate.yml",
+          "sha": "e7e6c7a127c9da7b6686dec2143cc20d6e5ec09e"
+        }
+      ]
+    },
+    {
+      "repository": "FindMy.py",
+      "sha": "f3f20754305ca77a50d77ee3f9ccd03b3b670ef7",
+      "branch": "main",
+      "truncated": false,
+      "files": [
+        {
+          "path": ".github/workflows/dispatch-blutag-findmy.yml",
+          "sha": "f06124c98778fd9bd95c77e65888d25a9d5e035c"
+        },
+        {
+          "path": ".github/workflows/docs.yml",
+          "sha": "9a56508ee17fc05410fc4f06bc1e9f3d8ccbe8aa"
+        },
+        {
+          "path": ".github/workflows/pre-commit.yml",
+          "sha": "e8dd33bb24c5b9a1e56421ad7869bbfdcd56631e"
+        },
+        {
+          "path": ".github/workflows/publish.yml",
+          "sha": "4ea3422758ced1145524801ea46a46f437ce4a9c"
+        },
+        {
+          "path": ".github/workflows/sync-upstream.yml",
+          "sha": "238a28b3f2c517eaa5f849f0c3e1d7be8ce45a30"
+        },
+        {
+          "path": ".github/workflows/test.yml",
+          "sha": "2b708e89770b5d263c2d52386887b44faa372905"
+        }
+      ]
+    },
+    {
+      "repository": "openhaystack",
+      "sha": "c6132b812fb591b7a0d7cb8c968be63e1580621f",
+      "branch": "main",
+      "truncated": false,
+      "files": [
+        {
+          "path": ".github/workflows/build-app.yml",
+          "sha": "7e6cf9f9e6949aa221c3f6c2a1eb63716c3eb006"
+        },
+        {
+          "path": ".github/workflows/build-cve-2020-9986.yaml",
+          "sha": "f99a16b9903580139effbcda52720abedab30f68"
+        },
+        {
+          "path": ".github/workflows/build-firmware-esp32.yaml",
+          "sha": "41e0d08921a27d1f4b2fa3aab37a45fbea59c61a"
+        },
+        {
+          "path": ".github/workflows/build-firmware.yaml",
+          "sha": "04d504294ddf5701eab11212464dcde4877ba6f7"
+        },
+        {
+          "path": ".github/workflows/release.yml",
+          "sha": "587c80f5583ba47fd12993b5a9f5d0de8e3548f2"
+        },
+        {
+          "path": ".github/workflows/sync-upstream.yml",
+          "sha": "b45f89d20fd883c157a30c3427edd1927e6d25f9"
+        }
+      ]
+    }
+  ],
+  "additionalOwnerRepositories": [
+    {
+      "repository": "eladhayun/synology-nas",
+      "sha": "24cc9cd9f21369792f207b9e40f88c8ea26cbeb1",
+      "branch": "main",
+      "files": []
+    },
+    {
+      "repository": "eladhayun/codex-widget",
+      "sha": "b24619e822e0708b279fa31d5988ae1af54ccceb",
+      "branch": "main",
+      "files": [
+        {
+          "path": ".github/workflows/release.yml",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "2d459bd9b1df6efe02ee96d04872e68545a59b67",
+          "size": 6401,
+          "url": "https://api.github.com/repos/eladhayun/codex-widget/git/blobs/2d459bd9b1df6efe02ee96d04872e68545a59b67"
+        }
+      ]
+    },
+    {
+      "repository": "eladhayun/homebrew-tap",
+      "sha": "881565769262a2ce1425aec1beb8f9a1a96c9afd",
+      "branch": "main",
+      "files": []
+    },
+    {
+      "repository": "eladhayun/3d-models",
+      "sha": "940852e37bfeaa90526de9ad64a889aebd61ab43",
+      "branch": "main",
+      "files": []
+    }
+  ]
+}

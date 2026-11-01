@@ -8,7 +8,9 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: gitops-${{ github.ref }}
+  # Keep each intake commit queued even if push events arrive out of order.
+  # The promotion step still rejects any SHA that is no longer main.
+  group: gitops-${{ github.ref }}-${{ github.sha }}
   cancel-in-progress: false
 jobs:
   validate:
@@ -36,6 +38,8 @@ jobs:
       - run: |
           bash scripts/install-validation-tools.sh "$RUNNER_TEMP/gitops-tools"
           echo "$RUNNER_TEMP/gitops-tools" >> "$GITHUB_PATH"
+      - run: bash -n image-security/scan-image.sh
+      - run: python image-security/test-image-security.py
       - run: python scripts/test-validate-gitops.py
       - run: python scripts/test-pod-security.py
       - run: python scripts/test-workload-hardening.py

@@ -1,0 +1,7 @@
+{
+  "mcr.microsoft.com/oss/v2/kubernetes/azure-cloud-node-manager@sha256:af4ac15c18429cb866362ffc6fcfb7c6171102fb7821edb8fe7f2a298a3c5eeb": {
+    "reportReference": "mcr.microsoft.com/oss/v2/kubernetes/azure-cloud-node-manager:v1.36.8-2",
+    "expectedImageID": "sha256:af4ac15c18429cb866362ffc6fcfb7c6171102fb7821edb8fe7f2a298a3c5eeb",
+    "reason": "Kubernetes reported the config digest, not a pullable registry manifest digest; scanned tag config digest exactly matches."
+  }
+}

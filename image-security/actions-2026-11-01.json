@@ -1,0 +1,775 @@
+{
+  "topLevel": [
+    {
+      "reference": "actions/checkout@v5",
+      "repository": "actions/checkout",
+      "uses": [
+        "trips/.github/workflows/ci.yaml:26",
+        "trips/.github/workflows/ci.yaml:65",
+        "trips/.github/workflows/ci.yaml:114",
+        "johnson/.github/workflows/johnson.yml:34",
+        "johnson/.github/workflows/johnson.yml:72",
+        "johnson/.github/workflows/johnson.yml:109",
+        "johnson/.github/workflows/johnson.yml:178",
+        "hasadnaa/.github/workflows/ci.yml:28",
+        "hasadnaa/.github/workflows/ci.yml:65",
+        "hasadnaa/.github/workflows/ci.yml:96",
+        "hasadnaa/.github/workflows/ci.yml:124",
+        "hasadnaa/.github/workflows/ci.yml:155",
+        "hasadnaa/.github/workflows/ci.yml:221",
+        "FindMy.py/.github/workflows/sync-upstream.yml:31",
+        "slack-notifications/.github/workflows/ci.yml:29",
+        "slack-notifications/.github/workflows/ci.yml:81",
+        "slack-notifications/.github/workflows/ci.yml:146",
+        "ANPR-Shikmim/.github/workflows/ci.yml:22",
+        "ANPR-Shikmim/.github/workflows/ci.yml:50",
+        "ANPR-Shikmim/.github/workflows/ci.yml:80",
+        "ANPR-Shikmim/.github/workflows/ci.yml:120",
+        "ANPR-Shikmim/.github/workflows/ci.yml:193",
+        "blutag-pointer-push/.github/workflows/ci-cd.yml:23",
+        "blutag-pointer-push/.github/workflows/ci-cd.yml:53",
+        "blutag-pointer-push/.github/workflows/ci-cd.yml:106",
+        "blutag-findmy/.github/workflows/ci-cd.yml:28",
+        "blutag-findmy/.github/workflows/ci-cd.yml:70",
+        "blutag-findmy/.github/workflows/ci-cd.yml:137",
+        "ids/.github/workflows/ids.yml:28",
+        "ids/.github/workflows/ids.yml:90",
+        "ids/.github/workflows/ids.yml:138",
+        "ids/.github/workflows/e2e-test.yml:36",
+        "openhaystack/.github/workflows/sync-upstream.yml:22",
+        "gen-rag/.github/workflows/ci.yml:19",
+        "gen-rag/.github/workflows/ci.yml:50",
+        "gen-rag/.github/workflows/ci.yml:93",
+        "dirtbike-specialist/.github/workflows/ci.yml:85",
+        "dirtbike-specialist/.github/workflows/ci.yml:230",
+        "dirtbike-specialist/.github/workflows/ci.yml:429",
+        "dirtbike-specialist/.github/workflows/ci.yml:480",
+        "blutag-app/.github/workflows/ci-cd.yml:42",
+        "blutag-app/.github/workflows/ci-cd.yml:77",
+        "blutag-app/.github/workflows/ci-cd.yml:122",
+        "blutag-app/.github/workflows/ci-cd.yml:181",
+        "asd-ste100-skill/.github/workflows/validate.yml:19",
+        "blutag-website/.github/workflows/ci-cd.yml:33",
+        "blutag-website/.github/workflows/ci-cd.yml:78",
+        "blutag-website/.github/workflows/ci-cd.yml:126",
+        "drc/.github/workflows/trainings.yml:38",
+        "drc/.github/workflows/trainings.yml:77",
+        "drc/.github/workflows/trainings.yml:120"
+      ],
+      "latestRelease": "v7.0.1",
+      "releasePublished": "2026-07-20T15:10:05Z",
+      "resolvedCommit": "fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09",
+      "commitDate": "2026-07-16T19:43:40Z",
+      "runtime": "node24",
+      "dockerImage": null,
+      "nestedUses": []
+    },
+    {
+      "reference": "actions/setup-go@v6",
+      "repository": "actions/setup-go",
+      "uses": [
+        "trips/.github/workflows/ci.yaml:29",
+        "hasadnaa/.github/workflows/ci.yml:31",
+        "hasadnaa/.github/workflows/ci.yml:99",
+        "slack-notifications/.github/workflows/ci.yml:32",
+        "ids/.github/workflows/ids.yml:31",
+        "ids/.github/workflows/e2e-test.yml:39",
+        "gen-rag/.github/workflows/ci.yml:20",
+        "dirtbike-specialist/.github/workflows/ci.yml:101",
+        "dirtbike-specialist/.github/workflows/ci.yml:246",
+        "blutag-app/.github/workflows/ci-cd.yml:45",
+        "drc/.github/workflows/trainings.yml:39"
+      ],
+      "latestRelease": "v7.0.0",
+      "releasePublished": "2026-07-16T02:50:50Z",
+      "resolvedCommit": "924ae3a1cded613372ab5595356fb5720e22ba16",
+      "commitDate": "2026-06-23T17:03:17Z",
+      "runtime": "node24",
+      "dockerImage": null,
+      "nestedUses": []
+    },
+    {
+      "reference": "actions/setup-node@v5",
+      "repository": "actions/setup-node",
+      "uses": [
+        "trips/.github/workflows/ci.yaml:35",
+        "johnson/.github/workflows/johnson.yml:75",
+        "ANPR-Shikmim/.github/workflows/ci.yml:23",
+        "blutag-website/.github/workflows/ci-cd.yml:36"
+      ],
+      "latestRelease": "v7.1.0",
+      "releasePublished": "2026-10-08T02:52:34Z",
+      "resolvedCommit": "a0853c24544627f65ddf259abe73b1d18a591444",
+      "commitDate": "2025-09-03T17:47:21Z",
+      "runtime": "node24",
+      "dockerImage": null,
+      "nestedUses": []
+    },
+    {
+      "reference": "azure/login@a641126d1b8aa4d1fa005f4f92df94a3a4c4c906",
+      "repository": "azure/login",
+      "uses": [
+        "trips/.github/workflows/ci.yaml:68",
+        "johnson/.github/workflows/johnson.yml:112",
+        "hasadnaa/.github/workflows/ci.yml:162",
+        "mashov-mcp/.github/workflows/check.yml:52",
+        "slack-notifications/.github/workflows/ci.yml:84",
+        "multi-whatsapp/.github/workflows/check.yml:74",
+        "ANPR-Shikmim/.github/workflows/ci.yml:126",
+        "blutag-pointer-push/.github/workflows/ci-cd.yml:59",
+        "blutag-findmy/.github/workflows/ci-cd.yml:78",
+        "tivtaam-mcp/.github/workflows/check.yml:56",
+        "ids/.github/workflows/ids.yml:93",
+        "padel-booking/.github/workflows/check.yml:66",
+        "webtop-mcp/.github/workflows/check.yml:52",
+        "gen-rag/.github/workflows/ci.yml:53",
+        "dirtbike-specialist/.github/workflows/ci.yml:432",
+        "blutag-app/.github/workflows/ci-cd.yml:128",
+        "blutag-website/.github/workflows/ci-cd.yml:81",
+        "drc/.github/workflows/trainings.yml:80"
+      ],
+      "latestRelease": "v3.1.0",
+      "runtime": "node24",
+      "resolvedCommit": "a641126d1b8aa4d1fa005f4f92df94a3a4c4c906",
+      "verification": "Public action metadata; authenticated API denied by upstream Azure organization SAML",
+      "releasePublished": "2026-09-10T03:16:59Z"
+    },
+    {
+      "reference": "docker/metadata-action@v6",
+      "repository": "docker/metadata-action",
+      "uses": [
+        "trips/.github/workflows/ci.yaml:79",
+        "johnson/.github/workflows/johnson.yml:123",
+        "johnson/.github/workflows/johnson.yml:143",
+        "hasadnaa/.github/workflows/ci.yml:173",
+        "slack-notifications/.github/workflows/ci.yml:95",
+        "ANPR-Shikmim/.github/workflows/ci.yml:137",
+        "ANPR-Shikmim/.github/workflows/ci.yml:146",
+        "blutag-pointer-push/.github/workflows/ci-cd.yml:70",
+        "blutag-findmy/.github/workflows/ci-cd.yml:89",
+        "ids/.github/workflows/ids.yml:104",
+        "gen-rag/.github/workflows/ci.yml:63",
+        "dirtbike-specialist/.github/workflows/ci.yml:443",
+        "blutag-app/.github/workflows/ci-cd.yml:139",
+        "blutag-website/.github/workflows/ci-cd.yml:92",
+        "drc/.github/workflows/trainings.yml:90"
+      ],
+      "latestRelease": "v6.2.0",
+      "releasePublished": "2026-07-02T08:55:18Z",
+      "resolvedCommit": "dc802804100637a589fabce1cb79ff13a1411302",
+      "commitDate": "2026-07-02T08:48:54Z",
+      "runtime": "node24",
+      "dockerImage": null,
+      "nestedUses": []
+    },
+    {
+      "reference": "docker/build-push-action@v7",
+      "repository": "docker/build-push-action",
+      "uses": [
+        "trips/.github/workflows/ci.yaml:87",
+        "johnson/.github/workflows/johnson.yml:131",
+        "johnson/.github/workflows/johnson.yml:151",
+        "hasadnaa/.github/workflows/ci.yml:181",
+        "slack-notifications/.github/workflows/ci.yml:104",
+        "ANPR-Shikmim/.github/workflows/ci.yml:154",
+        "ANPR-Shikmim/.github/workflows/ci.yml:165",
+        "blutag-pointer-push/.github/workflows/ci-cd.yml:78",
+        "blutag-findmy/.github/workflows/ci-cd.yml:106",
+        "ids/.github/workflows/ids.yml:112",
+        "gen-rag/.github/workflows/ci.yml:70",
+        "dirtbike-specialist/.github/workflows/ci.yml:451",
+        "blutag-app/.github/workflows/ci-cd.yml:147",
+        "blutag-website/.github/workflows/ci-cd.yml:100",
+        "drc/.github/workflows/trainings.yml:97"
+      ],
+      "latestRelease": "v7.4.0",
+      "releasePublished": "2026-09-15T08:22:01Z",
+      "resolvedCommit": "c3c9e263c25d99ce0380d002d59b67737d91b0dc",
+      "commitDate": "2026-09-15T07:29:04Z",
+      "runtime": "node24",
+      "dockerImage": null,
+      "nestedUses": []
+    },
+    {
+      "reference": "actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+      "repository": "actions/create-github-app-token",
+      "uses": [
+        "trips/.github/workflows/ci.yaml:106",
+        "johnson/.github/workflows/johnson.yml:170",
+        "hasadnaa/.github/workflows/ci.yml:213",
+        "mashov-mcp/.github/workflows/check.yml:104",
+        "slack-notifications/.github/workflows/ci.yml:138",
+        "multi-whatsapp/.github/workflows/check.yml:126",
+        "ANPR-Shikmim/.github/workflows/ci.yml:185",
+        "blutag-pointer-push/.github/workflows/ci-cd.yml:98",
+        "blutag-findmy/.github/workflows/ci-cd.yml:62",
+        "blutag-findmy/.github/workflows/ci-cd.yml:129",
+        "tivtaam-mcp/.github/workflows/check.yml:108",
+        "ids/.github/workflows/ids.yml:130",
+        "padel-booking/.github/workflows/check.yml:121",
+        "webtop-mcp/.github/workflows/check.yml:104",
+        "gen-rag/.github/workflows/ci.yml:86",
+        "dirtbike-specialist/.github/workflows/ci.yml:472",
+        "blutag-app/.github/workflows/ci-cd.yml:173",
+        "blutag-website/.github/workflows/ci-cd.yml:118",
+        "drc/.github/workflows/trainings.yml:113"
+      ],
+      "latestRelease": "v3.3.0",
+      "releasePublished": "2026-10-12T23:42:23Z",
+      "resolvedCommit": "64ab729a6294000f5aa4a4bc0b73d1f32bc45510",
+      "commitDate": "2026-10-12T23:42:07Z",
+      "runtime": "node24",
+      "dockerImage": null,
+      "nestedUses": []
+    },
+    {
+      "reference": "actions/setup-python@v6",
+      "repository": "actions/setup-python",
+      "uses": [
+        "johnson/.github/workflows/johnson.yml:37",
+        "asd-ste100-skill/.github/workflows/validate.yml:20"
+      ],
+      "latestRelease": "v7.1.0",
+      "releasePublished": "2026-10-22T02:56:04Z",
+      "resolvedCommit": "ece7cb06caefa5fff74198d8649806c4678c61a1",
+      "commitDate": "2026-06-23T18:01:57Z",
+      "runtime": "node24",
+      "dockerImage": null,
+      "nestedUses": []
+    },
+    {
+      "reference": "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+      "repository": "actions/checkout",
+      "uses": [
+        "gitops/.github/workflows/gitops-validation.yaml:19",
+        "gitops/.github/workflows/gitops-validation.yaml:63",
+        "mashov-mcp/.github/workflows/check.yml:19",
+        "mashov-mcp/.github/workflows/check.yml:47",
+        "mashov-mcp/.github/workflows/check.yml:112",
+        "mashov-mcp/.github/workflows/check.yml:117",
+        "multi-whatsapp/.github/workflows/check.yml:19",
+        "multi-whatsapp/.github/workflows/check.yml:69",
+        "multi-whatsapp/.github/workflows/check.yml:134",
+        "multi-whatsapp/.github/workflows/check.yml:139",
+        "tivtaam-mcp/.github/workflows/check.yml:17",
+        "tivtaam-mcp/.github/workflows/check.yml:51",
+        "tivtaam-mcp/.github/workflows/check.yml:115",
+        "tivtaam-mcp/.github/workflows/check.yml:119",
+        "padel-booking/.github/workflows/public-pages.yml:20",
+        "padel-booking/.github/workflows/check.yml:24",
+        "padel-booking/.github/workflows/check.yml:61",
+        "padel-booking/.github/workflows/check.yml:129",
+        "webtop-mcp/.github/workflows/check.yml:19",
+        "webtop-mcp/.github/workflows/check.yml:47",
+        "webtop-mcp/.github/workflows/check.yml:112",
+        "webtop-mcp/.github/workflows/check.yml:117"
+      ],
+      "latestRelease": "v7.0.1",
+      "releasePublished": "2026-07-20T15:10:05Z",
+      "resolvedCommit": "3d3c42e5aac5ba805825da76410c181273ba90b1",
+      "commitDate": "2026-07-17T18:45:11Z",
+      "runtime": "node24",
+      "dockerImage": null,
+      "nestedUses": []
+    },
+    {
+      "reference": "actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0",
+      "repository": "actions/setup-python",
+      "uses": [
+        "gitops/.github/workflows/gitops-validation.yaml:22"
+      ],
+      "latestRelease": "v7.1.0",
+      "releasePublished": "2026-10-22T02:56:04Z",
+      "resolvedCommit": "6d4fd22b20465ccc0f7354476588e8df7c9ca0e0",
+      "commitDate": "2026-10-22T02:33:06Z",
+      "runtime": "node24",
+      "dockerImage": null,
+      "nestedUses": []
+    },
+    {
+      "reference": "actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e",
+      "repository": "actions/setup-go",
+      "uses": [
+        "gitops/.github/workflows/gitops-validation.yaml:25",
+        "mashov-mcp/.github/workflows/check.yml:22",
+        "multi-whatsapp/.github/workflows/check.yml:22",
+        "tivtaam-mcp/.github/workflows/check.yml:20",
+        "padel-booking/.github/workflows/public-pages.yml:23",
+        "padel-booking/.github/workflows/check.yml:27",
+        "webtop-mcp/.github/workflows/check.yml:22"
+      ],
+      "latestRelease": "v7.0.0",
+      "releasePublished": "2026-07-16T02:50:50Z",
+      "resolvedCommit": "b7ad1dad31e06c5925ef5d2fc7ad053ef454303e",
+      "commitDate": "2026-07-16T02:47:49Z",
+      "runtime": "node24",
+      "dockerImage": null,
+      "nestedUses": []
+    },
+    {
+      "reference": "golangci/golangci-lint-action@v9",
+      "repository": "golangci/golangci-lint-action",
+      "uses": [
+        "hasadnaa/.github/workflows/ci.yml:53",
+        "ids/.github/workflows/ids.yml:53"
+      ],
+      "latestRelease": "v9.3.0",
+      "releasePublished": "2026-06-29T15:52:49Z",
+      "resolvedCommit": "ba0d7d2ec06a0ea1cb5fa41b2e4a3ab91d21278a",
+      "commitDate": "2026-06-29T15:43:58Z",
+      "runtime": "node24",
+      "dockerImage": null,
+      "nestedUses": []
+    },
+    {
+      "reference": "oven-sh/setup-bun@v2",
+      "repository": "oven-sh/setup-bun",
+      "uses": [
+        "hasadnaa/.github/workflows/ci.yml:68",
+        "hasadnaa/.github/workflows/ci.yml:127",
+        "dirtbike-specialist/.github/workflows/ci.yml:115",
+        "blutag-app/.github/workflows/ci-cd.yml:80",
+        "drc/.github/workflows/trainings.yml:57"
+      ],
+      "latestRelease": "v2.2.0",
+      "releasePublished": "2026-03-14T09:38:33Z",
+      "resolvedCommit": "0c5077e51419868618aeaa5fe8019c62421857d6",
+      "commitDate": "2026-03-14T09:37:27Z",
+      "runtime": "node24",
+      "dockerImage": null,
+      "nestedUses": []
+    },
+    {
+      "reference": "actions/upload-artifact@v6",
+      "repository": "actions/upload-artifact",
+      "uses": [
+        "hasadnaa/.github/workflows/ci.yml:110",
+        "ids/.github/workflows/ids.yml:66",
+        "ids/.github/workflows/e2e-test.yml:77",
+        "dirtbike-specialist/.github/workflows/ci.yml:184",
+        "dirtbike-specialist/.github/workflows/ci.yml:194",
+        "dirtbike-specialist/.github/workflows/ci.yml:395",
+        "dirtbike-specialist/.github/workflows/ci.yml:405"
+      ],
+      "latestRelease": "v7.0.2",
+      "releasePublished": "2026-10-07T10:08:14Z",
+      "resolvedCommit": "b7c566a772e6b6bfb58ed0dc250532a479d7789f",
+      "commitDate": "2025-12-12T17:58:04Z",
+      "runtime": "node24",
+      "dockerImage": null,
+      "nestedUses": []
+    },
+    {
+      "reference": "docker/setup-buildx-action@v4",
+      "repository": "docker/setup-buildx-action",
+      "uses": [
+        "hasadnaa/.github/workflows/ci.yml:159",
+        "ANPR-Shikmim/.github/workflows/ci.yml:123",
+        "blutag-pointer-push/.github/workflows/ci-cd.yml:56",
+        "blutag-findmy/.github/workflows/ci-cd.yml:75",
+        "blutag-app/.github/workflows/ci-cd.yml:125"
+      ],
+      "latestRelease": "v4.4.1",
+      "releasePublished": "2026-09-16T07:50:21Z",
+      "resolvedCommit": "f87e5991a6d7451dcb8d9637bfbc97413f497069",
+      "commitDate": "2026-09-16T07:47:45Z",
+      "runtime": "node24",
+      "dockerImage": null,
+      "nestedUses": []
+    },
+    {
+      "reference": "actions/checkout@v6",
+      "repository": "actions/checkout",
+      "uses": [
+        "FindMy.py/.github/workflows/publish.yml:17",
+        "FindMy.py/.github/workflows/test.yml:17",
+        "FindMy.py/.github/workflows/test.yml:36",
+        "FindMy.py/.github/workflows/docs.yml:18",
+        "FindMy.py/.github/workflows/pre-commit.yml:13",
+        "eladhayun/codex-widget/.github/workflows/release.yml"
+      ],
+      "latestRelease": "v7.0.1",
+      "releasePublished": "2026-07-20T15:10:05Z",
+      "resolvedCommit": "d23441a48e516b6c34aea4fa41551a30e30af803",
+      "commitDate": "2026-07-16T19:43:33Z",
+      "runtime": "node24",
+      "dockerImage": null,
+      "nestedUses": []
+    },
+    {
+      "reference": "./.github/actions/setup-project",
+      "skip": "local or container"
+    },
+    {
+      "reference": "softprops/action-gh-release@v3",
+      "repository": "softprops/action-gh-release",
+      "uses": [
+        "FindMy.py/.github/workflows/publish.yml:32"
+      ],
+      "latestRelease": "v3.0.3",
+      "releasePublished": "2026-08-30T00:30:08Z",
+      "resolvedCommit": "efb35369e0ad2afab669f228072c1b0d510eae64",
+      "commitDate": "2026-08-30T00:27:42Z",
+      "runtime": "node24",
+      "dockerImage": null,
+      "nestedUses": []
+    },
+    {
+      "reference": "actions/configure-pages@v6",
+      "repository": "actions/configure-pages",
+      "uses": [
+        "FindMy.py/.github/workflows/docs.yml:38"
+      ],
+      "latestRelease": "v6.0.0",
+      "releasePublished": "2026-03-25T17:00:49Z",
+      "resolvedCommit": "45bfe0192ca1faeb007ade9deae92b16b8254a0d",
+      "commitDate": "2026-03-24T23:32:07Z",
+      "runtime": "node24",
+      "dockerImage": null,
+      "nestedUses": []
+    },
+    {
+      "reference": "actions/upload-pages-artifact@v5",
+      "repository": "actions/upload-pages-artifact",
+      "uses": [
+        "FindMy.py/.github/workflows/docs.yml:41"
+      ],
+      "latestRelease": "v5.0.0",
+      "releasePublished": "2026-04-10T18:22:59Z",
+      "resolvedCommit": "fc324d3547104276b827a68afc52ff2a11cc49c9",
+      "commitDate": "2026-04-08T19:09:19Z",
+      "runtime": "composite",
+      "dockerImage": null,
+      "nestedUses": [
+        "actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f"
+      ]
+    },
+    {
+      "reference": "actions/deploy-pages@v5",
+      "repository": "actions/deploy-pages",
+      "uses": [
+        "FindMy.py/.github/workflows/docs.yml:47"
+      ],
+      "latestRelease": "v5.0.1",
+      "releasePublished": "2026-09-01T21:31:19Z",
+      "resolvedCommit": "368f82528645a54fb793d4d04e342629a3f51346",
+      "commitDate": "2026-09-01T21:29:43Z",
+      "runtime": "node24",
+      "dockerImage": null,
+      "nestedUses": []
+    },
+    {
+      "reference": "actions/cache@v5",
+      "repository": "actions/cache",
+      "uses": [
+        "FindMy.py/.github/workflows/pre-commit.yml:20",
+        "blutag-app/.github/workflows/ci-cd.yml:85"
+      ],
+      "latestRelease": "v6.1.0",
+      "releasePublished": "2026-06-26T19:17:06Z",
+      "resolvedCommit": "caa296126883cff596d87d8935842f9db880ef25",
+      "commitDate": "2026-06-26T19:14:19Z",
+      "runtime": "node24",
+      "dockerImage": null,
+      "nestedUses": []
+    },
+    {
+      "reference": "pre-commit-ci/lite-action@v1.2.0",
+      "repository": "pre-commit-ci/lite-action",
+      "uses": [
+        "FindMy.py/.github/workflows/pre-commit.yml:28"
+      ],
+      "latestRelease": "v1.2.0",
+      "releasePublished": "2026-09-29T21:08:37Z",
+      "resolvedCommit": "062bca0919bc9d6e66755cc05074b70c77e111fc",
+      "commitDate": "2026-09-29T21:07:55Z",
+      "runtime": "node24",
+      "dockerImage": null,
+      "nestedUses": []
+    },
+    {
+      "reference": "docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069",
+      "repository": "docker/setup-buildx-action",
+      "uses": [
+        "mashov-mcp/.github/workflows/check.yml:50",
+        "multi-whatsapp/.github/workflows/check.yml:72",
+        "tivtaam-mcp/.github/workflows/check.yml:54",
+        "padel-booking/.github/workflows/check.yml:64",
+        "webtop-mcp/.github/workflows/check.yml:50"
+      ],
+      "latestRelease": "v4.4.1",
+      "releasePublished": "2026-09-16T07:50:21Z",
+      "resolvedCommit": "f87e5991a6d7451dcb8d9637bfbc97413f497069",
+      "commitDate": "2026-09-16T07:47:45Z",
+      "runtime": "node24",
+      "dockerImage": null,
+      "nestedUses": []
+    },
+    {
+      "reference": "docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc",
+      "repository": "docker/build-push-action",
+      "uses": [
+        "mashov-mcp/.github/workflows/check.yml:71",
+        "multi-whatsapp/.github/workflows/check.yml:93",
+        "tivtaam-mcp/.github/workflows/check.yml:75",
+        "padel-booking/.github/workflows/check.yml:85",
+        "webtop-mcp/.github/workflows/check.yml:71"
+      ],
+      "latestRelease": "v7.4.0",
+      "releasePublished": "2026-09-15T08:22:01Z",
+      "resolvedCommit": "c3c9e263c25d99ce0380d002d59b67737d91b0dc",
+      "commitDate": "2026-09-15T07:29:04Z",
+      "runtime": "node24",
+      "dockerImage": null,
+      "nestedUses": []
+    },
+    {
+      "reference": "dtolnay/rust-toolchain@stable",
+      "repository": "dtolnay/rust-toolchain",
+      "uses": [
+        "ANPR-Shikmim/.github/workflows/ci.yml:53",
+        "ANPR-Shikmim/.github/workflows/ci.yml:83"
+      ],
+      "latestRelease": "v1",
+      "releasePublished": "2022-07-15T18:16:27Z",
+      "resolvedCommit": "b725eda525362e7cf34af9a7243cac1e3f01a7ec",
+      "commitDate": "2026-10-16T02:25:02Z",
+      "runtime": "composite",
+      "dockerImage": null,
+      "nestedUses": []
+    },
+    {
+      "reference": "Swatinem/rust-cache@v2",
+      "repository": "Swatinem/rust-cache",
+      "uses": [
+        "ANPR-Shikmim/.github/workflows/ci.yml:59",
+        "ANPR-Shikmim/.github/workflows/ci.yml:88"
+      ],
+      "latestRelease": "v2.9.3",
+      "releasePublished": "2026-10-20T13:47:43Z",
+      "resolvedCommit": "d1527c8f67ef9af357290475d4af4b0fab8f12e0",
+      "commitDate": "2026-10-20T13:45:46Z",
+      "runtime": "node24",
+      "dockerImage": null,
+      "nestedUses": []
+    },
+    {
+      "reference": "taiki-e/install-action@cargo-llvm-cov",
+      "repository": "taiki-e/install-action",
+      "uses": [
+        "ANPR-Shikmim/.github/workflows/ci.yml:91"
+      ],
+      "latestRelease": "v2.89.0",
+      "releasePublished": "2026-11-01T20:13:24Z",
+      "resolvedCommit": "3597834a0a5e3e38f058c7b6dc454f0aa1a25609",
+      "commitDate": "2026-11-01T20:12:44Z",
+      "runtime": "composite",
+      "dockerImage": null,
+      "nestedUses": []
+    },
+    {
+      "reference": "actions/upload-artifact@v7",
+      "repository": "actions/upload-artifact",
+      "uses": [
+        "ANPR-Shikmim/.github/workflows/ci.yml:100"
+      ],
+      "latestRelease": "v7.0.2",
+      "releasePublished": "2026-10-07T10:08:14Z",
+      "resolvedCommit": "cf430e030ddbb5b0abf93d22962f4752f3646cd9",
+      "commitDate": "2026-10-07T10:00:52Z",
+      "runtime": "node24",
+      "dockerImage": null,
+      "nestedUses": []
+    },
+    {
+      "reference": "astral-sh/setup-uv@v7",
+      "repository": "astral-sh/setup-uv",
+      "uses": [
+        "blutag-pointer-push/.github/workflows/ci-cd.yml:26",
+        "blutag-findmy/.github/workflows/ci-cd.yml:33"
+      ],
+      "latestRelease": "v10.3.3",
+      "releasePublished": "2026-10-28T14:35:19Z",
+      "resolvedCommit": "37802adc94f370d6bfd71619e3f0bf239e1f3b78",
+      "commitDate": "2026-03-16T12:38:17Z",
+      "runtime": "node24",
+      "dockerImage": null,
+      "nestedUses": []
+    },
+    {
+      "reference": "browser-actions/setup-chrome@v2",
+      "repository": "browser-actions/setup-chrome",
+      "uses": [
+        "ids/.github/workflows/e2e-test.yml:45"
+      ],
+      "latestRelease": "v2.2.0",
+      "releasePublished": "2026-08-16T03:35:57Z",
+      "resolvedCommit": "48ad923757ca74d66703209fe939badbdf80f2f4",
+      "commitDate": "2026-08-16T03:26:38Z",
+      "runtime": "node24",
+      "dockerImage": null,
+      "nestedUses": []
+    },
+    {
+      "reference": "actions/checkout@v2",
+      "repository": "actions/checkout",
+      "uses": [
+        "openhaystack/.github/workflows/release.yml:14",
+        "openhaystack/.github/workflows/release.yml:45",
+        "openhaystack/.github/workflows/build-firmware-esp32.yaml:19",
+        "openhaystack/.github/workflows/build-cve-2020-9986.yaml:23",
+        "openhaystack/.github/workflows/build-cve-2020-9986.yaml:34",
+        "openhaystack/.github/workflows/build-cve-2020-9986.yaml:66",
+        "openhaystack/.github/workflows/build-firmware.yaml:22",
+        "openhaystack/.github/workflows/build-app.yml:25",
+        "openhaystack/.github/workflows/build-app.yml:35",
+        "openhaystack/.github/workflows/build-app.yml:48"
+      ],
+      "latestRelease": "v7.0.1",
+      "releasePublished": "2026-07-20T15:10:05Z",
+      "resolvedCommit": "0717577d45739eb3c851188b29f50ed6c0b2194e",
+      "commitDate": "2026-07-16T19:43:54Z",
+      "runtime": "node12",
+      "dockerImage": null,
+      "nestedUses": []
+    },
+    {
+      "reference": "./.github/actions/build-esp-idf",
+      "skip": "local or container"
+    },
+    {
+      "reference": "actions/upload-artifact@v2",
+      "repository": "actions/upload-artifact",
+      "uses": [
+        "openhaystack/.github/workflows/release.yml:26"
+      ],
+      "latestRelease": "v7.0.2",
+      "releasePublished": "2026-10-07T10:08:14Z",
+      "resolvedCommit": "82c141cc518b40d92cc801eee768e7aafc9c2fa2",
+      "commitDate": "2021-12-15T14:47:54Z",
+      "runtime": "node12",
+      "dockerImage": null,
+      "nestedUses": []
+    },
+    {
+      "reference": "keehun/xcode-select@v1",
+      "repository": "keehun/xcode-select",
+      "uses": [
+        "openhaystack/.github/workflows/release.yml:47",
+        "openhaystack/.github/workflows/build-cve-2020-9986.yaml:36",
+        "openhaystack/.github/workflows/build-cve-2020-9986.yaml:68",
+        "openhaystack/.github/workflows/build-app.yml:50"
+      ],
+      "latestRelease": null,
+      "resolvedCommit": "05f94658217eb8575f0aabd3b95e702a47995d21",
+      "commitDate": "2020-10-19T15:55:01Z",
+      "runtime": "node12",
+      "dockerImage": null,
+      "nestedUses": []
+    },
+    {
+      "reference": "actions/download-artifact@v2",
+      "repository": "actions/download-artifact",
+      "uses": [
+        "openhaystack/.github/workflows/release.yml:51"
+      ],
+      "latestRelease": "v8.0.2",
+      "releasePublished": "2026-10-07T10:09:51Z",
+      "resolvedCommit": "cbed621e49e4c01b044d60f6c80ea4ed6328b281",
+      "commitDate": "2023-03-08T21:06:44Z",
+      "runtime": "node12",
+      "dockerImage": null,
+      "nestedUses": []
+    },
+    {
+      "reference": "actions/create-release@v1",
+      "repository": "actions/create-release",
+      "uses": [
+        "openhaystack/.github/workflows/release.yml:64"
+      ],
+      "latestRelease": "v1.1.4",
+      "releasePublished": "2020-09-14T13:55:07Z",
+      "resolvedCommit": "0cb9c9b65d5d1901c1f53e5e66eaf4afd303e70e",
+      "commitDate": "2020-09-14T13:52:01Z",
+      "runtime": "node12",
+      "dockerImage": null,
+      "nestedUses": []
+    },
+    {
+      "reference": "actions/upload-release-asset@v1",
+      "repository": "actions/upload-release-asset",
+      "uses": [
+        "openhaystack/.github/workflows/release.yml:74"
+      ],
+      "latestRelease": "v1.0.2",
+      "releasePublished": "2020-02-10T08:01:38Z",
+      "resolvedCommit": "e8f9f06c4b078e705bd2ea027f0926603fc9b4d5",
+      "commitDate": "2020-02-10T07:58:34Z",
+      "runtime": "node12",
+      "dockerImage": null,
+      "nestedUses": []
+    },
+    {
+      "reference": "actions/download-artifact@v7",
+      "repository": "actions/download-artifact",
+      "uses": [
+        "dirtbike-specialist/.github/workflows/ci.yml:253"
+      ],
+      "latestRelease": "v8.0.2",
+      "releasePublished": "2026-10-07T10:09:51Z",
+      "resolvedCommit": "37930b1c2abaa49bbe596cd826c3c89aef350131",
+      "commitDate": "2025-12-12T17:58:13Z",
+      "runtime": "node24",
+      "dockerImage": null,
+      "nestedUses": []
+    },
+    {
+      "reference": "actions/checkout@11d5960a326750d5838078e36cf38b85af677262",
+      "repository": "actions/checkout",
+      "uses": [
+        "terraform/.github/workflows/validate.yaml:13"
+      ],
+      "latestRelease": "v7.0.1",
+      "releasePublished": "2026-07-20T15:10:05Z",
+      "resolvedCommit": "11d5960a326750d5838078e36cf38b85af677262",
+      "commitDate": "2026-07-16T19:43:47Z",
+      "runtime": "node20",
+      "dockerImage": null,
+      "nestedUses": []
+    },
+    {
+      "reference": "hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e",
+      "repository": "hashicorp/setup-terraform",
+      "uses": [
+        "terraform/.github/workflows/validate.yaml:16"
+      ],
+      "latestRelease": "v4.0.1",
+      "releasePublished": "2026-05-12T12:23:15Z",
+      "resolvedCommit": "dfe3c3f87815947d99a8997f908cb6525fc44e9e",
+      "commitDate": "2026-05-12T12:22:33Z",
+      "runtime": "node24",
+      "dockerImage": null,
+      "nestedUses": []
+    }
+  ],
+  "nested": [
+    {
+      "reference": "actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f",
+      "runtime": "node24",
+      "sha": "bbbca2ddaa5d8feaa63e36b76fdaad77386f024f",
+      "nestedUses": []
+    },
+    {
+      "reference": "astral-sh/setup-uv@v8.1.0",
+      "runtime": "node24",
+      "sha": "08807647e7069bb48b6ef5acd8ec9567f424441b",
+      "nestedUses": []
+    },
+    {
+      "reference": "actions/checkout@v7.0.1",
+      "runtime": "node24",
+      "sha": "3d3c42e5aac5ba805825da76410c181273ba90b1",
+      "nestedUses": []
+    }
+  ]
+}
