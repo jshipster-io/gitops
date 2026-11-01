@@ -7,6 +7,8 @@ ROOT = Path(__file__).resolve().parent
 SOURCES = {
     'argo': ('argoproj/argo-cd', 'c2b1e3017e2cec86b122172e861dcd026453ae44'),
     'ksops': ('viaduct-ai/kustomize-sops', 'd9442dc3153d9c16e517a68ce8926c9507386429'),
+    'helm': ('helm/helm', 'c0d08d0d6d9424d4a14febb5e8a3e51b0dd00dff'),
+    'git-lfs': ('git-lfs/git-lfs', 'a662a6dbfedf706cfa9fc7a5b7bcc7ba2e2c8a65'),
 }
 for name, (repo, commit) in SOURCES.items():
     dest = ROOT / '.build' / name

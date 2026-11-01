@@ -17,14 +17,21 @@ RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache
 FROM golang:1.27.3-bookworm@sha256:972b4110ba0f47539a975c31e52c64765e1ff19f2d74469ae4a595c6676e80a5 AS tools
 ENV CGO_ENABLED=0 GOTOOLCHAIN=local GOMAXPROCS=2 GOBIN=/out
 RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build \
-    go install -p 2 -trimpath -ldflags='-s -w' sigs.k8s.io/kustomize/kustomize/v5@v5.8.3 && \
-    go install -p 2 -trimpath -ldflags='-s -w' github.com/git-lfs/git-lfs/v3@v3.8.1 && \
-    go install -p 2 -trimpath -ldflags='-s -w -X helm.sh/helm/v4/internal/version.version=v4.3.1' helm.sh/helm/v4/cmd/helm@v4.3.1
+    go install -p 2 -trimpath -ldflags='-s -w' sigs.k8s.io/kustomize/kustomize/v5@v5.8.3
+COPY .build/git-lfs/ /src/git-lfs/
+WORKDIR /src/git-lfs
+RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build \
+    go build -mod=readonly -p 2 -trimpath -ldflags='-s -w' -o /out/git-lfs .
+COPY .build/helm/ /src/helm/
+WORKDIR /src/helm
+RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build \
+    go build -mod=readonly -p 2 -trimpath -ldflags='-s -w -X helm.sh/helm/v4/internal/version.version=v4.3.1' -o /out/helm ./cmd/helm
 
 # Preserve the release's users, entrypoint, symlinks, GPG/SSH and UI behavior.
 FROM quay.io/argoproj/argocd:v3.5.6@sha256:8e5cc5bb008df8a09dba439462e58c94c55b7735888d3ebde0c25fc05e4e5335
 USER 0
-RUN apt-get update && apt-get upgrade -y && rm -rf /var/lib/apt/lists/*
+# Argo uses tini; the Ubuntu base's unused Pebble supervisor embeds stale Go code.
+RUN apt-get update && apt-get upgrade -y && rm -rf /var/lib/apt/lists/* && rm -f /usr/bin/pebble
 COPY --from=build --chmod=755 /out/argocd /usr/local/bin/argocd
 COPY --from=tools --chmod=755 /out/kustomize /out/git-lfs /out/helm /usr/local/bin/
 USER 999

@@ -40,6 +40,17 @@ class ImageSecurityTest(unittest.TestCase):
         self.assertNotEqual(result.returncode, 0)
         self.assertIn('immutable image digest', result.stderr)
 
+    def test_control_plane_blocks_fixable_high(self):
+        with tempfile.TemporaryDirectory() as temp:
+            path = Path(temp)/'report.json'
+            path.write_text(json.dumps({'ArtifactName': 'candidate@sha256:abc', 'Results': [
+                {'Vulnerabilities': [{'Severity': 'HIGH', 'FixedVersion': '2',
+                 'VulnerabilityID': 'CVE-test', 'PkgName': 'package', 'InstalledVersion': '1'}]}]}))
+            for policy in ('1', 'invalid'):
+                result = subprocess.run(['python3', '-c', PARSER, str(path)], capture_output=True,
+                                        env={**os.environ, 'BLOCK_FIXABLE_HIGH': policy})
+                self.assertNotEqual(result.returncode, 0)
+
     def test_invalid_report_fails(self):
         with tempfile.TemporaryDirectory() as temp:
             path = Path(temp) / 'report.json'

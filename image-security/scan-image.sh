@@ -20,11 +20,15 @@ import collections, json, os, sys
 with open(sys.argv[1]) as f:
     report = json.load(f)
 findings = [v for r in report.get('Results', []) for v in r.get('Vulnerabilities') or []]
-blocking = [v for v in findings if v['Severity'] == 'CRITICAL' and v.get('FixedVersion')]
+high_policy = os.environ.get('BLOCK_FIXABLE_HIGH', '0')
+if high_policy not in ('0', '1'):
+    sys.exit('Invalid BLOCK_FIXABLE_HIGH policy')
+severities = {'CRITICAL', 'HIGH'} if high_policy == '1' else {'CRITICAL'}
+blocking = [v for v in findings if v['Severity'] in severities and v.get('FixedVersion')]
 counts = collections.Counter(v['Severity'] for v in findings)
 lines = ['### Image vulnerability scan', '', f"Image: `{report['ArtifactName']}`", '',
          'Package/CVE findings: ' + ', '.join(f'{k}: {counts[k]}' for k in ['CRITICAL','HIGH','MEDIUM','LOW','UNKNOWN']),
-         f'Fixable critical findings (promotion gate): {len(blocking)}', '',
+         f"Fixable {'/'.join(sorted(severities))} findings (promotion gate): {len(blocking)}", '',
          'High and unfixed findings remain a tracked remediation backlog; passing this gate does not mean vulnerability-free.', '',
          '| Severity | CVE | Package | Installed | Fixed |', '|---|---|---|---|---|']
 for v in findings:
@@ -37,5 +41,5 @@ if os.environ.get('GITHUB_STEP_SUMMARY'):
     with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as f:
         f.write(summary)
 if blocking:
-    sys.exit('Promotion blocked: fixable CRITICAL vulnerabilities remain')
+    sys.exit('Promotion blocked: fixable ' + '/'.join(sorted(severities)) + ' vulnerabilities remain')
 PY
