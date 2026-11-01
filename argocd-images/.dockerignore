@@ -1,0 +1,2 @@
+.build/**/.git
+.build/**/node_modules

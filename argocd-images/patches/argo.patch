@@ -1,0 +1,62 @@
+diff --git a/go.mod b/go.mod
+index 38a199c..019187f 100644
+--- a/go.mod
++++ b/go.mod
+@@ -45,7 +45,7 @@ require (
+ 	// #1515) is mitigated in util/git by populating HostKeyAlgorithms via
+ 	// skeema/knownhosts. Keep that fix in place when bumping further.
+ 	github.com/go-git/go-git/v5 v5.19.2
+-	github.com/go-jose/go-jose/v4 v4.1.4
++	github.com/go-jose/go-jose/v4 v4.1.6
+ 	github.com/go-logr/logr v1.4.3
+ 	github.com/go-openapi/loads v0.24.0
+ 	github.com/go-playground/webhooks/v6 v6.4.0
+@@ -106,7 +106,7 @@ require (
+ 	go.opentelemetry.io/otel/trace v1.44.0
+ 	go.yaml.in/yaml/v3 v3.0.4
+ 	golang.org/x/crypto v0.57.0
+-	golang.org/x/net v0.59.0
++	golang.org/x/net v0.60.0
+ 	golang.org/x/oauth2 v0.36.0
+ 	golang.org/x/sync v0.23.0
+ 	golang.org/x/term v0.46.0
+@@ -233,7 +233,7 @@ require (
+ 	github.com/json-iterator/go v1.1.12 // indirect
+ 	github.com/kevinburke/ssh_config v1.2.0 // indirect
+ 	github.com/keybase/go-keychain v0.0.1 // indirect
+-	github.com/klauspost/compress v1.18.0 // indirect
++	github.com/klauspost/compress v1.18.7 // indirect
+ 	github.com/kylelemons/godebug v1.1.0 // indirect
+ 	github.com/liggitt/tabwriter v0.0.0-20181228230101-89fcab3d43de // indirect
+ 	github.com/mailru/easyjson v0.9.0 // indirect
+diff --git a/go.sum b/go.sum
+index 8de359d..7f3edbc 100644
+--- a/go.sum
++++ b/go.sum
+@@ -318,6 +318,8 @@ github.com/go-jose/go-jose/v3 v3.0.5 h1:BLLJWbC4nMZOfuPVxoZIxeYsn6Nl2r1fITaJ78UQ
+ github.com/go-jose/go-jose/v3 v3.0.5/go.mod h1:5b+7YgP7ZICgJDBdfjZaIt+H/9L9T/YQrVfLAMboGkQ=
+ github.com/go-jose/go-jose/v4 v4.1.4 h1:moDMcTHmvE6Groj34emNPLs/qtYXRVcd6S7NHbHz3kA=
+ github.com/go-jose/go-jose/v4 v4.1.4/go.mod h1:x4oUasVrzR7071A4TnHLGSPpNOm2a21K9Kf04k1rs08=
++github.com/go-jose/go-jose/v4 v4.1.6 h1:sNRkftxFJxwsILiQukqp5z83QBSmntVwmgRY7AqBDO4=
++github.com/go-jose/go-jose/v4 v4.1.6/go.mod h1:x4oUasVrzR7071A4TnHLGSPpNOm2a21K9Kf04k1rs08=
+ github.com/go-kit/kit v0.8.0/go.mod h1:xBxKIO96dXMWWy0MnWVtmwkA9/13aqxPnvrjFYMA2as=
+ github.com/go-kit/kit v0.9.0/go.mod h1:xBxKIO96dXMWWy0MnWVtmwkA9/13aqxPnvrjFYMA2as=
+ github.com/go-kit/log v0.1.0/go.mod h1:zbhenjAZHb184qTLMA9ZjW7ThYL0H2mk7Q6pNt4vbaY=
+@@ -594,6 +596,8 @@ github.com/klauspost/compress v1.11.7/go.mod h1:aoV0uJVorq1K+umq18yTdKaF57EivdYs
+ github.com/klauspost/compress v1.13.6/go.mod h1:/3/Vjq9QcHkK5uEr5lBEmyoZ1iFhe47etQ6QUkpK6sk=
+ github.com/klauspost/compress v1.18.0 h1:c/Cqfb0r+Yi+JtIEq73FWXVkRonBlf0CRNYc8Zttxdo=
+ github.com/klauspost/compress v1.18.0/go.mod h1:2Pp+KzxcywXVXMr50+X0Q/Lsb43OQHYWRCY2AiWywWQ=
++github.com/klauspost/compress v1.18.7 h1:aUyZsS4kH3QTKurYhAOwAHxllVPnOthb3vPfnF1Ehjw=
++github.com/klauspost/compress v1.18.7/go.mod h1:cwPg85FWrGar70rWktvGQj8/hthj3wpl0PGDogxkrSQ=
+ github.com/klauspost/cpuid/v2 v2.3.0 h1:S4CRMLnYUhGeDFDqkGriYKdfoFlDnMtqTiI/sFzhA9Y=
+ github.com/klauspost/cpuid/v2 v2.3.0/go.mod h1:hqwkgyIinND0mEev00jJYCxPNVRVXFQeu1XKlok6oO0=
+ github.com/konsorten/go-windows-terminal-sequences v1.0.1/go.mod h1:T0+1ngSBFLxvqU3pZ+m/2kptfBszLMUkC4ZK/EgS/cQ=
+@@ -1036,6 +1040,8 @@ golang.org/x/net v0.41.0/go.mod h1:B/K4NNqkfmg07DQYrbwvSluqCJOOXwUjeb/5lOisjbA=
+ golang.org/x/net v0.42.0/go.mod h1:FF1RA5d3u7nAYA4z2TkclSCKh68eSXtiFwcWQpPXdt8=
+ golang.org/x/net v0.59.0 h1:5zfYln+w5XCxwrnMMJPufRgNoXEaGxl0wo5GqPXyues=
+ golang.org/x/net v0.59.0/go.mod h1:2DA/G1UfVbCpQPeWTmMPGY7Cs2PkBkwu743bVX5PIVg=
++golang.org/x/net v0.60.0 h1:79p50tfZlm0J9YfoDsSi639qSXNGVwEzOPLCxM2FsYU=
++golang.org/x/net v0.60.0/go.mod h1:2DA/G1UfVbCpQPeWTmMPGY7Cs2PkBkwu743bVX5PIVg=
+ golang.org/x/oauth2 v0.0.0-20180821212333-d2e6202438be/go.mod h1:N/0e6XlmueqKjAGxoOufVs8QHGRruUQn6yWY3a++T0U=
+ golang.org/x/oauth2 v0.0.0-20190226205417-e64efc72b421/go.mod h1:gOpvHmFTYa4IltrdGE7lF6nIHvwfUNPOp7c8zoXwtLw=
+ golang.org/x/oauth2 v0.0.0-20190604053449-0f29369cfe45/go.mod h1:gOpvHmFTYa4IltrdGE7lF6nIHvwfUNPOp7c8zoXwtLw=

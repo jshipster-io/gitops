@@ -1,0 +1,30 @@
+FROM node:24-bookworm-slim@sha256:c86ecead9e55a5210ac1727de38a4ca840bf03dcaf34dc9749addbf383b1920c AS ui
+WORKDIR /src
+RUN apt-get update && apt-get install -y --no-install-recommends git ca-certificates && rm -rf /var/lib/apt/lists/*
+COPY .build/argo/ui/ ./
+RUN npm install -g corepack@0.34.6 && corepack enable && pnpm install --frozen-lockfile
+ENV ARGO_VERSION=v3.5.6
+RUN NODE_ENV=production NODE_ONLINE_ENV=online NODE_OPTIONS=--max_old_space_size=4096 pnpm build
+
+FROM golang:1.27.3-bookworm@sha256:972b4110ba0f47539a975c31e52c64765e1ff19f2d74469ae4a595c6676e80a5 AS build
+ENV CGO_ENABLED=0 GOTOOLCHAIN=local GOMAXPROCS=2
+WORKDIR /src
+COPY .build/argo/ ./
+COPY --from=ui /src/dist/app ./ui/dist/app
+RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build \
+    go build -mod=readonly -p 2 -trimpath -ldflags='-s -w -X github.com/argoproj/argo-cd/v3/common.version=v3.5.6+security -X github.com/argoproj/argo-cd/v3/common.gitCommit=c2b1e3017e2cec86b122172e861dcd026453ae44 -X github.com/argoproj/argo-cd/v3/common.gitTreeState=modified' -o /out/argocd ./cmd
+
+FROM golang:1.27.3-bookworm@sha256:972b4110ba0f47539a975c31e52c64765e1ff19f2d74469ae4a595c6676e80a5 AS tools
+ENV CGO_ENABLED=0 GOTOOLCHAIN=local GOMAXPROCS=2 GOBIN=/out
+RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build \
+    go install -p 2 -trimpath -ldflags='-s -w' sigs.k8s.io/kustomize/kustomize/v5@v5.8.3 && \
+    go install -p 2 -trimpath -ldflags='-s -w' github.com/git-lfs/git-lfs/v3@v3.8.1 && \
+    go install -p 2 -trimpath -ldflags='-s -w -X helm.sh/helm/v4/internal/version.version=v4.3.1' helm.sh/helm/v4/cmd/helm@v4.3.1
+
+# Preserve the release's users, entrypoint, symlinks, GPG/SSH and UI behavior.
+FROM quay.io/argoproj/argocd:v3.5.6@sha256:8e5cc5bb008df8a09dba439462e58c94c55b7735888d3ebde0c25fc05e4e5335
+USER 0
+RUN apt-get update && apt-get upgrade -y && rm -rf /var/lib/apt/lists/*
+COPY --from=build --chmod=755 /out/argocd /usr/local/bin/argocd
+COPY --from=tools --chmod=755 /out/kustomize /out/git-lfs /out/helm /usr/local/bin/
+USER 999
