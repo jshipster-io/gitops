@@ -40,6 +40,9 @@ docker run --rm --network none --read-only --user 999:999 --cap-drop ALL --secur
     grep -q "probe: synthetic-only" /tmp/rendered.yaml
     if SOPS_AGE_KEY_FILE=/dev/null kustomize build /fixture --enable-alpha-plugins --enable-exec >/dev/null 2>&1; then exit 1; fi
     argocd version --client
+    # Argo prefixes v and adds commit metadata itself. Its REST gateway rejects
+    # invalid embedded SemVer even when version --client exits successfully.
+    argocd version --client --short | grep -E "^argocd: v[0-9]+\\.[0-9]+\\.[0-9]+(-[0-9A-Za-z.-]+)?(\\+[0-9A-Za-z.-]+)?$"
     helm version --short
     helm template probe /fixture/chart > /tmp/helm.yaml
     grep -q "probe: synthetic-helm" /tmp/helm.yaml

@@ -12,7 +12,7 @@ WORKDIR /src
 COPY .build/argo/ ./
 COPY --from=ui /src/dist/app ./ui/dist/app
 RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build \
-    go build -mod=readonly -p 2 -trimpath -ldflags='-s -w -X github.com/argoproj/argo-cd/v3/common.version=v3.5.6+security -X github.com/argoproj/argo-cd/v3/common.gitCommit=c2b1e3017e2cec86b122172e861dcd026453ae44 -X github.com/argoproj/argo-cd/v3/common.gitTreeState=modified' -o /out/argocd ./cmd
+    go build -mod=readonly -p 2 -trimpath -ldflags='-s -w -X github.com/argoproj/argo-cd/v3/common.version=3.5.6 -X github.com/argoproj/argo-cd/v3/common.gitCommit=c2b1e3017e2cec86b122172e861dcd026453ae44 -X github.com/argoproj/argo-cd/v3/common.gitTreeState=dirty -X github.com/argoproj/argo-cd/v3/common.extraBuildInfo=jshipster-security-rebuild' -o /out/argocd ./cmd
 
 FROM golang:1.27.3-bookworm@sha256:972b4110ba0f47539a975c31e52c64765e1ff19f2d74469ae4a595c6676e80a5 AS tools
 ENV CGO_ENABLED=0 GOTOOLCHAIN=local GOMAXPROCS=2 GOBIN=/out
