@@ -105,7 +105,7 @@ Deploy hardened templates first, verify replacements and access, then promote
 namespace enforcement. Hasadnaa, drc, trips, external-dns and jshipster completed
 this staged sequence. Blutag App/Website and cloudflared have per-workload guards;
 the shared blutag and argocd namespaces retain Baseline until their other workloads
-are migrated. Database/backup templates, persistent FindMy/Pointer workers, the
+are migrated. Persistent FindMy/Pointer workers, the
 third-party anisette cache and root-dependent bastion/KSOPS bootstrap are separate
 compatibility work; do not infer they were migrated by this stateless stage.
 
@@ -120,3 +120,55 @@ success and secret-read denial, and private SSH/owner API access from both Macs.
 The runtime verifier never starts scheduled jobs. Shell `test -w` alone is not
 proof of a writable filesystem: validate mount flags and an owned disposable write
 attempt when testing read-only enforcement, and remove temporary probe files.
+
+## Database and backup runtime hardening
+
+The shared PostgreSQL images retain their verified UID/GID/fsGroup 999. Both the
+active PostgreSQL 18 StatefulSet and the retained, zero-replica PostgreSQL 17
+StatefulSet have read-only root filesystems, RuntimeDefault seccomp, no privilege
+escalation, dropped capabilities and no automatic API token. Data stays on the
+original PVC; only sockets/PID files (`/var/run/postgresql`, 16Mi) and temporary
+files (`/tmp`, 128Mi) use bounded emptyDir volumes. Preserve TLS mounts, image
+digests, PGDATA, service selection and `OnRootMismatch` group handling. CI also
+pins the active/offline replica counts and both PVC retention settings to Retain.
+Never start the retained PostgreSQL 17 database as a rollback after new writes.
+
+All ten application backup templates and the cluster recovery job use UID/GID
+1001, read-only roots and bounded temporary storage. The six legacy application
+backups now explicitly mount `/tmp`; Azure CLI uses `HOME=/tmp` and its existing
+`AZURE_CONFIG_DIR=/tmp/azure`. Their upload container reads the dump volume
+read-only. Keep workload identity, backup schedules, compression/archive names,
+container paths, retention and database credentials unchanged. The TLS reload job
+keeps its existing UID 999. All fourteen database/backup templates are guarded in
+`pod-security/workloads.yaml`, including init containers.
+
+Before a database runtime change, inspect current process/data ownership, recent
+backup success, PVC identity and reclaim/retention policy. Rehearse exact pinned
+images on disposable storage, including TLS, pgvector, dump/restore and restart.
+For this singleton primary a rolling update includes a brief restart/client
+reconnect; do not promise zero downtime. Keep a recovery point before restarting
+and distinguish a crash-consistent disk snapshot from a tested logical restore.
+
+```sh
+python3 scripts/test-database-hardening.py
+KUBECONFIG="$HOME/.kube/prod-aks-entra" python3 scripts/verify-database-runtime.py --run
+KUBECONFIG="$HOME/.kube/prod-aks-entra" python3 scripts/verify-backup-runtime.py --run
+```
+
+The first live probe mounts no production data and binds its synthetic database to
+loopback. The second reads schema only through the six changed backup templates
+and uploads/downloads/deletes uniquely named synthetic blobs under
+`hardening-probes/`; it never uploads database dumps or overwrites backup archives.
+Both require explicit `--run`, use deadlines and remove their Jobs. These are
+opt-in operational probes, not production-credential dependencies for CI. CI tests
+their isolation and runs the normal credential-free manifest/security gate.
+
+Publish runtime contexts first while existing admission remains in place. Verify
+ready replacement pods, unchanged database/access catalogs and PVCs, TLS, real
+application readiness and owner access. Then advance postgres and pg-backups to
+Restricted only after all their controller and scheduled templates pass live
+admission checks. A synthetic backup probe proves runtime/identity/I/O behavior;
+it does not claim that the next scheduled full backup has already run. Remove only
+temporary probe artifacts/recovery snapshots created for this rollout, preserving
+normal backups and previous recovery points. If the replacement fails, revert the
+runtime change through automatic GitOps validation and reuse the current data PVC.

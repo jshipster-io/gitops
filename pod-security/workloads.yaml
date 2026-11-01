@@ -107,3 +107,105 @@ workloads:
   kubernetesToken: false
   reason: No Kubernetes API dependency; preserve separately projected Azure tokens
     and mounted GCP credentials.
+- namespace: postgres
+  kind: StatefulSet
+  name: shared-postgres
+  uid: 999
+  fsGroup: 999
+  replicas: 0
+  kubernetesToken: false
+  reason: Preserve PostgreSQL-owned data and Retain PVCs; only data, socket and temporary
+    paths are writable.
+- namespace: postgres
+  kind: StatefulSet
+  name: shared-postgres-18
+  uid: 999
+  fsGroup: 999
+  replicas: 1
+  kubernetesToken: false
+  reason: Preserve PostgreSQL-owned data and Retain PVCs; only data, socket and temporary
+    paths are writable.
+- namespace: pg-backups
+  kind: CronJob
+  name: pg-backup-tivtaam-mcp
+  uid: 1001
+  kubernetesToken: false
+  reason: Container-scoped Azure federation; no Kubernetes API access. Dump and uploader
+    share bounded scratch storage.
+- namespace: pg-backups
+  kind: CronJob
+  name: pg-backup-webtop-mcp
+  uid: 1001
+  kubernetesToken: false
+  reason: Container-scoped Azure federation; no Kubernetes API access. Dump and uploader
+    share bounded scratch storage.
+- namespace: pg-backups
+  kind: CronJob
+  name: pg-backup-mashov-mcp
+  uid: 1001
+  kubernetesToken: false
+  reason: Container-scoped Azure federation; no Kubernetes API access. Dump and uploader
+    share bounded scratch storage.
+- namespace: pg-backups
+  kind: CronJob
+  name: pg-backup-multi-whatsapp
+  uid: 1001
+  kubernetesToken: false
+  reason: Container-scoped Azure federation; no Kubernetes API access. Dump and uploader
+    share bounded scratch storage.
+- namespace: pg-backups
+  kind: CronJob
+  name: pg-backup-ids
+  uid: 1001
+  kubernetesToken: false
+  reason: Container-scoped Azure federation; no Kubernetes API access. Dump and uploader
+    share bounded scratch storage.
+- namespace: pg-backups
+  kind: CronJob
+  name: pg-backup-dirtbike
+  uid: 1001
+  kubernetesToken: false
+  reason: Container-scoped Azure federation; no Kubernetes API access. Dump and uploader
+    share bounded scratch storage.
+- namespace: pg-backups
+  kind: CronJob
+  name: pg-backup-hasadnaa
+  uid: 1001
+  kubernetesToken: false
+  reason: Container-scoped Azure federation; no Kubernetes API access. Dump and uploader
+    share bounded scratch storage.
+- namespace: pg-backups
+  kind: CronJob
+  name: pg-backup-blutag
+  uid: 1001
+  kubernetesToken: false
+  reason: Container-scoped Azure federation; no Kubernetes API access. Dump and uploader
+    share bounded scratch storage.
+- namespace: pg-backups
+  kind: CronJob
+  name: pg-backup-trainings
+  uid: 1001
+  kubernetesToken: false
+  reason: Container-scoped Azure federation; no Kubernetes API access. Dump and uploader
+    share bounded scratch storage.
+- namespace: pg-backups
+  kind: CronJob
+  name: pg-backup-anpr
+  uid: 1001
+  kubernetesToken: false
+  reason: Container-scoped Azure federation; no Kubernetes API access. Dump and uploader
+    share bounded scratch storage.
+- namespace: postgres
+  kind: CronJob
+  name: pg-backup-cluster-recovery
+  uid: 1001
+  kubernetesToken: false
+  reason: Existing non-root recovery/TLS maintenance contract; retain projected identity
+    and read-only credential mounts.
+- namespace: postgres
+  kind: CronJob
+  name: shared-postgres-tls-reload
+  uid: 999
+  kubernetesToken: false
+  reason: Existing non-root recovery/TLS maintenance contract; retain projected identity
+    and read-only credential mounts.

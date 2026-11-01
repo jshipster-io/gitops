@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: shared-postgres
+  namespace: postgres
+spec:
+  template:
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 999
+        runAsGroup: 999
+        fsGroup: 999
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: postgres
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+        volumeMounts:
+        - name: postgres-run
+          mountPath: /var/run/postgresql
+        - name: runtime-tmp
+          mountPath: /tmp
+      volumes:
+      - name: postgres-run
+        emptyDir:
+          sizeLimit: 16Mi
+      - name: runtime-tmp
+        emptyDir:
+          sizeLimit: 128Mi
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: shared-postgres-18
+  namespace: postgres
+spec:
+  template:
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 999
+        runAsGroup: 999
+        fsGroup: 999
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: postgres
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
+        volumeMounts:
+        - name: postgres-run
+          mountPath: /var/run/postgresql
+        - name: runtime-tmp
+          mountPath: /tmp
+      volumes:
+      - name: postgres-run
+        emptyDir:
+          sizeLimit: 16Mi
+      - name: runtime-tmp
+        emptyDir:
+          sizeLimit: 128Mi

@@ -23,3 +23,6 @@ generators:
   - mashov-mcp-secrets-generator.yaml
   - multi-whatsapp-secrets-generator.yaml
   - secrets-generator.yaml
+
+patches:
+  - path: pod-hardening.patch.yaml

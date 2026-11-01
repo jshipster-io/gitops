@@ -15,11 +15,14 @@ profiles = yaml.safe_load((workload_hardening.ROOT / 'pod-security/workloads.yam
 docs = [get('get', p['kind'], p['name'], '-n', p['namespace']) for p in profiles]
 workload_hardening.validate(docs)
 for p, obj in zip(profiles, docs):
-    if p['kind'] != 'Deployment':
+    if p['kind'] not in ('Deployment', 'StatefulSet'):
         continue  # Never execute notification, business or backup jobs for validation.
     status, spec = obj['status'], obj['spec']
     replicas = spec.get('replicas', 1)
-    assert replicas > 0, f'No active runtime: {p["name"]}'
+    if replicas == 0:
+        assert p.get('replicas') == 0 and not status.get('readyReplicas', 0), p['name']
+        print('PASS retained offline database:', p['name'], flush=True)
+        continue
     assert status.get('observedGeneration', 0) >= obj['metadata']['generation'], p['name']
     assert status.get('updatedReplicas', 0) == replicas and status.get('availableReplicas', 0) >= replicas, p['name']
     selector = ','.join(k + '=' + v for k, v in spec['selector']['matchLabels'].items())
@@ -28,7 +31,7 @@ for p, obj in zip(profiles, docs):
     assert len(pods) == replicas, f'Rollout still replacing pods: {p["name"]}'
     for pod in pods:
         assert any(c['type'] == 'Ready' and c['status'] == 'True' for c in pod['status'].get('conditions', [])), p['name']
-        runtime = {'kind': 'Deployment', 'metadata': obj['metadata'], 'spec': {'template': {'spec': pod['spec']}}}
+        runtime = {'kind': p['kind'], 'metadata': obj['metadata'], 'spec': {**obj['spec'], 'template': {'spec': pod['spec']}}}
         # Admission-injected tokens/volumes must not weaken the original controls.
         i = docs.index(obj)
         actual = docs.copy(); actual[i] = runtime

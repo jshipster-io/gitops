@@ -1,0 +1,269 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: pg-backup-ids
+spec:
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          automountServiceAccountToken: false
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
+            fsGroup: 1001
+            seccompProfile:
+              type: RuntimeDefault
+          initContainers:
+          - name: pg-dump
+            securityContext: &id001
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                - ALL
+            volumeMounts:
+            - name: runtime-tmp
+              mountPath: /tmp
+          containers:
+          - name: upload
+            securityContext: *id001
+            volumeMounts:
+            - name: runtime-tmp
+              mountPath: /tmp
+            - name: backup-data
+              mountPath: /backups
+              readOnly: true
+            env:
+            - name: HOME
+              value: /tmp
+          volumes:
+          - name: runtime-tmp
+            emptyDir:
+              sizeLimit: 128Mi
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: pg-backup-dirtbike
+spec:
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          automountServiceAccountToken: false
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
+            fsGroup: 1001
+            seccompProfile:
+              type: RuntimeDefault
+          initContainers:
+          - name: pg-dump
+            securityContext: &id001
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                - ALL
+            volumeMounts:
+            - name: runtime-tmp
+              mountPath: /tmp
+          containers:
+          - name: upload
+            securityContext: *id001
+            volumeMounts:
+            - name: runtime-tmp
+              mountPath: /tmp
+            - name: backup-data
+              mountPath: /backups
+              readOnly: true
+            env:
+            - name: HOME
+              value: /tmp
+          volumes:
+          - name: runtime-tmp
+            emptyDir:
+              sizeLimit: 128Mi
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: pg-backup-hasadnaa
+spec:
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          automountServiceAccountToken: false
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
+            fsGroup: 1001
+            seccompProfile:
+              type: RuntimeDefault
+          initContainers:
+          - name: pg-dump
+            securityContext: &id001
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                - ALL
+            volumeMounts:
+            - name: runtime-tmp
+              mountPath: /tmp
+          containers:
+          - name: upload
+            securityContext: *id001
+            volumeMounts:
+            - name: runtime-tmp
+              mountPath: /tmp
+            - name: backup-data
+              mountPath: /backups
+              readOnly: true
+            env:
+            - name: HOME
+              value: /tmp
+          volumes:
+          - name: runtime-tmp
+            emptyDir:
+              sizeLimit: 128Mi
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: pg-backup-blutag
+spec:
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          automountServiceAccountToken: false
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
+            fsGroup: 1001
+            seccompProfile:
+              type: RuntimeDefault
+          initContainers:
+          - name: pg-dump
+            securityContext: &id001
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                - ALL
+            volumeMounts:
+            - name: runtime-tmp
+              mountPath: /tmp
+          containers:
+          - name: upload
+            securityContext: *id001
+            volumeMounts:
+            - name: runtime-tmp
+              mountPath: /tmp
+            - name: backup-data
+              mountPath: /backups
+              readOnly: true
+            env:
+            - name: HOME
+              value: /tmp
+          volumes:
+          - name: runtime-tmp
+            emptyDir:
+              sizeLimit: 128Mi
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: pg-backup-trainings
+spec:
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          automountServiceAccountToken: false
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
+            fsGroup: 1001
+            seccompProfile:
+              type: RuntimeDefault
+          initContainers:
+          - name: pg-dump
+            securityContext: &id001
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                - ALL
+            volumeMounts:
+            - name: runtime-tmp
+              mountPath: /tmp
+          containers:
+          - name: upload
+            securityContext: *id001
+            volumeMounts:
+            - name: runtime-tmp
+              mountPath: /tmp
+            - name: backup-data
+              mountPath: /backups
+              readOnly: true
+            env:
+            - name: HOME
+              value: /tmp
+          volumes:
+          - name: runtime-tmp
+            emptyDir:
+              sizeLimit: 128Mi
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: pg-backup-anpr
+spec:
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          automountServiceAccountToken: false
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
+            fsGroup: 1001
+            seccompProfile:
+              type: RuntimeDefault
+          initContainers:
+          - name: pg-dump
+            securityContext: &id001
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                - ALL
+            volumeMounts:
+            - name: runtime-tmp
+              mountPath: /tmp
+          containers:
+          - name: upload
+            securityContext: *id001
+            volumeMounts:
+            - name: runtime-tmp
+              mountPath: /tmp
+            - name: backup-data
+              mountPath: /backups
+              readOnly: true
+            env:
+            - name: HOME
+              value: /tmp
+          volumes:
+          - name: runtime-tmp
+            emptyDir:
+              sizeLimit: 128Mi

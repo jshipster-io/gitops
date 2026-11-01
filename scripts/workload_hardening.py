@@ -12,7 +12,12 @@ def validate(docs):
         assert key in indexed, f'Missing hardened workload: {key}'
         obj = indexed[key]
         spec = obj['spec']['jobTemplate']['spec']['template']['spec'] if p['kind'] == 'CronJob' else obj['spec']['template']['spec']
+        if 'replicas' in p:
+            assert obj['spec'].get('replicas', 1) == p['replicas'], f'Database replica contract drift: {key}'
+            assert obj['spec'].get('persistentVolumeClaimRetentionPolicy') == {'whenDeleted': 'Retain', 'whenScaled': 'Retain'}, f'Database PVC retention drift: {key}'
         context = spec.get('securityContext', {})
+        if 'fsGroup' in p:
+            assert context.get('fsGroup') == p['fsGroup'] and context.get('fsGroupChangePolicy') == 'OnRootMismatch', f'Database ownership drift: {key}'
         assert context.get('runAsNonRoot') is True and context.get('runAsUser') == p['uid'], f'Runtime identity drift: {key}'
         assert context.get('seccompProfile', {}).get('type') == 'RuntimeDefault', f'Seccomp drift: {key}'
         assert spec.get('automountServiceAccountToken') is p['kubernetesToken'] and p['reason'], f'Token policy drift: {key}'
