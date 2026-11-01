@@ -64,13 +64,46 @@ not silently suppressed. Residual HIGH findings are outside the initial gate.
 
 This first enforcement stage is enabled in the four updated applications, **not every repository**. HIGH and unfixed findings remain a backlog. Passing the gate does not mean vulnerability-free. The helper must remain in sync with the copies in those source repositories; changing this GitOps copy alone does not change their CI.
 
+## Argo CD / KSOPS follow-up — 2026-11-02
+
+Both final runtime images were rebuilt from pinned upstream sources with patched
+Go/tool dependencies, scanned, and deployed through automatic protected GitOps.
+The control-plane image pipeline opts into a stricter fixable-critical/**high**
+gate; the existing application gate's default remains unchanged.
+
+| Runtime | Critical before → after | High before → after | Remaining medium / low / unclassified |
+|---|---:|---:|---:|
+| Argo CD 3.5.6 rebuild | 2 → 0 | 122 → 0 | 52 / 7 / 9 |
+| KSOPS 4.5.1 rebuild | 3 → 0 | 124 → 0 | 1 / 1 / 3 |
+
+See [exact digests and verification](argocd-2026-11-02.json) and the
+[build/recovery contract](../argocd-images/README.md). These are final runtime
+counts; build-only stage images remain separate entries in the original inventory.
+They are not a vulnerability-free certification.
+
+The initial GITHUB_TOKEN/dispatch handoff failed the required production check;
+the existing scoped, automatically revoked GitOps App token fixed it without a
+PAT, human gate or protection bypass. A subsequent authenticated API check caught
+malformed Argo link-time version metadata. That rollout temporarily broke Argo
+REST/login access while rendering and HTML delivery still worked. Guarded Helm
+restoration recovered access, and an isolated canary rejected the broken binary
+and accepted the corrected one before reconciliation resumed. Do not reuse the
+private Argo images built before source commit `52a006b`; main validation now
+retests the desired image pair and linked version even for values-only changes.
+
+Final checks: all 33 Applications freshly rendered Synced/Healthy, seven ready
+control-plane pods, six unchanged protected Secret identities/data fingerprints,
+authenticated API/UI assets, five sampled public readiness routes returning 200,
+and private SSH from both Macs. Helm recovery progressed from revision 17 to 18
+for restoration, then to 19 with the final validated images on chart 10.11.6.
+Exact automatic reconciliation policies were restored after both operations.
+
 ## Remaining work, in priority order
 
 | Area | Finding | Next change |
 |---|---|---|
 | Trainings and Slack Notifications | Deployed images have fixable critical library findings; older Go builders | Update compiler/modules, run each service's tests and image gate before normal promotion |
 | Blutag Website | Deployed image and current `nginx:alpine` both have a fixable critical finding | Use a tested patched Nginx/base combination; a rebuild of the unchanged floating tag alone is insufficient |
-| Argo CD / KSOPS | Even the recently pinned images contain fixable critical findings in bundled components | Update or rebuild compatible upstream artifacts, validate secret rendering and Helm recovery before changing these control-plane images |
 | Backup helpers and PostgreSQL image | SOPS, Azure CLI, PostgreSQL/pgvector images contain findings, including fixable critical ones | Patch compatible image components and use isolated backup/restore checks; do not run production backup/import jobs merely for scan validation |
 | AKS-managed Azure File CSI | Fixable critical findings in Microsoft-managed image | Use a supported AKS/add-on image update; do not replace managed DaemonSet images manually |
 | ANPR builder | Rust 1.88 / old Bookworm build packages have a large finding count | Update the builder and validate both normal and OCR builds; builder findings are not automatically runtime exposure |

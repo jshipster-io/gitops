@@ -1,0 +1,147 @@
+{
+  "verifiedAt": "2026-11-01T22:53:02.861112+00:00",
+  "scope": "Final Argo CD and KSOPS runtime images; build-only stage findings remain separate inventory entries",
+  "scanner": "Trivy 0.76.1 with fresh vulnerability database",
+  "platform": "linux/amd64",
+  "countUnit": "package/CVE occurrences, not unique or proven-exploitable CVEs",
+  "images": [
+    {
+      "name": "argocd",
+      "before": {
+        "image": "quay.io/argoproj/argocd@sha256:8e5cc5bb008df8a09dba439462e58c94c55b7735888d3ebde0c25fc05e4e5335",
+        "critical": 2,
+        "high": 122
+      },
+      "after": {
+        "image": "prodacr1234.azurecr.io/platform-argocd@sha256:75906d931dc8066c3d94fd727c0e6cdae65ef2e3dd903c0ef4954e2afba74109",
+        "findings": {
+          "CRITICAL": 0,
+          "HIGH": 0,
+          "MEDIUM": 52,
+          "LOW": 7,
+          "UNKNOWN": 9
+        },
+        "fixableCriticalOrHigh": 0
+      }
+    },
+    {
+      "name": "ksops",
+      "before": {
+        "image": "viaductoss/ksops@sha256:4def9fdd4e2f850265740ebe9592c5455d19b76891e88e602df8b52d74b95334",
+        "critical": 3,
+        "high": 124
+      },
+      "after": {
+        "image": "prodacr1234.azurecr.io/platform-ksops@sha256:30336b7f0b2583de4fc9d78fc8b30451cf6e768f43dbf09ac18dcc8b2d22d2be",
+        "findings": {
+          "CRITICAL": 0,
+          "HIGH": 0,
+          "MEDIUM": 1,
+          "LOW": 1,
+          "UNKNOWN": 3
+        },
+        "fixableCriticalOrHigh": 0
+      }
+    }
+  ],
+  "imageSourceCommit": "52a006bd77fa32cb7ab356795b538af176160d6d",
+  "imagePromotionCommit": "a755c995c67e3ba8a1f45e9b58823e752625affe",
+  "ci": {
+    "imageBuildScanRuntimePromotion": "https://github.com/jshipster-io/gitops/actions/runs/41357577760",
+    "validatedImageProductionPromotion": "https://github.com/jshipster-io/gitops/actions/runs/41358142249",
+    "terraformOIDC": "https://github.com/jshipster-io/terraform/actions/runs/41354410636",
+    "appTokenMintUseRevocationVerified": true
+  },
+  "runtimeIdentities": [
+    {
+      "pod": "argocd-application-controller-0",
+      "container": "application-controller",
+      "expected": "prodacr1234.azurecr.io/platform-argocd:52a006bd77fa32cb7ab356795b538af176160d6d@sha256:75906d931dc8066c3d94fd727c0e6cdae65ef2e3dd903c0ef4954e2afba74109",
+      "actualImageID": "prodacr1234.azurecr.io/platform-argocd@sha256:75906d931dc8066c3d94fd727c0e6cdae65ef2e3dd903c0ef4954e2afba74109",
+      "amd64Manifest": "sha256:546332b81e0e822ef06045af4af9f7eed5ab4493ba98b6f66771e8911b1fde9c"
+    },
+    {
+      "pod": "argocd-applicationset-controller-6766cff4d4-nclqp",
+      "container": "applicationset-controller",
+      "expected": "prodacr1234.azurecr.io/platform-argocd:52a006bd77fa32cb7ab356795b538af176160d6d@sha256:75906d931dc8066c3d94fd727c0e6cdae65ef2e3dd903c0ef4954e2afba74109",
+      "actualImageID": "prodacr1234.azurecr.io/platform-argocd@sha256:75906d931dc8066c3d94fd727c0e6cdae65ef2e3dd903c0ef4954e2afba74109",
+      "amd64Manifest": "sha256:546332b81e0e822ef06045af4af9f7eed5ab4493ba98b6f66771e8911b1fde9c"
+    },
+    {
+      "pod": "argocd-dex-server-f8c667bfc-d8b5k",
+      "container": "copyutil",
+      "expected": "prodacr1234.azurecr.io/platform-argocd:52a006bd77fa32cb7ab356795b538af176160d6d@sha256:75906d931dc8066c3d94fd727c0e6cdae65ef2e3dd903c0ef4954e2afba74109",
+      "actualImageID": "prodacr1234.azurecr.io/platform-argocd@sha256:75906d931dc8066c3d94fd727c0e6cdae65ef2e3dd903c0ef4954e2afba74109",
+      "amd64Manifest": "sha256:546332b81e0e822ef06045af4af9f7eed5ab4493ba98b6f66771e8911b1fde9c"
+    },
+    {
+      "pod": "argocd-notifications-controller-d6fdd8874-xrljr",
+      "container": "notifications-controller",
+      "expected": "prodacr1234.azurecr.io/platform-argocd:52a006bd77fa32cb7ab356795b538af176160d6d@sha256:75906d931dc8066c3d94fd727c0e6cdae65ef2e3dd903c0ef4954e2afba74109",
+      "actualImageID": "prodacr1234.azurecr.io/platform-argocd@sha256:75906d931dc8066c3d94fd727c0e6cdae65ef2e3dd903c0ef4954e2afba74109",
+      "amd64Manifest": "sha256:546332b81e0e822ef06045af4af9f7eed5ab4493ba98b6f66771e8911b1fde9c"
+    },
+    {
+      "pod": "argocd-repo-server-65c5cd9594-6vq95",
+      "container": "repo-server",
+      "expected": "prodacr1234.azurecr.io/platform-argocd:52a006bd77fa32cb7ab356795b538af176160d6d@sha256:75906d931dc8066c3d94fd727c0e6cdae65ef2e3dd903c0ef4954e2afba74109",
+      "actualImageID": "prodacr1234.azurecr.io/platform-argocd@sha256:75906d931dc8066c3d94fd727c0e6cdae65ef2e3dd903c0ef4954e2afba74109",
+      "amd64Manifest": "sha256:546332b81e0e822ef06045af4af9f7eed5ab4493ba98b6f66771e8911b1fde9c"
+    },
+    {
+      "pod": "argocd-repo-server-65c5cd9594-6vq95",
+      "container": "copyutil",
+      "expected": "prodacr1234.azurecr.io/platform-argocd:52a006bd77fa32cb7ab356795b538af176160d6d@sha256:75906d931dc8066c3d94fd727c0e6cdae65ef2e3dd903c0ef4954e2afba74109",
+      "actualImageID": "prodacr1234.azurecr.io/platform-argocd@sha256:75906d931dc8066c3d94fd727c0e6cdae65ef2e3dd903c0ef4954e2afba74109",
+      "amd64Manifest": "sha256:546332b81e0e822ef06045af4af9f7eed5ab4493ba98b6f66771e8911b1fde9c"
+    },
+    {
+      "pod": "argocd-repo-server-65c5cd9594-6vq95",
+      "container": "install-ksops",
+      "expected": "prodacr1234.azurecr.io/platform-ksops@sha256:30336b7f0b2583de4fc9d78fc8b30451cf6e768f43dbf09ac18dcc8b2d22d2be",
+      "actualImageID": "prodacr1234.azurecr.io/platform-ksops@sha256:30336b7f0b2583de4fc9d78fc8b30451cf6e768f43dbf09ac18dcc8b2d22d2be",
+      "amd64Manifest": "sha256:25b9dc5622f3327bc9108e9c3c8972091c5ab24ebeb00c5afe4a922263bee4f6"
+    },
+    {
+      "pod": "argocd-server-b5555858f-5r224",
+      "container": "server",
+      "expected": "prodacr1234.azurecr.io/platform-argocd:52a006bd77fa32cb7ab356795b538af176160d6d@sha256:75906d931dc8066c3d94fd727c0e6cdae65ef2e3dd903c0ef4954e2afba74109",
+      "actualImageID": "prodacr1234.azurecr.io/platform-argocd@sha256:75906d931dc8066c3d94fd727c0e6cdae65ef2e3dd903c0ef4954e2afba74109",
+      "amd64Manifest": "sha256:546332b81e0e822ef06045af4af9f7eed5ab4493ba98b6f66771e8911b1fde9c"
+    }
+  ],
+  "verification": {
+    "applicationsFreshlySyncedHealthy": 33,
+    "applicationIdentitiesPreserved": true,
+    "controlPlanePodsReady": 7,
+    "protectedSecretIdentitiesAndDataUnchanged": 6,
+    "syntheticAgeRenderingAndMissingKeyRejection": true,
+    "malformedVersionCanaryRejected": true,
+    "correctedAPICanaryPassed": true,
+    "authenticatedProductionAPIAndUIAssets": true,
+    "publicReadinessRoutesReturning200": 5,
+    "tailscaleSSHFromBothMacs": true,
+    "originalAutomaticPoliciesRestored": true,
+    "temporaryAPICanariesCleaned": true
+  },
+  "helm": {
+    "chart": "argo-cd-10.11.6",
+    "beforeRevision": 17,
+    "knownGoodRestorationRevision": 18,
+    "finalValidatedImageRecoveryRevision": 19,
+    "status": "deployed"
+  },
+  "incidents": [
+    {
+      "issue": "GITHUB_TOKEN push plus workflow_dispatch did not satisfy the protected production check",
+      "failedRun": "https://github.com/jshipster-io/gitops/actions/runs/41355877001",
+      "fix": "Use the existing scoped promotion App token to emit a normal push event; preserve branch protection and automatic token revocation"
+    },
+    {
+      "issue": "Malformed link-time version temporarily broke authenticated Argo REST access after an initial rollout, despite successful rendering and HTML delivery",
+      "recovery": "Guarded external Helm restored original known-good images and credentials before corrected rollout",
+      "fix": "Bare common.version=3.5.6, vendor marker in extraBuildInfo, linked SemVer gate, paired desired-image tests and isolated REST/login/denial/UI canary",
+      "finalVersion": "v3.5.6+c2b1e30.dirty"
+    }
+  ]
+}

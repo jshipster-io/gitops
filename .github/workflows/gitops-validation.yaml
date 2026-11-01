@@ -49,6 +49,7 @@ jobs:
       - run: python scripts/test-database-hardening.py
       - run: python scripts/test-argocd-bootstrap.py
       - run: python scripts/test-argocd-image-promotion.py
+      - run: python scripts/test-argocd-api-candidate.py
       - run: python scripts/test-argocd-self-management.py
       - run: python scripts/test-argocd-projects.py
       # Private candidate pulls use short-lived ACR credentials on trusted main.
@@ -63,6 +64,18 @@ jobs:
         if: github.ref == 'refs/heads/main'
       - run: python scripts/check-ksops-image.py
         if: github.ref == 'refs/heads/main'
+      - name: Verify complete control-plane image pair
+        if: github.ref == 'refs/heads/main'
+        run: |
+          sudo apt-get update && sudo apt-get install -y age
+          python3 - <<'PY'
+          import subprocess, yaml
+          values = yaml.safe_load(open('argocd-ksops-values.yaml'))
+          image = values['global']['image']
+          argo = image['repository'] + ':' + image['tag']
+          ksops = next(c['image'] for c in values['repoServer']['initContainers'] if c['name'] == 'install-ksops')
+          subprocess.run(['bash', 'argocd-images/test-runtime.sh', argo, ksops], check=True, timeout=300)
+          PY
       - run: python scripts/test-network-policy.py
       - run: python scripts/test-operator-identity.py
       - run: python scripts/test-security-audit.py

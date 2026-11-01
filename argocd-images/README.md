@@ -13,6 +13,12 @@ Helm 4.3.1 are rebuilt too. Dependency patches cover go-jose, compress, x/net an
 their compatible dependencies; KSOPS and Helm also patch gRPC. Remove/rebase these
 patches when upstream releases incorporate the fixes.
 
+Argo's `common.version` linker value must be a bare release number (`3.5.6`):
+`GetVersion` adds the `v` prefix and commit metadata itself. Put vendor information
+in `common.extraBuildInfo`. A malformed value can leave rendering and the HTML UI
+working while the REST gateway rejects API/login requests. CI checks the actual
+linked version's SemVer, not merely the version command's exit status.
+
 The Argo image upgrades installed Ubuntu packages and removes the unused Pebble
 supervisor inherited from Ubuntu; Argo starts with `tini`. KSOPS contains only
 the native installer/plugin on non-root distroless Debian 13. It does not ship a
@@ -47,6 +53,8 @@ Main-branch GitOps validation uses short-lived OIDC/ACR authentication to pull t
 private installer before its isolated runtime test. PR and branch validation
 remain credential-free static checks; trusted main must pass the runtime gate
 before promotion to production. Container tests receive no registry credentials.
+Main also repeats the full paired rendering/version test for the desired pins,
+so a values-only rollback cannot reintroduce a malformed binary unnoticed.
 
 ## Runtime and recovery verification
 
@@ -57,7 +65,13 @@ token. The bounded pool retains its existing singleton repo-server update strate
 
 For a changed runtime, run `scripts/verify-ksops-bootstrap.py --run` with an explicit
 trusted owner KUBECONFIG. It creates and removes only a disposable fixture Secret
-and Job. Check the intended running digests, fresh production rendering, all
+and Job. Use `scripts/verify-argocd-api-candidate.py --run --image <validated-digest>
+--expected-version <version>` to rehearse REST version, authenticated login/read,
+unauthenticated denial and embedded UI before accepting a candidate. It uses the
+existing server identity in an isolated, five-minute-bounded Pod, refuses any
+production Service selector match, and cleans up the Pod and local tunnel. This
+owner-run check uses existing protected credentials only in memory, never in CI.
+Check the intended running digests, fresh production rendering, all
 Application sync/health, protected Secret identities/data fingerprints, UI and
 private access separately. Do not print Secret contents or rendered manifests.
 
@@ -66,3 +80,5 @@ external Helm drill, then restore the saved automatic policies with `resume`.
 Follow `../docs/argocd-self-management.md`; never run competing Helm reconciliation
 or delete/recreate bootstrap credentials. A successful build or synthetic fixture
 alone does not establish production readiness or successful Helm recovery.
+When provenance changes an OCI index but the cached runtime reports an older index,
+resolve both linux/amd64 manifests before comparing content identity.
