@@ -15,7 +15,7 @@ global:
     create: false
   image:
     repository: prodacr1234.azurecr.io/platform-argocd
-    tag: 80d194609a77a36c34d7f2758414a33e1cb95ae8@sha256:fa8435591b2241f4fd81f3314ecb4aa8ec41b3c59a61c58c855c71349cd3834f
+    tag: 52a006bd77fa32cb7ab356795b538af176160d6d@sha256:75906d931dc8066c3d94fd727c0e6cdae65ef2e3dd903c0ef4954e2afba74109
 
 controller:
   resources:
@@ -89,7 +89,7 @@ repoServer:
   # Keep Argo CD's bundled Kustomize; replace only the decryption plugin.
   initContainers:
     - name: install-ksops
-      image: prodacr1234.azurecr.io/platform-ksops@sha256:41dcf0a948289ebba8cb5ddbd74084ed49f3eff909652d3e8325560bc93ca205
+      image: prodacr1234.azurecr.io/platform-ksops@sha256:30336b7f0b2583de4fc9d78fc8b30451cf6e768f43dbf09ac18dcc8b2d22d2be
       command: ["/usr/local/bin/ksops", "install", "/custom-tools"]
       securityContext:
         runAsNonRoot: true
