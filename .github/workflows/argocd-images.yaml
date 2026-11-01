@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - 'argocd-images/Dockerfile.*'
+      - 'argocd-images/.dockerignore'
       - 'argocd-images/patches/**'
       - 'argocd-images/prepare.py'
       - 'argocd-images/test-runtime.sh'
@@ -119,7 +120,7 @@ jobs:
           for attempt in 1 2 3 4 5; do
             git fetch origin main
             # Accept unrelated service promotions, but never publish superseded build inputs.
-            if ! git diff --quiet "$BUILT_SHA" origin/main -- argocd-images .github/workflows/argocd-images.yaml scripts/promote-argocd-images.py image-security/scan-image.sh; then
+            if ! git diff --quiet "$BUILT_SHA" origin/main -- 'argocd-images/Dockerfile.*' argocd-images/.dockerignore argocd-images/patches argocd-images/prepare.py argocd-images/test-runtime.sh .github/workflows/argocd-images.yaml scripts/promote-argocd-images.py image-security/scan-image.sh; then
               echo 'Newer image inputs exist; leaving the runtime pins unchanged.'
               exit 0
             fi
